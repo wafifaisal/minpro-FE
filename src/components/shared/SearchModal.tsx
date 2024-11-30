@@ -22,7 +22,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
     <>
       {isModalOpen && (
         <div
-          className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center"
+          className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center  z-50"
           onClick={handleCloseModal}
         >
           <div
@@ -42,7 +42,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                 <select
                   value={selectedFilter}
                   onChange={(e) => setSelectedFilter(e.target.value)}
-                  className="h-[40px] px-4 text-sm text-[#999999] bg-transparent border rounded-full"
+                  className="h-[40px] px-4 text-sm text-[#999999] bg-transparent border rounded-full "
                 >
                   <option value="event">Event</option>
                   <option value="city">City</option>

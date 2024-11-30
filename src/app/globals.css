@@ -2,26 +2,94 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Wrapper untuk pagination agar bullet sejajar */
+.swiper-pagination {
+  display: flex; /* Mengatur bullet dalam satu baris */
+  justify-content: center; /* Mengatur bullet di tengah */
+  align-items: center; /* Vertikal sejajar */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Bullet dasar */
+.swiper-pagination .custom-bullet {
+  width: 8px;
+  height: 8px;
+  background-color: rgba(255, 255, 255, 0.5); /* Warna bullet default */
+  border-radius: 50%;
+  opacity: 1;
+  margin: 0 6px;
+  display: inline-block;
+  position: relative;
+  transition: all 0.3s ease; /* Menambahkan transisi */
+}
+
+/* Efek Hover pada Bullet */
+.swiper-pagination .custom-bullet:hover {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.8
+  ); /* Warna lebih terang saat hover */
+  transform: scale(1.2); /* Efek pembesaran saat hover */
+}
+
+/* Bullet aktif */
+.swiper-pagination .custom-bullet-active {
+  background-color: transparent; /* Warna transparan untuk lingkaran */
+  border: 2px solid rgba(255, 255, 255, 1); /* Border lingkaran aktif */
+  width: 1rem; /* Lebar bullet aktif */
+  height: 1rem; /* Tinggi bullet aktif */
+  border-radius: 50%;
+  position: relative;
+  animation: pulse 1s infinite; /* Menambahkan animasi pulse */
+}
+
+/* Animasi pulse untuk bullet aktif */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom navigation buttons */
+.swiper-button-next,
+.swiper-button-prev {
+  background-color: transparent;
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  opacity: 0;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.hero-slider:hover .swiper-button-next,
+.hero-slider:hover .swiper-button-prev {
+  opacity: 1; /* Visible on hover */
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-weight: bold;
+}
+
+/* Hover effect on navigation buttons */
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
+}
+
+.swiper {
+  --swiper-navigation-color: #fff !important;
+  --swiper-pagination-color: #fff !important;
 }

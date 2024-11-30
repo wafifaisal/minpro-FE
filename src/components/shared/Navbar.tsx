@@ -29,9 +29,9 @@ const Navbar: React.FC = () => {
       <div className="mx-10 flex justify-between items-center py-4">
         {/* Logo */}
         <div className="flex items-center">
-          <img src="/path-to-logo.svg" alt="Logo" className="w-10 h-10" />
-          <span className="text-2xl font-semibold text-[#3249f0] ">Q</span>
-          <span className="text-2xl font-semibold text-[#04092c]">Tix</span>
+          {/* <img src="/path-to-logo.svg" alt="Logo" className="w-10 h-10" /> */}
+          <span className="text-2xl font-semibold text-[#2f6af3] ">VT</span>
+          <span className="text-2xl font-semibold text-[#04092c]">ix</span>
         </div>
 
         {/* User Actions */}
