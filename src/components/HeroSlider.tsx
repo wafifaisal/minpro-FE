@@ -5,6 +5,7 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { useEffect, useState } from "react";
 
 const HeroSlider = () => {
   const slides = [
@@ -12,19 +13,19 @@ const HeroSlider = () => {
       id: 1,
       title: "Experience the Best Events",
       description: "Your gateway to unforgettable moments.",
-      image: "/images/slide1.jpg",
+      image: "/tes2.jpg",
     },
     {
       id: 2,
       title: "Discover New Adventures",
       description: "Find events tailored just for you.",
-      image: "/images/slide2.jpg",
+      image: "/tes3.jpg",
     },
     {
       id: 3,
       title: "Secure Your Spot Today",
       description: "Book tickets effortlessly with ValorPass.",
-      image: "/images/slide3.jpg",
+      image: "/tes4.jpg",
     },
   ];
 
@@ -81,11 +82,7 @@ const HeroSlider = () => {
         .gradient-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.3),
-            rgba(0, 0, 0, 0.7)
-          );
+          background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), black);
           z-index: 1;
         }
         .slide-content {

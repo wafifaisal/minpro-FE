@@ -1,7 +1,6 @@
-// components/Navbar.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import BurgerMenu from "./BurgerMenu";
 import SearchModal from "./SearchModal";
@@ -11,6 +10,7 @@ const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false); // For mobile menu
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedFilter, setSelectedFilter] = useState<string>("event"); // Default filter
+  const [isScrolled, setIsScrolled] = useState<boolean>(false); // Track scroll position
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -24,14 +24,38 @@ const Navbar: React.FC = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Handle scroll event to toggle background color
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setIsScrolled(true); // Set scrolled state to true when scrolling down
+      } else {
+        setIsScrolled(false); // Set it back to false when at the top
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <div className="w-full bg-white shadow-md">
+    <div
+      className={`w-full ${
+        isScrolled
+          ? "bg-black bg-opacity-70 backdrop-blur-sm "
+          : "bg-transparent backdrop-blur-none"
+      } 
+      fixed top-0 left-0 right-0 z-50  transition-all duration-300 ease-in-out`}
+    >
       <div className="mx-10 flex justify-between items-center py-4">
         {/* Logo */}
         <div className="flex items-center">
-          {/* <img src="/path-to-logo.svg" alt="Logo" className="w-10 h-10" /> */}
-          <span className="text-2xl font-semibold text-[#2f6af3] ">VT</span>
-          <span className="text-2xl font-semibold text-[#04092c]">ix</span>
+          <span className="text-2xl font-semibold text-[#2f6af3]">VT</span>
+          <span className="text-2xl font-semibold text-white">IX</span>
         </div>
 
         {/* User Actions */}
@@ -69,9 +93,9 @@ const Navbar: React.FC = () => {
             className="w-8 h-6 flex flex-col justify-between items-end"
             onClick={toggleMenu}
           >
-            <div className="w-6 h-[2px] bg-[#04092c]"></div>
-            <div className="w-4 h-[2px] bg-[#04092c]"></div>
-            <div className="w-6 h-[2px] bg-[#04092c]"></div>
+            <div className="w-6 h-[2px] bg-[white]"></div>
+            <div className="w-4 h-[2px] bg-[white]"></div>
+            <div className="w-6 h-[2px] bg-[white]"></div>
           </button>
         </div>
       </div>

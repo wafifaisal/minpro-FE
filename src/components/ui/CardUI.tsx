@@ -1,28 +1,52 @@
 "use client";
 import { cn } from "@/lib/utils";
 
-export function CardUI() {
+interface CardUIProps {
+  title: string;
+  description: string;
+  imageUrl: string;
+  hoverImageUrl: string;
+}
+
+export function CardUI({
+  title,
+  description,
+  imageUrl,
+  hoverImageUrl,
+}: CardUIProps) {
   return (
-    <div className="max-w-xs w-full">
+    <div className="max-w-xs w-full group">
+      {/* Card Container */}
       <div
         className={cn(
-          "group w-full cursor-pointer overflow-hidden relative card h-96 rounded-md shadow-xl mx-auto flex flex-col justify-end p-4 border border-transparent dark:border-neutral-800",
-          "bg-[url(https://images.unsplash.com/photo-1476842634003-7dcca8f832de?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1650&q=80)] bg-cover",
-          "before:bg-[url(https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWlodTF3MjJ3NnJiY3Rlc2J0ZmE0c28yeWoxc3gxY2VtZzA5ejF1NSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/syEfLvksYQnmM/giphy.gif)] before:fixed before:inset-0 before:opacity-0 before:z-[-1]",
-          "hover:bg-[url(https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWlodTF3MjJ3NnJiY3Rlc2J0ZmE0c28yeWoxc3gxY2VtZzA5ejF1NSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/syEfLvksYQnmM/giphy.gif)]",
-          "hover:after:content-[''] hover:after:absolute hover:after:inset-0 hover:after:bg-black hover:after:opacity-50",
-          "transition-all duration-500"
+          "relative h-96 w-full rounded-md shadow-xl overflow-hidden",
+          "cursor-pointer flex flex-col justify-end p-4",
+          "bg-cover bg-center border border-transparent dark:border-neutral-800",
+          "transition-all duration-500",
+          "group-hover:after:content-[''] group-hover:after:absolute group-hover:after:inset-0 group-hover:after:bg-black group-hover:after:opacity-50"
         )}
+        style={{
+          backgroundImage: `url(${imageUrl})`,
+        }}
       >
-        <div className="text relative z-50">
-          <h1 className="font-bold text-xl md:text-3xl text-gray-50 relative">
-            Background Overlays
-          </h1>
-          <p className="font-normal text-base text-gray-50 relative my-4">
-            This card is for some special elements, like displaying background
-            gifs on hover only.
-          </p>
-        </div>
+        {/* Background Change on Hover */}
+        <div
+          className={cn(
+            "absolute inset-0 transition-all duration-500 opacity-0",
+            "group-hover:opacity-100 group-hover:bg-cover group-hover:bg-center"
+          )}
+          style={{
+            backgroundImage: `url(${hoverImageUrl})`,
+          }}
+        />
+      </div>
+
+      {/* Text Section */}
+      <div className="mt-4 text-center">
+        <h1 className="font-bold text-lg text-gray-50">{title}</h1>
+        <p className="font-normal text-base text-gray-300 mt-2">
+          {description}
+        </p>
       </div>
     </div>
   );
