@@ -43,75 +43,88 @@ const Navbar: React.FC = () => {
   }, []);
 
   return (
-    <div
-      className={`w-full ${
-        isScrolled
-          ? "bg-black bg-opacity-70 backdrop-blur-sm "
-          : "bg-transparent backdrop-blur-none"
-      } 
-      fixed top-0 left-0 right-0 z-50  transition-all duration-300 ease-in-out`}
-    >
-      <div className="mx-10 flex justify-between items-center py-4">
-        {/* Logo */}
-        <div className="flex items-center">
-          <span className="text-2xl font-semibold text-[#2f6af3]">VT</span>
-          <span className="text-2xl font-semibold text-white">IX</span>
-        </div>
+    <div>
+      <div
+        className={`w-full ${
+          isScrolled
+            ? "bg-black bg-opacity-70 backdrop-blur-sm "
+            : "bg-transparent backdrop-blur-none"
+        } 
+      fixed z-50 transition-all duration-300 ease-in-out`}
+      >
+        <div className="mx-10 flex justify-between items-center py-4">
+          {/* Logo */}
+          <div className="flex items-center">
+            <span className="text-2xl font-semibold text-[#2f6af3]">VT</span>
+            <span className="text-2xl font-semibold text-white">IX</span>
+          </div>
 
-        {/* User Actions */}
-        <div className="flex items-center ml-auto">
-          {/* Search Button */}
-          <div className="hidden md:flex mr-4">
-            <button
-              className="w-10 h-10 bg-[#f1f1f1] rounded-full flex justify-center items-center"
-              onClick={handleOpenModal}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                className="w-6 h-6 text-[#04092c]"
+          {/* User Actions */}
+          <div className="flex items-center ml-auto">
+            {/* Search Button */}
+            <div className="hidden md:flex mr-4">
+              <button
+                className="w-10 h-10 bg-[#f1f1f1] rounded-full flex justify-center items-center"
+                onClick={handleOpenModal}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M11 18a7 7 0 100-14 7 7 0 000 14zM21 21l-4.35-4.35"
-                />
-              </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  className="w-6 h-6 text-[#04092c]"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M11 18a7 7 0 100-14 7 7 0 000 14zM21 21l-4.35-4.35"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Login Button */}
+            <div className="w-[130px] h-[40px] bg-[#2c9cf0] rounded-full flex justify-center items-center text-white text-sm font-medium mr-4">
+              <Link href="/Login">Login</Link>
+            </div>
+
+            {/* Hamburger Menu Button */}
+            <button
+              className="w-8 h-6 flex flex-col justify-between items-end"
+              onClick={toggleMenu}
+            >
+              <div className="w-6 h-[2px] bg-[white]"></div>
+              <div className="w-4 h-[2px] bg-[white]"></div>
+              <div className="w-6 h-[2px] bg-[white]"></div>
             </button>
           </div>
-
-          {/* Login Button */}
-          <div className="w-[130px] h-[40px] bg-[#2c9cf0] rounded-full flex justify-center items-center text-white text-sm font-medium mr-4">
-            <Link href="/Login">Login</Link>
-          </div>
-
-          {/* Hamburger Menu Button */}
-          <button
-            className="w-8 h-6 flex flex-col justify-between items-end"
-            onClick={toggleMenu}
-          >
-            <div className="w-6 h-[2px] bg-[white]"></div>
-            <div className="w-4 h-[2px] bg-[white]"></div>
-            <div className="w-6 h-[2px] bg-[white]"></div>
-          </button>
         </div>
+
+        {/* Burger Menu */}
+        <BurgerMenu isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+
+        {/* Overlay for Search Modal */}
+        {isModalOpen && (
+          <div
+            className="fixed top-0 left-0 right-0 bottom-0 bg-black opacity-50 z-40"
+            onClick={handleCloseModal} // Close modal if the overlay is clicked
+          ></div>
+        )}
       </div>
 
-      {/* Burger Menu */}
-      <BurgerMenu isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
-
       {/* Search Modal */}
-      <SearchModal
-        isModalOpen={isModalOpen}
-        handleCloseModal={handleCloseModal}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        selectedFilter={selectedFilter}
-        setSelectedFilter={setSelectedFilter}
-      />
+      {isModalOpen && (
+        <SearchModal
+          isModalOpen={isModalOpen}
+          handleCloseModal={handleCloseModal}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          selectedFilter={selectedFilter}
+          setSelectedFilter={setSelectedFilter}
+          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
+        />
+      )}
     </div>
   );
 };

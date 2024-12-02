@@ -27,7 +27,7 @@ export default function Home() {
       hoverImageUrl: "https://i.giphy.com/media/xUPGcGmDg9IKexTHS8/giphy.gif",
     },
     {
-      title: "Family",
+      title: "Socials",
       description: "Fun activities for all ages.",
       imageUrl:
         "https://images.unsplash.com/photo-1535543669007-c994ab7fdbb2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwb3B1bGFyfHx8fGVufHx8fHx8MTY0OTUzNjU2OQ&ixlib=rb-1.2.1&q=80&w=1080",

@@ -1,5 +1,6 @@
-// components/SearchModal.tsx
 "use client";
+
+import { useEffect } from "react";
 
 interface SearchModalProps {
   isModalOpen: boolean;
@@ -8,6 +9,7 @@ interface SearchModalProps {
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   selectedFilter: string;
   setSelectedFilter: React.Dispatch<React.SetStateAction<string>>;
+  className?: string; // Allow className as an optional prop
 }
 
 const SearchModal: React.FC<SearchModalProps> = ({
@@ -18,16 +20,27 @@ const SearchModal: React.FC<SearchModalProps> = ({
   selectedFilter,
   setSelectedFilter,
 }) => {
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = "hidden"; // Disable scroll
+    } else {
+      document.body.style.overflow = ""; // Enable scroll
+    }
+
+    return () => {
+      document.body.style.overflow = ""; // Cleanup on unmount
+    };
+  }, [isModalOpen]);
+
   return (
     <>
       {isModalOpen && (
         <div
-          className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center 
-          z-50"
+          className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 z-50"
           onClick={handleCloseModal}
         >
           <div
-            className="bg-white p-6 rounded-lg w-full sm:w-[400px] max-w-[80%]"
+            className="relative bg-white p-6 rounded-lg w-full sm:w-[400px] max-w-[90%] shadow-lg"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-xl font-semibold mb-4">Search</h2>
@@ -43,7 +56,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                 <select
                   value={selectedFilter}
                   onChange={(e) => setSelectedFilter(e.target.value)}
-                  className="h-[40px] px-4 text-sm text-[#999999] bg-transparent border rounded-full "
+                  className="h-[40px] px-4 text-sm text-[#999999] bg-transparent border rounded-full"
                 >
                   <option value="event">Event</option>
                   <option value="city">City</option>
@@ -52,7 +65,6 @@ const SearchModal: React.FC<SearchModalProps> = ({
                 </select>
               </div>
 
-              {/* Calendar for Date */}
               <div>
                 <input
                   type="date"
