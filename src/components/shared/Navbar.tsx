@@ -55,8 +55,8 @@ const Navbar: React.FC = () => {
         <div className="mx-10 flex justify-between items-center py-4">
           {/* Logo */}
           <div className="flex items-center">
-            <span className="text-2xl font-semibold text-[#2f6af3]">VT</span>
-            <span className="text-2xl font-semibold text-white">IX</span>
+            <p className="text-2xl  text-[#1b3f95] font-extrabold ">HYPE</p>
+            <span className="text-2xl text-white font-extrabold ">TIX</span>
           </div>
 
           {/* User Actions */}
@@ -64,7 +64,7 @@ const Navbar: React.FC = () => {
             {/* Search Button */}
             <div className="hidden md:flex mr-4">
               <button
-                className="w-10 h-10 bg-[#f1f1f1] rounded-full flex justify-center items-center"
+                className="w-10 h-10 bg-[#f1f1f1] bg-opacity-0 hover:bg-opacity-30 rounded-full flex justify-center items-center"
                 onClick={handleOpenModal}
               >
                 <svg
@@ -72,7 +72,7 @@ const Navbar: React.FC = () => {
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  className="w-6 h-6 text-[#04092c]"
+                  className="w-6 h-6 text-white"
                 >
                   <path
                     strokeLinecap="round"
@@ -100,18 +100,18 @@ const Navbar: React.FC = () => {
             </button>
           </div>
         </div>
-
-        {/* Burger Menu */}
-        <BurgerMenu isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
-
-        {/* Overlay for Search Modal */}
-        {isModalOpen && (
-          <div
-            className="fixed top-0 left-0 right-0 bottom-0 bg-black opacity-50 z-40"
-            onClick={handleCloseModal} // Close modal if the overlay is clicked
-          ></div>
-        )}
       </div>
+
+      {/* Burger Menu */}
+      <BurgerMenu isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+
+      {/* Overlay for Search Modal */}
+      {isModalOpen && (
+        <div
+          className="fixed top-0 left-0 right-0 bottom-0 bg-black opacity-50 z-40"
+          onClick={handleCloseModal} // Close modal if the overlay is clicked
+        ></div>
+      )}
 
       {/* Search Modal */}
       {isModalOpen && (

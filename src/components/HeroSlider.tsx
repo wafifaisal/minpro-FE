@@ -81,7 +81,8 @@ const HeroSlider = () => {
         .gradient-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), black);
+          background: linear-gradient(to top, black 0%, rgba(0, 0, 0, 0) 20%),
+            linear-gradient(to bottom, black 0%, rgba(0, 0, 0, 0) 20%);
           z-index: 1;
         }
         .slide-content {
