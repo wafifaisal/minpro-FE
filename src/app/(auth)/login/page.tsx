@@ -112,7 +112,7 @@ const Login = () => {
                 className="w-full p-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-400"
               >
                 {isSubmitting ? "Logging in..." : "Login"}
-              </button >
+              </button>
             </Form>
           )}
         </Formik>
