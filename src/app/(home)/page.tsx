@@ -13,7 +13,7 @@ import { Navigation } from "swiper/modules";
 async function getEvents(): Promise<IEvent[]> {
   const response = await fetch("http://localhost:8000/api/events"); // Pastikan ini sesuai dengan endpoint API Anda
   const data = await response.json();
-  return data.events; // Asumsi response JSON berisi objek dengan property 'events'
+  return data.events; //response JSON berisi objek dengan property 'events'
 }
 
 export default function Home() {

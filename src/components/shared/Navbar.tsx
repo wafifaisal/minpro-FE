@@ -62,7 +62,7 @@ const Navbar: React.FC = () => {
           {/* User Actions */}
           <div className="flex items-center ml-auto">
             {/* Search Button */}
-            <div className="hidden md:flex mr-4">
+            <div className=" md:flex mr-4">
               <button
                 className="w-10 h-10 bg-[#f1f1f1] bg-opacity-0 hover:bg-opacity-30 rounded-full flex justify-center items-center"
                 onClick={handleOpenModal}
@@ -85,7 +85,7 @@ const Navbar: React.FC = () => {
             </div>
 
             {/* Login Button */}
-            <div className="w-[130px] h-[40px] bg-[#2c9cf0] rounded-full flex justify-center items-center text-white text-sm font-medium mr-4">
+            <div className="w-[130px] h-[40px] bg-[#2c9cf0] rounded-full hidden md:flex justify-center items-center text-white text-sm font-medium mr-4 ">
               <Link href="/Login">Login</Link>
             </div>
 
