@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 /* Wrapper untuk pagination agar bullet sejajar */
 .swiper-pagination {
   display: flex; /* Mengatur bullet dalam satu baris */
@@ -93,4 +92,25 @@
 .swiper {
   --swiper-navigation-color: #fff !important;
   --swiper-pagination-color: #fff !important;
+}
+
+.custom-prev,
+.custom-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.custom-prev {
+  left: 10px;
+}
+
+.custom-next {
+  right: 10px;
 }

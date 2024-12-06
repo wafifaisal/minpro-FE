@@ -62,7 +62,7 @@ const Navbar: React.FC = () => {
           {/* User Actions */}
           <div className="flex items-center ml-auto">
             {/* Search Button */}
-            <div className="hidden md:flex mr-4">
+            <div className=" md:flex mr-4">
               <button
                 className="w-10 h-10 bg-[#f1f1f1] bg-opacity-0 hover:bg-opacity-30 rounded-full flex justify-center items-center"
                 onClick={handleOpenModal}

@@ -1,56 +1,130 @@
+"use client";
+import { useEffect, useState } from "react";
 import { CardUI } from "@/components/ui/CardUI";
 import HeroSlider from "@/components/HeroSlider";
 import Navbar from "@/components/shared/Navbar";
+import { IEvent } from "@/types/event";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import { Navigation } from "swiper/modules";
+
+// Mengambil data event dari API
+async function getEvents(): Promise<IEvent[]> {
+  const response = await fetch("http://localhost:8000/api/events"); // Pastikan ini sesuai dengan endpoint API Anda
+  const data = await response.json();
+  return data.events; //response JSON berisi objek dengan property 'events'
+}
 
 export default function Home() {
-  const cardsData = [
-    {
-      title: "Concert",
-      description: "Enjoy live music and performances.",
-      imageUrl:
-        "https://images.unsplash.com/photo-1476842634003-7dcca8f832de?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1650&q=80",
-      hoverImageUrl:
-        "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWlodTF3MjJ3NnJiY3Rlc2J0ZmE0c28yeWoxc3gxY2VtZzA5ejF1NSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/syEfLvksYQnmM/giphy.gif",
-    },
-    {
-      title: "Sports",
-      description: "Get into the action with live sports.",
-      imageUrl:
-        "https://images.unsplash.com/photo-1504626835342-6b01071d182e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwb3B1bGFyfHx8fGVufHx8fHx8MTY0OTUzNjU2OQ&ixlib=rb-1.2.1&q=80&w=1080",
-      hoverImageUrl: "https://i.giphy.com/media/3o7abldj0b3rxrZUxW/giphy.gif",
-    },
-    {
-      title: "Theater",
-      description: "Experience drama and storytelling.",
-      imageUrl:
-        "https://images.unsplash.com/photo-1594938298609-05c4212cb750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwb3B1bGFyfHx8fGVufHx8fHx8MTY0OTUzNjU2OQ&ixlib=rb-1.2.1&q=80&w=1080",
-      hoverImageUrl: "https://i.giphy.com/media/xUPGcGmDg9IKexTHS8/giphy.gif",
-    },
-    {
-      title: "Socials",
-      description: "Fun activities for all ages.",
-      imageUrl:
-        "https://images.unsplash.com/photo-1535543669007-c994ab7fdbb2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwb3B1bGFyfHx8fGVufHx8fHx8MTY0OTUzNjU2OQ&ixlib=rb-1.2.1&q=80&w=1080",
-      hoverImageUrl: "https://i.giphy.com/media/l0HlMWkGPP8WiIQaU/giphy.gif",
-    },
-  ];
+  const [events, setEvents] = useState<IEvent[]>([]);
+
+  useEffect(() => {
+    // Ambil data event saat halaman dimuat
+    getEvents().then(setEvents);
+  }, []);
+
+  // Filter event berdasarkan kategori
+  const getCardsByCategory = (category: string) => {
+    return events.filter((event) => event.category === category);
+  };
+
+  const renderCategorySlider = (category: string, title: string) => {
+    const [isBeginning, setIsBeginning] = useState(true);
+    const [isEnd, setIsEnd] = useState(false);
+
+    return (
+      <div className="relative">
+        <h2 className="text-3xl font-bold mb-5">{title}</h2>
+        <Swiper
+          modules={[Navigation]}
+          navigation={{
+            nextEl: `.custom-next-${category}`,
+            prevEl: `.custom-prev-${category}`,
+          }}
+          onSlideChange={(swiper) => {
+            setIsBeginning(swiper.isBeginning);
+            setIsEnd(swiper.isEnd);
+          }}
+          onInit={(swiper) => {
+            setIsBeginning(swiper.isBeginning);
+            setIsEnd(swiper.isEnd);
+          }}
+          slidesPerView={1}
+          spaceBetween={10}
+          breakpoints={{
+            640: { slidesPerView: 1 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          }}
+        >
+          {getCardsByCategory(category).map((item, idx) => (
+            <SwiperSlide key={idx}>
+              <CardUI
+                title={item.event_name}
+                imageUrl={item.event_thumbnail}
+                hoverImageUrl={item.event_preview}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+
+        {/* Tombol Navigasi Kustom */}
+        <button
+          className={`custom-prev-${category} absolute top-1/2 left-2 transform -translate-y-1/2 p-2 bg-black text-white rounded-full transition-opacity duration-300 flex items-center justify-center ${
+            isBeginning ? "opacity-0 pointer-events-none" : "opacity-100"
+          } z-10`}
+        >
+          {/* Panah Kiri */}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="0.5"
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.75 19.5L8.25 12l7.5-7.5"
+            />
+          </svg>
+        </button>
+        <button
+          className={`custom-next-${category} absolute top-1/2 right-2 transform -translate-y-1/2 p-2 bg-black text-white rounded-full transition-opacity duration-300 flex items-center justify-center ${
+            isEnd ? "opacity-50 cursor-pointer" : "opacity-100"
+          } z-10`}
+          disabled={isEnd}
+        >
+          {/* Panah Kanan */}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="0.5"
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M8.25 4.5l7.5 7.5-7.5 7.5"
+            />
+          </svg>
+        </button>
+      </div>
+    );
+  };
 
   return (
     <div>
       <Navbar />
       <HeroSlider />
-      <div className="text-2xl text-white font-bold px-20 py-40 bg-black">
-        {cardsData.map((card, index) => (
-          <div key={index}>
-            <h2>{card.title}</h2>
-            <CardUI
-              title={card.title}
-              description={card.description}
-              imageUrl={card.imageUrl}
-              hoverImageUrl={card.hoverImageUrl}
-            />
-          </div>
-        ))}
+      <div className="px-20 py-40 bg-black text-white">
+        {renderCategorySlider("Concert", "Concert")}
+        {renderCategorySlider("Sports", "Sports")}
+        {renderCategorySlider("Socials", "Socials")}
       </div>
     </div>
   );
