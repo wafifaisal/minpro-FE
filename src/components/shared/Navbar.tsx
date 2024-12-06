@@ -85,8 +85,11 @@ const Navbar: React.FC = () => {
             </div>
 
             {/* Login Button */}
-            <div className="w-[130px] h-[40px] bg-[#2c9cf0] rounded-full hidden md:flex justify-center items-center text-white text-sm font-medium mr-4 ">
-              <Link href="/Login">Login</Link>
+            <div className="w-[130px] h-[40px] bg-[#2c9cf0] rounded-full flex justify-center items-center text-white text-sm font-medium mr-4">
+              <Link href="/login">Login</Link>
+            </div>
+            <div className="w-[130px] h-[40px] bg-[#2c9cf0] rounded-full flex justify-center items-center text-white text-sm font-medium mr-4">
+              <Link href="/register">Register</Link>
             </div>
 
             {/* Hamburger Menu Button */}
