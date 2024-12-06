@@ -54,10 +54,12 @@ const Navbar: React.FC = () => {
       >
         <div className="mx-10 flex justify-between items-center py-4">
           {/* Logo */}
-          <div className="flex items-center">
-            <p className="text-2xl  text-[#1b3f95] font-extrabold ">HYPE</p>
-            <span className="text-2xl text-white font-extrabold ">TIX</span>
-          </div>
+          <Link href={"/"}>
+            <div className="flex items-center">
+              <p className="text-2xl  text-[#1b3f95] font-extrabold ">HYPE</p>
+              <span className="text-2xl text-white font-extrabold ">TIX</span>
+            </div>
+          </Link>
 
           {/* User Actions */}
           <div className="flex items-center ml-auto">
