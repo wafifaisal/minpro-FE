@@ -1,7 +1,10 @@
-"use client";
-
-import { useDebounce } from "@/hooks/debounce";
+import { IEvent } from "@/types/event";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
+import { CardUI } from "../ui/CardUI";
+import { FaRegWindowClose, FaWindowClose } from "react-icons/fa";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 
 interface SearchModalProps {
   isModalOpen: boolean;
@@ -16,68 +19,153 @@ interface SearchModalProps {
 const SearchModal: React.FC<SearchModalProps> = ({
   isModalOpen,
   handleCloseModal,
-  searchQuery,
-  setSearchQuery,
-  selectedFilter,
-  setSelectedFilter,
   className,
 }) => {
-  const [results, setResults] = useState([]);
-  const debouncedQuery = useDebounce(searchQuery, 500);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [events, setEvents] = useState<IEvent[]>([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [value, setValue] = useState<string>(searchParams.get("keyword") || "");
+  const [text] = useDebounce(value, 500);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const getData = async () => {
+    try {
+      setIsLoading(true);
+      const res = await fetch(
+        `http://localhost:8000/api/events?search=${text}`
+      );
+      const result = await res.json();
+      setEvents(result.events || []);
+      const eventSuggestions = result.events
+        ? result.events.map((event: IEvent) => event.event_name)
+        : [];
+      setSuggestions(eventSuggestions);
+    } catch (err) {
+      console.error("Error fetching events:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (!debouncedQuery) return;
+    if (text) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("keyword", text);
+      router.push(`${pathname}?${params.toString()}`);
+      getData();
+    } else {
+      setSuggestions([]);
+      setEvents([]);
+    }
+  }, [text]);
 
-    const fetchResults = async () => {
-      try {
-        const response = await fetch(
-          `/api/search?query=${debouncedQuery}&filter=${selectedFilter}`
-        );
-        const data = await response.json();
-        setResults(data);
-      } catch (error) {
-        console.error("Error fetching search results:", error);
-      }
+  const handleSuggestionClick = (suggestion: string) => {
+    setValue(suggestion);
+    setSuggestions([]); // Close suggestions when clicked
+  };
+
+  // Hide suggestions if the current value matches any suggestion
+  const filteredSuggestions = suggestions.filter(
+    (suggestion) =>
+      suggestion.toLowerCase().includes(text.toLowerCase()) &&
+      suggestion.toLowerCase() !== text.toLowerCase()
+  );
+
+  const highlightMatch = (text: string, match: string) => {
+    const parts = text.split(new RegExp(`(${match})`, "gi"));
+    return parts.map((part, idx) =>
+      part.toLowerCase() === match.toLowerCase() ? (
+        <strong key={idx} className="font-bold">
+          {part}
+        </strong>
+      ) : (
+        part
+      )
+    );
+  };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      // Disable scroll when modal is open
+      document.body.style.overflow = "hidden";
+    } else {
+      // Enable scroll when modal is closed
+      document.body.style.overflow = "auto";
+    }
+
+    // Cleanup: Restore scrolling on unmount or modal close
+    return () => {
+      document.body.style.overflow = "auto";
     };
-
-    fetchResults();
-  }, [debouncedQuery, selectedFilter]);
-
-  if (!isModalOpen) return null;
-
+  }, [isModalOpen]);
   return (
-    <div className={`p-6 bg-white shadow-lg rounded-lg ${className}`}>
-      <h2 className="text-lg font-bold mb-4">Search</h2>
-      <input
-        type="text"
-        className="border rounded p-2 w-full"
-        placeholder="Search here..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-      <select
-        className="border rounded p-2 mt-2 w-full"
-        value={selectedFilter}
-        onChange={(e) => setSelectedFilter(e.target.value)}
-      >
-        <option value="event">Event</option>
-        <option value="city">City</option>
-        <option value="artist">Artist</option>
-        <option value="venue">Venue</option>
-      </select>
-      <ul className="mt-4">
-        {results.map((result: any) => (
-          <li key={result.id} className="border-b py-2">
-            {result.eventName || result.city || result.artist || result.venue}
-          </li>
-        ))}
-      </ul>
-      <button
-        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-        onClick={handleCloseModal}
-      >
-        Close
-      </button>
+    <div
+      className={`fixed inset-0 z-50 ${className} text-white z-50 w-full bg-black bg-opacity-50 h-full py-10 px-6 sm:px-10 lg:px-32 transition-all duration-300 ease-in-out`}
+    >
+      <div className="rounded-xl"></div>
+      <div className="flex justify-between p-4 border-b border-white">
+        <FaMagnifyingGlass className="w-10 h-10 " />
+        <button
+          className="text-gray-400 hover:text-gray-200 focus:outline-none text-3xl"
+          onClick={handleCloseModal}
+          aria-label="Close modal"
+        >
+          <FaRegWindowClose />
+        </button>
+      </div>
+
+      {/* Search Input */}
+      <div className="p-4">
+        <input
+          type="search"
+          className="w-full p-3 bg-neutral-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
+          placeholder="Search..."
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+      </div>
+
+      {/* Suggestions List */}
+      {filteredSuggestions.length > 0 && (
+        <ul className="absolute z-10 bg-neutral-800 text-white border border-gray-700 rounded-lg shadow-md w-full sm:w-[80%] lg:w-[60%]">
+          {filteredSuggestions.map((suggestion, idx) => (
+            <li
+              key={idx}
+              className="py-2 cursor-pointer hover:bg-gray-700 flex"
+              onClick={() => handleSuggestionClick(suggestion)}
+            >
+              <FaMagnifyingGlass className="mx-6" />
+              {highlightMatch(suggestion, text)}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* Results */}
+      <div className="p-4 overflow-y-auto max-h-96 ">
+        {isLoading ? (
+          <div className="text-center mt-4">Loading...</div>
+        ) : events.length === 0 ? (
+          <div className="text-center mt-4">No results found</div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {events.map((item, idx) => (
+              <div
+                key={idx}
+                className="transition-transform transform hover:scale-105 p-4 rounded-lg"
+              >
+                <CardUI
+                  title={item.event_name}
+                  imageUrl={item.event_thumbnail}
+                  hoverImageUrl={item.event_preview}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

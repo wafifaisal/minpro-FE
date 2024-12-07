@@ -6,6 +6,7 @@ interface CardUIProps {
   title: string;
   imageUrl: string;
   hoverImageUrl: string;
+  className?: string;
 }
 
 export function CardUI({ title, imageUrl, hoverImageUrl }: CardUIProps) {
@@ -32,7 +33,7 @@ export function CardUI({ title, imageUrl, hoverImageUrl }: CardUIProps) {
     >
       <div
         className={cn(
-          "relative h-96 w-full rounded-xl shadow-lg overflow-hidden",
+          "relative h-52 w-full rounded-xl shadow-lg overflow-hidden",
           "cursor-pointer flex flex-col justify-end p-4",
           "bg-cover bg-center border-2 border-transparent dark:border-neutral-800",
           "transition-transform duration-500 ease-in-out transform group-hover:scale-105"
@@ -61,7 +62,7 @@ export function CardUI({ title, imageUrl, hoverImageUrl }: CardUIProps) {
                 left: "0", // Align video with the left
                 width: "100%", // Ensure the video takes full width
                 height: "100%", // Ensure the video takes full height
-                objectFit: "cover", // Ensure the video covers the container fully
+                objectFit: "fill", // Ensure the video covers the container fully
               }}
               allow="autoplay; encrypted-media"
               allowFullScreen
@@ -88,14 +89,14 @@ export function CardUI({ title, imageUrl, hoverImageUrl }: CardUIProps) {
             "group-hover:opacity-100 transition-opacity duration-500"
           )}
         >
-          <span className="text-white text-xl font-bold bg-black w-full h-full flex justify-center transition-opacity duration-500 items-center bg-opacity-40">
+          <span className="text-white text-xl font-bold bg-gray-700 w-full h-full flex justify-center transition-opacity duration-500 items-center bg-opacity-50">
             View Event
           </span>
         </div>
       </div>
 
       {/* Text Section */}
-      <div className="mt-4 text-center">
+      <div className="mt-4 text-start">
         <h1 className="font-bold text-lg text-gray-800 dark:text-gray-200">
           {title}
         </h1>

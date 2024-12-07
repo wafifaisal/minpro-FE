@@ -37,23 +37,14 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isMenuOpen, toggleMenu }) => {
             <div className="flex flex-col gap-4 mx-5">
               <Link
                 href={"/login"}
-                onClick={toggleMenu}
                 className="flex justify-center md:hidden bg-blue-500 items-center "
               >
                 Login
               </Link>
-              <Link href="/" onClick={toggleMenu}>
-                Home
-              </Link>
-              <Link href="/events" onClick={toggleMenu}>
-                Events
-              </Link>
-              <Link href="/venues" onClick={toggleMenu}>
-                Venues
-              </Link>
-              <Link href="/about" onClick={toggleMenu}>
-                About
-              </Link>
+              <Link href="/">Home</Link>
+              <Link href="/events">Events</Link>
+              <Link href="/venues">Venues</Link>
+              <Link href="/about">About</Link>
             </div>
           </div>
         </div>

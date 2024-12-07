@@ -6,4 +6,5 @@ export interface IEvent {
   event_preview: string;
   slug: string;
   date: string;
+  location: string;
 }

@@ -50,7 +50,7 @@ const Navbar: React.FC = () => {
             ? "bg-black bg-opacity-70 backdrop-blur-sm "
             : "bg-transparent backdrop-blur-none"
         } 
-      fixed z-50 transition-all duration-300 ease-in-out`}
+      fixed z-10 transition-all duration-300 ease-in-out`}
       >
         <div className="mx-10 flex justify-between items-center py-4">
           {/* Logo */}
@@ -113,13 +113,14 @@ const Navbar: React.FC = () => {
       </div>
 
       {/* Burger Menu */}
-      <BurgerMenu isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
-
+      <button onClick={toggleMenu} className="absolute">
+        <BurgerMenu isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+      </button>
       {/* Overlay for Search Modal */}
       {isModalOpen && (
         <div
-          className="fixed top-0 left-0 right-0 bottom-0 bg-black opacity-50 z-40"
-          onClick={handleCloseModal} // Close modal if the overlay is clicked
+          className="fixed top-0 left-0 right-0 bottom-0 bg-black opacity-50 z-10"
+          onClick={handleCloseModal}
         ></div>
       )}
 
@@ -132,7 +133,7 @@ const Navbar: React.FC = () => {
           setSearchQuery={setSearchQuery}
           selectedFilter={selectedFilter}
           setSelectedFilter={setSelectedFilter}
-          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
+          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10"
         />
       )}
     </div>

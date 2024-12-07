@@ -29,7 +29,7 @@ const HeroSlider = () => {
   ];
 
   return (
-    <div className="hero-slider">
+    <div className="hero-slider ">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={0} // No space to create seamless slides
