@@ -3,7 +3,7 @@ export const getEvents = async () => {
     next: { revalidate: 60 },
   });
   const data = await res.json();
-  return data.event;
+  return data.events;
 };
 
 export const getEventSlug = async (slug: string) => {

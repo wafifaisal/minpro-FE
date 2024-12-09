@@ -8,6 +8,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
+import Link from "next/link";
 
 // Mengambil data event dari API
 async function getEvents(): Promise<IEvent[]> {
@@ -34,7 +35,7 @@ export default function Home() {
     const [isEnd, setIsEnd] = useState(false);
 
     return (
-      <div className="relative">
+      <div className="relative ">
         <h2 className="text-3xl font-bold mb-5">{title}</h2>
         <Swiper
           modules={[Navigation]}
@@ -59,11 +60,12 @@ export default function Home() {
           }}
         >
           {getCardsByCategory(category).map((item, idx) => (
-            <SwiperSlide key={idx}>
+            <SwiperSlide>
               <CardUI
                 title={item.event_name}
                 imageUrl={item.event_thumbnail}
                 hoverImageUrl={item.event_preview}
+                slug={item.slug}
               />
             </SwiperSlide>
           ))}

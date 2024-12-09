@@ -4,13 +4,19 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import BurgerMenu from "./BurgerMenu";
 import SearchModal from "./SearchModal";
+import Image from "next/image";
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  backgroundImage?: string;
+  isEventPage?: boolean;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ backgroundImage, isEventPage }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false); // For mobile menu
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedFilter, setSelectedFilter] = useState<string>("event"); // Default filter
-  const [isScrolled, setIsScrolled] = useState<boolean>(false); // Track scroll position
+  const [selectedFilter, setSelectedFilter] = useState<string>("event");
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -24,19 +30,17 @@ const Navbar: React.FC = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Handle scroll event to toggle background color
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
-        setIsScrolled(true); // Set scrolled state to true when scrolling down
+        setIsScrolled(true);
       } else {
-        setIsScrolled(false); // Set it back to false when at the top
+        setIsScrolled(false);
       }
     };
 
     window.addEventListener("scroll", handleScroll);
 
-    // Cleanup the event listener on component unmount
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -45,26 +49,39 @@ const Navbar: React.FC = () => {
   return (
     <div>
       <div
-        className={`w-full ${
+        className={`w-full fixed z-40 transition-all duration-300 ease-in-out ${
           isScrolled
-            ? "bg-black bg-opacity-70 backdrop-blur-sm "
+            ? "bg-black bg-opacity-70 backdrop-blur-sm"
+            : isEventPage
+            ? "bg-transparent"
             : "bg-transparent backdrop-blur-none"
-        } 
-      fixed z-10 transition-all duration-300 ease-in-out`}
+        }`}
       >
-        <div className="mx-10 flex justify-between items-center py-4">
-          {/* Logo */}
-          <Link href={"/"}>
-            <div className="flex items-center">
-              <p className="text-2xl  text-[#1b3f95] font-extrabold ">HYPE</p>
-              <span className="text-2xl text-white font-extrabold ">TIX</span>
+        <div className="mx-10 flex justify-between items-center py-4 relative z-10">
+          {isEventPage && backgroundImage && (
+            <div className="relative h-[80px] w-[80px]">
+              <Image
+                src={backgroundImage}
+                alt="Navbar Background"
+                width={200}
+                height={200}
+                className="absolute inset-0 z-0"
+              />
             </div>
-          </Link>
-
+          )}
+          {/* Logo */}
+          {!isEventPage && (
+            <Link href={"/"}>
+              <div className="flex items-center">
+                <p className="text-2xl text-[#1b3f95] font-extrabold">HYPE</p>
+                <span className="text-2xl text-white font-extrabold">TIX</span>
+              </div>
+            </Link>
+          )}
           {/* User Actions */}
           <div className="flex items-center ml-auto">
             {/* Search Button */}
-            <div className=" md:flex mr-4">
+            <div className="md:flex mr-4">
               <button
                 className="w-10 h-10 bg-[#f1f1f1] bg-opacity-0 hover:bg-opacity-30 rounded-full flex justify-center items-center"
                 onClick={handleOpenModal}
@@ -119,7 +136,7 @@ const Navbar: React.FC = () => {
       {/* Overlay for Search Modal */}
       {isModalOpen && (
         <div
-          className="fixed top-0 left-0 right-0 bottom-0 bg-black opacity-50 z-10"
+          className="fixed top-0 left-0 right-0 bottom-0 bg-black opacity-50 z-40"
           onClick={handleCloseModal}
         ></div>
       )}
@@ -133,7 +150,7 @@ const Navbar: React.FC = () => {
           setSearchQuery={setSearchQuery}
           selectedFilter={selectedFilter}
           setSelectedFilter={setSelectedFilter}
-          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10"
+          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40"
         />
       )}
     </div>

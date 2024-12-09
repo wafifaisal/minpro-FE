@@ -114,3 +114,14 @@
 .custom-next {
   right: 10px;
 }
+
+.hover-effect {
+  transition: opacity 0.5s ease;
+}
+
+/* Media query untuk layar mobile */
+@media (max-width: 1024px) {
+  .group:hover .hover-effect {
+    opacity: 0 !important; /* Nonaktifkan efek hover */
+  }
+}
