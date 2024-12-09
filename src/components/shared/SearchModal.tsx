@@ -5,6 +5,7 @@ import { useDebounce } from "use-debounce";
 import { CardUI } from "../ui/CardUI";
 import { FaRegWindowClose, FaWindowClose } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import Link from "next/link";
 
 interface SearchModalProps {
   isModalOpen: boolean;
@@ -117,7 +118,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
       </div>
 
       {/* Search Input */}
-      <div className="p-4">
+      <div className="p-4 cursor-pointer">
         <input
           type="search"
           className="w-full p-3 bg-neutral-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
@@ -160,6 +161,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                   title={item.event_name}
                   imageUrl={item.event_thumbnail}
                   hoverImageUrl={item.event_preview}
+                  slug={item.slug}
                 />
               </div>
             ))}
