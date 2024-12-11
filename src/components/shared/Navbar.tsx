@@ -1,4 +1,4 @@
-"use client";
+"use client"; // This ensures that the component is rendered on the client side
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -17,6 +17,9 @@ const Navbar: React.FC<NavbarProps> = ({ backgroundImage, isEventPage }) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedFilter, setSelectedFilter] = useState<string>("event");
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const [avatarSize, setAvatarSize] = useState<number>(200); // Initial avatar size
+  const [avatarPosition, setAvatarPosition] = useState<number>(90); // Initial position outside navbar
+  const [avatarOpacity, setAvatarOpacity] = useState<number>(1); // Initial opacity
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -34,9 +37,14 @@ const Navbar: React.FC<NavbarProps> = ({ backgroundImage, isEventPage }) => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
         setIsScrolled(true);
+        setAvatarSize(0); // Shrink avatar size when scrolled
       } else {
         setIsScrolled(false);
+        setAvatarSize(200); // Reset avatar size
+        setAvatarPosition(90); // Keep avatar outside navbar
       }
+      const newOpacity = Math.max(1 - scrollY / 200, 0); // Opacity decreases as you scroll, minimum 0
+      setAvatarOpacity(newOpacity);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -57,15 +65,14 @@ const Navbar: React.FC<NavbarProps> = ({ backgroundImage, isEventPage }) => {
             : "bg-transparent backdrop-blur-none"
         }`}
       >
-        <div className="mx-10 flex justify-between items-center py-4 relative z-10">
-          {isEventPage && backgroundImage && (
-            <div className="relative h-[80px] w-[80px]">
+        <div className={`mx-10 flex items-center py-4`}>
+          {isEventPage && backgroundImage && isScrolled && (
+            <div className="relative transition-all ease-in-out duration-300 w-[100px] h-[100px] flex items-center ">
               <Image
                 src={backgroundImage}
                 alt="Navbar Background"
-                width={200}
-                height={200}
-                className="absolute inset-0 z-0"
+                width={600}
+                height={600}
               />
             </div>
           )}
@@ -83,7 +90,7 @@ const Navbar: React.FC<NavbarProps> = ({ backgroundImage, isEventPage }) => {
             {/* Search Button */}
             <div className="md:flex mr-4">
               <button
-                className="w-10 h-10 bg-[#f1f1f1] bg-opacity-0 hover:bg-opacity-30 rounded-full flex justify-center items-center"
+                className="w-10 h-10 bg-[#f1f1f1] bg-opacity-0 hover:bg-opacity-30 flex justify-center items-center"
                 onClick={handleOpenModal}
               >
                 <svg
@@ -128,6 +135,26 @@ const Navbar: React.FC<NavbarProps> = ({ backgroundImage, isEventPage }) => {
           </div>
         </div>
       </div>
+
+      {isEventPage && backgroundImage && (
+        <div
+          className="absolute mx-10 flex items-center justify-between"
+          style={{
+            top: `${avatarPosition}px`, // Control avatar position
+            transition: "top 0.3s ease-in-out",
+            opacity: avatarOpacity, // Control opacity based on scroll
+            zIndex: 20,
+          }}
+        >
+          <Image
+            src={backgroundImage}
+            alt="Organizer Avatar"
+            width={avatarSize}
+            height={avatarSize}
+            className="transition-all duration-300 opacity-0 md:opacity-100 "
+          />
+        </div>
+      )}
 
       {/* Burger Menu */}
       <button onClick={toggleMenu} className="absolute">

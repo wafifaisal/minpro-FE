@@ -1,5 +1,15 @@
-import { ReactNode } from "react";
+import { SessionProvider } from "@/context/useSession";
 
-export default function HomeLayout({ children }: { children: ReactNode }) {
-  return <main>{children}</main>;
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body>
+        <SessionProvider>{children}</SessionProvider>
+      </body>
+    </html>
+  );
 }
