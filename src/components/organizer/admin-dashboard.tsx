@@ -1,13 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { Overview } from '@/components/overview'
-import { RecentSales } from '@/components/recent-sales'
-import { Search } from '@/components/search'
-import { UserNav } from '@/components/user-nav'
-import { MainNav } from '@/components/main-nav'
-import { EventList } from '@/components/event-list'
-import { UserList } from '@/components/user-list'
+import { Overview } from '@/components/organizer/overview'
+import { RecentSales } from '@/components/organizer/recent-sales'
+import { Search } from '@/components/organizer/search'
+import { UserNav } from '@/components/organizer/user-nav'
+import { MainNav } from '@/components/organizer/main-nav'
+import { EventList } from '@/components/organizer/event-list'
+import { UserList } from '@/components/organizer/user-list'
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview')

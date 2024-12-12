@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import AdminAuthForm from '@/components/admin-auth-form'
+import AdminAuthForm from '@/components/organizer/admin-auth-form'
 
 export const metadata: Metadata = {
   title: 'Admin Authentication | Event Ticket Organizer',

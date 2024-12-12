@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { CardUI } from "@/components/ui/CardUI";
-import HeroSlider from "@/components/HeroSlider";
+import HeroSlider from "@/components/organizer/HeroSlider";
 import Navbar from "@/components/shared/Navbar";
 import { IEvent } from "@/types/event";
 import { Swiper, SwiperSlide } from "swiper/react";
