@@ -31,7 +31,7 @@ const HeroSlider = () => {
   ];
 
   return (
-    <div className="hero-slider">
+    <div className="relative w-full overflow-hidden">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={0} // No space to create seamless slides
@@ -47,7 +47,7 @@ const HeroSlider = () => {
       >
         {slides.map((slide) => (
           <SwiperSlide key={slide.id}>
-            <div className="slide">
+            <div className="relative h-screen flex items-center justify-center text-white text-center">
               <Image
                 src={slide.image}
                 alt={slide.title}
@@ -56,11 +56,16 @@ const HeroSlider = () => {
                 className="object-cover"
                 quality={100}
               />
-              <div className="gradient-overlay"></div>
-              <div className="slide-content">
-                <h1 className="slide-title">{slide.title}</h1>
-                <p className="slide-description">{slide.description}</p>
-                <Link href="/learn-more" className="cta-button">
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black z-10"></div>
+              <div className="relative z-20">
+                <h1 className="text-6xl font-bold mb-4 drop-shadow-[0_4px_10px_rgba(0,0,0,0.6)]">
+                  {slide.title}
+                </h1>
+                <p className="text-2xl mb-8">{slide.description}</p>
+                <Link
+                  href="/learn-more"
+                  className="inline-block px-8 py-3 text-base font-bold bg-yellow-400 text-black rounded-md cursor-pointer transition-all duration-300 ease-in-out hover:scale-110 hover:shadow-[0_8px_20px_rgba(255,204,0,0.6)] no-underline"
+                >
                   Learn More
                 </Link>
               </div>
@@ -68,60 +73,6 @@ const HeroSlider = () => {
           </SwiperSlide>
         ))}
       </Swiper>
-      <style jsx>{`
-        .hero-slider {
-          position: relative;
-          width: 100%;
-          overflow: hidden;
-        }
-        .slide {
-          position: relative;
-          height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: white;
-          text-align: center;
-        }
-        .gradient-overlay {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(to top, black 0%, rgba(0, 0, 0, 0) 20%),
-            linear-gradient(to bottom, black 0%, rgba(0, 0, 0, 0) 20%);
-          z-index: 1;
-        }
-        .slide-content {
-          position: relative;
-          z-index: 2;
-        }
-        .slide-title {
-          font-size: 4rem;
-          font-weight: bold;
-          margin-bottom: 1rem;
-          text-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
-        }
-        .slide-description {
-          font-size: 1.5rem;
-          margin-bottom: 2rem;
-        }
-        .cta-button {
-          display: inline-block;
-          padding: 0.75rem 2rem;
-          font-size: 1rem;
-          font-weight: bold;
-          background-color: #ffcc00;
-          color: #000;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
-          text-decoration: none;
-        }
-        .cta-button:hover {
-          transform: scale(1.1);
-          box-shadow: 0 8px 20px rgba(255, 204, 0, 0.6);
-        }
-      `}</style>
     </div>
   );
 };
