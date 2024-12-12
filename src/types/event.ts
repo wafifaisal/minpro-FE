@@ -24,7 +24,7 @@ export interface ITicket {
   category: string;
   desc?: string;
   seats?: string;
-  price: string;
+  price: number;
   order_details?: IOrderDetails;
 }
 
