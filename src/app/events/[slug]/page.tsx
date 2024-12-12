@@ -3,6 +3,7 @@ import HeroSection from "@/components/TicketDetails/HeroSection";
 import TicketSection from "@/components/TicketDetails/Ticket";
 import { getEvents, getEventSlug } from "@/lib/event";
 import { IEvent } from "@/types/event";
+import Image from "next/image";
 
 export const generateStaticParams = async () => {
   const events: IEvent[] = await getEvents();

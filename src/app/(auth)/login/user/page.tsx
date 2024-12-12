@@ -2,13 +2,14 @@
 import { useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { FormikHelpers } from "formik";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loginMessage, setLoginMessage] = useState<string | null>(null);
 
   const initialValues = {
-    loginIdentifier: "", // This field will accept either email or username
+    loginIdentifier: "",
     password: "",
   };
 
@@ -21,7 +22,7 @@ const Login = () => {
 
   const handleSubmit = async (
     values: typeof initialValues,
-    { setSubmitting }: any
+    { setSubmitting }: FormikHelpers<typeof initialValues>
   ) => {
     try {
       const response = await fetch("http://localhost:8000/api/login", {
@@ -30,17 +31,15 @@ const Login = () => {
         body: JSON.stringify(values),
       });
 
-      // Debug response information
       console.log('Response status:', response.status);
       console.log('Content-Type:', response.headers.get("content-type"));
       const responseText = await response.text();
       console.log('Response body:', responseText);
 
-      // Try to parse as JSON if possible
       let data;
       try {
         data = JSON.parse(responseText);
-      } catch (e) {
+      } catch {
         throw new Error(`Server returned invalid response: ${responseText.substring(0, 100)}...`);
       }
       
@@ -50,9 +49,10 @@ const Login = () => {
 
       setLoginMessage("Login successful!");
       console.log("Logged in user:", data);
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
       setLoginMessage(null);
-      alert(error.message || "An unexpected error occurred");
+      alert(errorMessage);
     } finally {
       setSubmitting(false);
     }

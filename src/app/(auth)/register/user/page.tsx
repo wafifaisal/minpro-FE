@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { FormikHelpers } from 'formik';
 
 const Register = () => {
   const [success, setSuccess] = useState<string | null>(null);
@@ -35,7 +36,7 @@ const Register = () => {
 
   const handleSubmit = async (
     values: typeof initialValues,
-    { setSubmitting, resetForm }: any
+    { setSubmitting, resetForm }: FormikHelpers<typeof initialValues>
   ) => {
     try {
       const response = await fetch(API_URL, {
@@ -54,9 +55,10 @@ const Register = () => {
         data.message || "Registration successful! You can now log in."
       );
       resetForm();
-    } catch (error: any) {
+    } catch (error: Error | unknown) {
       setSuccess(null);
-      alert(error.message || "Failed to register. Please try again.");
+      const errorMessage = error instanceof Error ? error.message : "Failed to register. Please try again.";
+      alert(errorMessage);
     } finally {
       setSubmitting(false);
     }
