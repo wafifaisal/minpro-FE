@@ -1,9 +1,11 @@
+import Image from "next/image"
+
 export function RecentSales() {
   return (
     <div className="space-y-8">
       <div className="flex items-center">
         <div className="h-9 w-9 rounded-full bg-gray-200">
-          <img src="/avatars/01.png" alt="Avatar" className="h-9 w-9 rounded-full" />
+          <Image src="/avatars/01.png" alt="Avatar" width={36} height={36} className="rounded-full" />
         </div>
         <div className="ml-4 space-y-1">
           <p className="text-sm font-medium leading-none">Olivia Martin</p>
@@ -15,7 +17,7 @@ export function RecentSales() {
       </div>
       <div className="flex items-center">
         <div className="h-9 w-9 rounded-full bg-gray-200">
-          <img src="/avatars/02.png" alt="Avatar" className="h-9 w-9 rounded-full" />
+          <Image src="/avatars/02.png" alt="Avatar" width={36} height={36} className="rounded-full" />
         </div>
         <div className="ml-4 space-y-1">
           <p className="text-sm font-medium leading-none">Jackson Lee</p>
@@ -25,7 +27,7 @@ export function RecentSales() {
       </div>
       <div className="flex items-center">
         <div className="h-9 w-9 rounded-full bg-gray-200">
-          <img src="/avatars/03.png" alt="Avatar" className="h-9 w-9 rounded-full" />
+          <Image src="/avatars/03.png" alt="Avatar" width={36} height={36} className="rounded-full" />
         </div>
         <div className="ml-4 space-y-1">
           <p className="text-sm font-medium leading-none">Isabella Nguyen</p>
@@ -37,7 +39,7 @@ export function RecentSales() {
       </div>
       <div className="flex items-center">
         <div className="h-9 w-9 rounded-full bg-gray-200">
-          <img src="/avatars/04.png" alt="Avatar" className="h-9 w-9 rounded-full" />
+          <Image src="/avatars/04.png" alt="Avatar" width={36} height={36} className="rounded-full" />
         </div>
         <div className="ml-4 space-y-1">
           <p className="text-sm font-medium leading-none">William Kim</p>
@@ -47,7 +49,7 @@ export function RecentSales() {
       </div>
       <div className="flex items-center">
         <div className="h-9 w-9 rounded-full bg-gray-200">
-          <img src="/avatars/05.png" alt="Avatar" className="h-9 w-9 rounded-full" />
+          <Image src="/avatars/05.png" alt="Avatar" width={36} height={36} className="rounded-full" />
         </div>
         <div className="ml-4 space-y-1">
           <p className="text-sm font-medium leading-none">Sofia Davis</p>

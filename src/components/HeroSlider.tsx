@@ -1,6 +1,8 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import Image from "next/image";
+import Link from "next/link";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -29,7 +31,7 @@ const HeroSlider = () => {
   ];
 
   return (
-    <div className="hero-slider ">
+    <div className="hero-slider">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={0} // No space to create seamless slides
@@ -45,19 +47,22 @@ const HeroSlider = () => {
       >
         {slides.map((slide) => (
           <SwiperSlide key={slide.id}>
-            <div
-              className="slide"
-              style={{
-                backgroundImage: `url(${slide.image})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            >
+            <div className="slide">
+              <Image
+                src={slide.image}
+                alt={slide.title}
+                fill
+                priority
+                className="object-cover"
+                quality={100}
+              />
               <div className="gradient-overlay"></div>
               <div className="slide-content">
                 <h1 className="slide-title">{slide.title}</h1>
                 <p className="slide-description">{slide.description}</p>
-                <button className="cta-button">Learn More</button>
+                <Link href="/learn-more" className="cta-button">
+                  Learn More
+                </Link>
               </div>
             </div>
           </SwiperSlide>
@@ -100,6 +105,7 @@ const HeroSlider = () => {
           margin-bottom: 2rem;
         }
         .cta-button {
+          display: inline-block;
           padding: 0.75rem 2rem;
           font-size: 1rem;
           font-weight: bold;
@@ -109,6 +115,7 @@ const HeroSlider = () => {
           border-radius: 5px;
           cursor: pointer;
           transition: transform 0.3s ease, box-shadow 0.3s ease;
+          text-decoration: none;
         }
         .cta-button:hover {
           transform: scale(1.1);
