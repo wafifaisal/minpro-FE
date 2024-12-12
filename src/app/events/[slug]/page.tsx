@@ -1,7 +1,7 @@
 import Navbar from "@/components/shared/Navbar";
 import { formatDate } from "@/helpers/formatDate";
 import { getEvents, getEventSlug } from "@/lib/event";
-import { IEvent, ITicket } from "@/types/event";
+import { IEvent } from "@/types/event";
 import Image from "next/image";
 
 export const generateStaticParams = async () => {

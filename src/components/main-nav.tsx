@@ -11,24 +11,28 @@ export function MainNav({
     >
       <Link
         href="/admin"
+        prefetch={true}
         className="text-sm font-medium transition-colors hover:text-primary"
       >
         Overview
       </Link>
       <Link
         href="/admin/events"
+        prefetch={true}
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         Events
       </Link>
       <Link
         href="/admin/users"
+        prefetch={true}
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         Users
       </Link>
       <Link
         href="/admin/settings"
+        prefetch={true}
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         Settings

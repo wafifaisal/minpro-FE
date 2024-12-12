@@ -58,7 +58,7 @@ export default function Home() {
           }}
         >
           {getCardsByCategory(category).map((item, idx) => (
-            <SwiperSlide>
+            <SwiperSlide key={item.id}>
               <CardUI
                 title={item.event_name}
                 imageUrl={item.event_thumbnail}
