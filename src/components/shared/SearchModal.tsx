@@ -3,9 +3,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { CardUI } from "../ui/CardUI";
-import { FaRegWindowClose, FaWindowClose } from "react-icons/fa";
+import { FaRegWindowClose } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import Link from "next/link";
 
 interface SearchModalProps {
   isModalOpen: boolean;
@@ -59,6 +58,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
     } else {
       setSuggestions([]);
       setEvents([]);
+      router.push(`${pathname}`);
     }
   }, [text]);
 
