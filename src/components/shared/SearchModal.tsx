@@ -60,7 +60,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
       setEvents([]);
       router.push(`${pathname}`);
     }
-  }, [text]);
+  }, [text, searchParams, pathname, router]);
 
   const handleSuggestionClick = (suggestion: string) => {
     setValue(suggestion);
@@ -162,6 +162,10 @@ const SearchModal: React.FC<SearchModalProps> = ({
                   imageUrl={item.event_thumbnail}
                   hoverImageUrl={item.event_preview}
                   slug={item.slug}
+                  lokasi={item.location}
+                  tempat={item.venue}
+                  price={Math.min(...item.Ticket.map((ticket) => ticket.price))} // Harga termurah
+                  organizer={item.Organizer}
                 />
               </div>
             ))}

@@ -2,9 +2,9 @@ import Navbar from "@/components/shared/Navbar";
 import HeroSection from "@/components/TicketDetails/HeroSection";
 import TicketSection from "@/components/TicketDetails/Ticket";
 import { getEvents, getEventSlug } from "@/lib/event";
-import { IEvent } from "@/types/event";
-import Image from "next/image";
+import { IEvent, ITicket } from "@/types/event";
 
+// Explicitly define the return type for generateStaticParams
 export const generateStaticParams = async () => {
   const events: IEvent[] = await getEvents();
   return events.map((item) => ({
@@ -12,11 +12,21 @@ export const generateStaticParams = async () => {
   }));
 };
 
-export async function generateMetaData({
+// Explicitly define the return type for metadata generation
+export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
-}) {
+}): Promise<{
+  title: string;
+  description: string;
+  name: string;
+  location: string;
+  thumbnail: string;
+  preview: string;
+  avatar: string | undefined;
+  ticket: ITicket[];
+}> {
   const event: IEvent = await getEventSlug(params.slug);
 
   return {
@@ -31,6 +41,7 @@ export async function generateMetaData({
   };
 }
 
+// Default exported component for the event page
 export default async function EventsDetail({
   params,
 }: {
