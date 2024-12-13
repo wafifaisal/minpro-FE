@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import AdminDashboard from "@/components/organizer/admin-dashboard";
+import AdminDashboard from "@/components/organizer/adminDashboard";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | Event Ticket Organizer",
