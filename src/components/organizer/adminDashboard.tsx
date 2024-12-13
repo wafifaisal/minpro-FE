@@ -2,12 +2,12 @@
 
 import { useState } from 'react'
 import { Overview } from '@/components/organizer/overview'
-import { RecentSales } from '@/components/organizer/recent-sales'
+import { RecentSales } from '@/components/organizer/recentSales'
 import { Search } from '@/components/organizer/search'
-import { UserNav } from '@/components/organizer/user-nav'
-import { MainNav } from '@/components/organizer/main-nav'
-import { EventList } from '@/components/organizer/event-list'
-import { UserList } from '@/components/organizer/user-list'
+import { UserNav } from '@/components/organizer/userNav'
+import { MainNav } from '@/components/organizer/mainNav'
+import { EventList } from '@/components/organizer/eventList'
+import { UserList } from '@/components/organizer/userList'
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview')

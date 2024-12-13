@@ -1,5 +1,3 @@
-import { eventNames } from "process";
-
 const users = [
   {
     id: 1,
