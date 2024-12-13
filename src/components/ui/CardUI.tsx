@@ -2,16 +2,31 @@
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import Link from "next/link";
+import { IOrganizer } from "@/types/event";
+import { formatCurrency } from "@/helpers/formatDate";
 
 interface CardUIProps {
   title: string;
   imageUrl: string;
   hoverImageUrl: string;
   slug: string;
+  lokasi: string;
+  price: number;
+  tempat: string;
   className?: string;
+  organizer: IOrganizer;
 }
 
-export function CardUI({ title, imageUrl, slug, hoverImageUrl }: CardUIProps) {
+export function CardUI({
+  title,
+  imageUrl,
+  slug,
+  hoverImageUrl,
+  lokasi,
+  price,
+  organizer,
+  tempat,
+}: CardUIProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   // Function to check if hoverImageUrl is a YouTube URL
@@ -26,7 +41,9 @@ export function CardUI({ title, imageUrl, slug, hoverImageUrl }: CardUIProps) {
   };
 
   const videoId = isYouTube ? getYouTubeVideoId(hoverImageUrl) : null;
-
+  console.log("Lokasi:", lokasi);
+  console.log("Tempat:", tempat);
+  console.log("Price:", price);
   return (
     <div
       className="max-w-xs w-full group relative overflow-hidden"
@@ -79,12 +96,25 @@ export function CardUI({ title, imageUrl, slug, hoverImageUrl }: CardUIProps) {
           {/* Hover Text */}
           <div
             className={cn(
-              "absolute inset-0 flex items-center justify-center opacity-0 ",
+              "absolute inset-0 flex flex-col items-center justify-center opacity-0 bg-gray-700 bg-opacity-50",
               "group-hover:opacity-100 transition-opacity duration-500"
             )}
           >
-            <span className="text-white text-xl font-bold bg-gray-700 w-full h-full flex justify-center transition-opacity duration-500 items-center bg-opacity-50">
+            {/* View Event */}
+            <span className="text-white text-xl font-bold  w-full h-1/4 flex justify-center items-center">
               View Event
+            </span>
+            {/* Location */}
+            <span className="text-white text-sm mt-2 font-medium px-4 py-1 rounded-md">
+              Location: {lokasi}
+            </span>
+            {/* Venue */}
+            <span className="text-white text-sm mt-2 font-medium  px-4 py-1 rounded-md">
+              Venue: {tempat}
+            </span>
+            {/* Price */}
+            <span className="text-white text-sm mt-2 font-medium px-4 py-1 rounded-md">
+              Price: {formatCurrency(price)}
             </span>
           </div>
         </div>
@@ -95,6 +125,7 @@ export function CardUI({ title, imageUrl, slug, hoverImageUrl }: CardUIProps) {
         <h1 className="font-bold text-lg text-gray-800 dark:text-gray-200">
           {title}
         </h1>
+        <span className="ml-2 text-sm">{organizer.name}</span>
       </div>
     </div>
   );

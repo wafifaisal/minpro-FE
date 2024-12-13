@@ -17,7 +17,7 @@ async function getEvents(): Promise<IEvent[]> {
 
 export default function Home() {
   const [events, setEvents] = useState<IEvent[]>([]);
-
+  console.log(events);
   useEffect(() => {
     // Ambil data event saat halaman dimuat
     getEvents().then(setEvents);
@@ -28,7 +28,7 @@ export default function Home() {
     return events.filter((event) => event.category === category);
   };
 
-  const renderCategorySlider = (category: string, title: string) => {
+  const RenderCategorySlider = (category: string, title: string) => {
     const [isBeginning, setIsBeginning] = useState(true);
     const [isEnd, setIsEnd] = useState(false);
 
@@ -57,13 +57,17 @@ export default function Home() {
             1024: { slidesPerView: 3 },
           }}
         >
-          {getCardsByCategory(category).map((item, idx) => (
+          {getCardsByCategory(category).map((item) => (
             <SwiperSlide key={item.id}>
               <CardUI
                 title={item.event_name}
                 imageUrl={item.event_thumbnail}
                 hoverImageUrl={item.event_preview}
                 slug={item.slug}
+                lokasi={item.location}
+                tempat={item.venue}
+                price={Math.min(...item.Ticket.map((ticket) => ticket.price))}
+                organizer={item.Organizer}
               />
             </SwiperSlide>
           ))}
@@ -122,9 +126,9 @@ export default function Home() {
       <Navbar />
       <HeroSlider />
       <div className="px-20 py-40 bg-black text-white">
-        {renderCategorySlider("Concert", "Concert")}
-        {renderCategorySlider("Sports", "Sports")}
-        {renderCategorySlider("Socials", "Socials")}
+        {RenderCategorySlider("Concert", "Concert")}
+        {RenderCategorySlider("Sports", "Sports")}
+        {RenderCategorySlider("Socials", "Socials")}
       </div>
     </div>
   );

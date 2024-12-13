@@ -68,12 +68,14 @@ const Navbar: React.FC<NavbarProps> = ({ backgroundImage, isEventPage }) => {
         <div className={`mx-10 flex items-center py-4`}>
           {isEventPage && backgroundImage && isScrolled && (
             <div className="relative transition-all ease-in-out duration-300 w-[100px] h-[100px] flex items-center ">
-              <Image
-                src={backgroundImage}
-                alt="Navbar Background"
-                width={600}
-                height={600}
-              />
+              <Link href={"/"}>
+                <Image
+                  src={backgroundImage}
+                  alt="Navbar Background"
+                  width={600}
+                  height={600}
+                />
+              </Link>
             </div>
           )}
           {/* Logo */}
@@ -135,7 +137,6 @@ const Navbar: React.FC<NavbarProps> = ({ backgroundImage, isEventPage }) => {
           </div>
         </div>
       </div>
-
       {isEventPage && backgroundImage && (
         <div
           className="absolute mx-10 flex items-center justify-between"
