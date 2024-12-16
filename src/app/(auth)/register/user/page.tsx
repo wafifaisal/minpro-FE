@@ -13,15 +13,19 @@ const Register = () => {
   const API_URL = "http://localhost:8000/api/auth";
 
   const initialValues = {
-    username: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
   };
 
   const validationSchema = Yup.object({
-    username: Yup.string()
-      .min(3, "Username must be at least 3 characters")
+    firstName: Yup.string()
+      .min(3, "First Name must be at least 3 characters")
+      .required("Username is required"),
+    lastName: Yup.string()
+      .min(3, "Last Name must be at least 3 characters")
       .required("Username is required"),
     email: Yup.string()
       .email("Invalid email address")
@@ -68,7 +72,7 @@ const Register = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="max-w-md w-full p-6 bg-white shadow-md rounded-lg">
         <h1 className="text-3xl font-semibold text-black text-center mb-6">
-          Register
+          User Register
         </h1>
         <Formik
           initialValues={initialValues}
@@ -80,11 +84,24 @@ const Register = () => {
               <div>
                 <Field
                   type="text"
-                  name="username"
-                  placeholder="Username"
+                  name="firstName"
+                  placeholder="First Name"
                   className="w-full p-3 border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <ErrorMessage name="username">
+                <ErrorMessage name="firstName">
+                  {(msg) => (
+                    <div className="text-red-500 text-sm mt-1">{msg}</div>
+                  )}
+                </ErrorMessage>
+              </div>
+              <div>
+                <Field
+                  type="text"
+                  name="lastName"
+                  placeholder="Last Name"
+                  className="w-full p-3 border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <ErrorMessage name="lastName">
                   {(msg) => (
                     <div className="text-red-500 text-sm mt-1">{msg}</div>
                   )}
@@ -141,6 +158,20 @@ const Register = () => {
                   {showConfirmPassword ? "🙈" : "👁️"}
                 </button>
                 <ErrorMessage name="confirmPassword">
+                  {(msg) => (
+                    <div className="text-red-500 text-sm mt-1">{msg}</div>
+                  )}
+                </ErrorMessage>
+              </div>
+
+              <div>
+                <Field
+                  type="text"
+                  name="ref_by"
+                  placeholder="Refferal Code"
+                  className="w-full p-3 border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <ErrorMessage name="ref_code">
                   {(msg) => (
                     <div className="text-red-500 text-sm mt-1">{msg}</div>
                   )}

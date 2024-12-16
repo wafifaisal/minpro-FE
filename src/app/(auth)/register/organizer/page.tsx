@@ -68,7 +68,7 @@ const Register = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="max-w-md w-full p-6 bg-white shadow-md rounded-lg">
         <h1 className="text-3xl font-semibold text-black text-center mb-6">
-          Register
+          Organizer Register
         </h1>
         <Formik
           initialValues={initialValues}
