@@ -54,21 +54,21 @@ export default function TicketCard({
       <div className="absolute h-full top-1/2 right-[-2rem] translate-y-[-50%] flex items-center">
         {count > 0 && (
           <>
-            <span
-              className={`text-lg font-semibold text-black px-1 md:px-2 transition-transform duration-300 transform ${
-                isIncrementActive ? "translate-x-[30px]" : ""
-              }`}
-            >
-              {count}
-            </span>
             <button
               onClick={handleDecrement}
-              className={`text-sm sm:text-base md:text-xl my-1 text-white font-bold h-full bg-red-700 hover:bg-red-500 px-2 md:px-3 shadow-md transition-transform duration-300 transform active:scale-105 ${
+              className={`text-sm sm:text-base md:text-xl my-1 text-white font-bold h-full bg-red-700 hover:bg-red-500 px-2 md:px-3 shadow-md transition-transform duration-300 transform ${
                 isIncrementActive ? "translate-x-[25px]" : ""
               }`}
             >
               -
             </button>
+            <span
+              className={`text-lg font-semibold text-black px-1 md:px-2 transition-transform duration-300 transform ${
+                isIncrementActive ? "translate-x-[25px]" : ""
+              }`}
+            >
+              {count}
+            </span>
           </>
         )}
         <button
