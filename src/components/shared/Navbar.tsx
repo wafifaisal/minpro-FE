@@ -114,13 +114,13 @@ const Navbar: React.FC<NavbarProps> = ({ backgroundImage, isEventPage }) => {
 
             {/* Login Button */}
             <Link href="/login/user">
-              <div className="w-[130px] h-[40px] bg-[#2c9cf0] rounded-full hidden md:flex justify-center items-center text-white text-sm font-medium mr-4 ">
+              <div className="w-[80px] h-[40px] bg-[white] rounded-full hidden md:flex justify-center items-center text-black text-sm font-medium mr-4 ">
                 Login
               </div>
             </Link>
 
             <Link href="/register/user">
-              <div className="w-[130px] h-[40px] bg-[#2c9cf0] rounded-full hidden md:flex justify-center items-center text-white text-sm font-medium mr-4">
+              <div className="w-[80px] h-[40px] bg-white rounded-full hidden md:flex justify-center items-center text-black text-sm font-medium mr-4">
                 Register
               </div>
             </Link>

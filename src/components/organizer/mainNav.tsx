@@ -1,4 +1,4 @@
-import Link from "next/link"
+import Link from "next/link";
 
 export function MainNav({
   className,
@@ -17,7 +17,7 @@ export function MainNav({
         Overview
       </Link>
       <Link
-        href="/admin/events"
+        href="/dashboard/create-event"
         prefetch={true}
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
@@ -38,6 +38,5 @@ export function MainNav({
         Settings
       </Link>
     </nav>
-  )
+  );
 }
-
