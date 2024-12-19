@@ -1,6 +1,5 @@
 import CreateTicket from "@/components/createEvent/createTicket";
 import { formatCurrency } from "@/helpers/formatDate";
-import { formatDate } from "@/helpers/formatDate";
 import { getTickets } from "@/lib/tickets";
 import { ITicket } from "@/types/event";
 import Link from "next/link";
@@ -9,15 +8,15 @@ import { FaPencilAlt, FaTrash } from "react-icons/fa";
 export default async function TicketPage({
   params,
 }: {
-  params: { id: string };
+  params: { eventId: string };
 }) {
-  const result: ITicket[] = await getTickets(params.id);
+  const result: ITicket[] = await getTickets(params.eventId);
   return (
-    <main>
-      <div className="rounded-2xl sm:mx-10 p-10 tablet:mx-52 shadow-2xl md:my-20">
-        <CreateTicket eventId={params.id} />
-        <div className="mt-10 border-t border-black pt-4">
-          <h1 className="text-2xl mb-6 font-[500]">
+    <main className="bg-gradient-to-tl from-blue-500 via-black to-black">
+      <div className="rounded-2xl sm:mx-32 p-10 tablet:mx-52 shadow-2xl md:py-20 bg-gray-900">
+        <CreateTicket eventId={params.eventId} />
+        <div className="py-10 border-t border-white text-white pt-4">
+          <h1 className="text-2xl py-6 font-[500]">
             TICKET ANDA AKAN MUNCUL DISINI
           </h1>
           <div className="flex flex-col gap-6">
@@ -60,7 +59,7 @@ export default async function TicketPage({
         <div className="mt-10 border-t border-black pt-4">
           <Link
             className="py-2 px-3 bg-lightBlue text-white rounded-md"
-            href={"/organizer/events"}
+            href={"/events"}
           >
             KEMBALI KE DASHBOARD
           </Link>
