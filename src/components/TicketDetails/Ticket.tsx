@@ -34,7 +34,7 @@ export default function TicketSection({ tickets }: { tickets: ITicket[] }) {
         <div className="flex flex-wrap gap-4 justify-center mx-4 overflow-y-auto max-h-60 px-5 md:mx-6">
           {tickets.map((ticket) => (
             <TicketCard
-              key={ticket.ticket_id}
+              key={ticket.eventId}
               ticket={ticket}
               totalTickets={totalTickets}
               onUpdateTotal={handleUpdateTotal}

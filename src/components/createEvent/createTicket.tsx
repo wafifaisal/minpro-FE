@@ -4,7 +4,10 @@ import { Formik, Field, Form, ErrorMessage, FieldArray } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
 import TicketDescription from "./ticketTextEditor";
+import axios from "@/helpers/axios";
+import { toast } from "react-toastify";
 
+// Validasi untuk setiap tiket
 const ticketSchema = Yup.object().shape({
   category: Yup.string().required("Ticket name is required"),
   seats: Yup.number()
@@ -13,11 +16,15 @@ const ticketSchema = Yup.object().shape({
   price: Yup.number()
     .min(20000, "Minimum price is Rp20.000")
     .required("Price is required"),
-  desc: Yup.string(),
+  desc: Yup.string().optional(),
 });
 
+// Validasi untuk seluruh array tiket
 const ticketEventSchema = Yup.object().shape({
-  tickets: Yup.array().of(ticketSchema),
+  tickets: Yup.array()
+    .of(ticketSchema)
+    .min(1, "At least one ticket is required")
+    .required(),
 });
 
 export default function CreateTicket({ eventId }: { eventId: string }) {
@@ -27,26 +34,46 @@ export default function CreateTicket({ eventId }: { eventId: string }) {
     tickets: [
       {
         category: "",
-        seats: "",
-        price: "",
-        description: "",
+        seats: 0,
+        price: 0,
+        desc: "",
       },
     ],
   };
 
+  const handleAddTickets = async (values: any, resetForm: () => void) => {
+    try {
+      setIsLoading(true);
+      const { data } = await axios.post(`/tickets/${eventId}`, {
+        tickets: values.tickets,
+      });
+      toast.success(data.message || "Tickets created successfully!");
+      resetForm();
+    } catch (err: any) {
+      console.error(err);
+      toast.error(
+        err.response?.data?.message ||
+          "An error occurred while creating tickets."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <>
-      <h1 className="text-4xl font-bold">CREATE YOUR EVENT TICKETS</h1>
+    <div>
+      <h1 className="text-4xl font-bold text-white">
+        CREATE YOUR EVENT TICKETS
+      </h1>
       <Formik
         initialValues={initialValues}
         validationSchema={ticketEventSchema}
-        onSubmit={(values, { resetForm }) => {
-          console.log(values);
-          resetForm();
-        }}
+        onSubmit={(values, { resetForm }) =>
+          handleAddTickets(values, resetForm)
+        }
       >
         {({ values, isSubmitting, setFieldValue }) => (
-          <Form className="flex flex-col gap-4 mt-4">
+          <Form className="flex flex-col gap-4 mt-4 text-white">
             <FieldArray
               name="tickets"
               render={(arrayHelpers) => (
@@ -57,7 +84,6 @@ export default function CreateTicket({ eventId }: { eventId: string }) {
                         Ticket {index + 1}
                       </h2>
 
-                      {/* Ticket Name */}
                       <div>
                         <label
                           htmlFor={`tickets.${index}.category`}
@@ -78,7 +104,6 @@ export default function CreateTicket({ eventId }: { eventId: string }) {
                         />
                       </div>
 
-                      {/* Ticket Seats */}
                       <div>
                         <label
                           htmlFor={`tickets.${index}.seats`}
@@ -99,7 +124,6 @@ export default function CreateTicket({ eventId }: { eventId: string }) {
                         />
                       </div>
 
-                      {/* Ticket Price */}
                       <div>
                         <label
                           htmlFor={`tickets.${index}.price`}
@@ -120,7 +144,6 @@ export default function CreateTicket({ eventId }: { eventId: string }) {
                         />
                       </div>
 
-                      {/* Ticket Desc */}
                       <div className="flex flex-col">
                         <label
                           htmlFor={`tickets.${index}.desc`}
@@ -129,22 +152,13 @@ export default function CreateTicket({ eventId }: { eventId: string }) {
                           Ticket Description:
                         </label>
                         <TicketDescription
+                          value={ticket.desc} // Pastikan ini adalah string
                           setFieldValue={(field, value) =>
                             setFieldValue(`tickets.${index}.${field}`, value)
                           }
-                          values={ticket}
                         />
-                        <ErrorMessage name={`tickets.${index}.desc`}>
-                          {(msg) => (
-                            <div className="text-red-500 text-xs mt-1 ml-1">
-                              <sup>*</sup>
-                              {msg}
-                            </div>
-                          )}
-                        </ErrorMessage>
                       </div>
 
-                      {/* Remove Ticket Button */}
                       <button
                         type="button"
                         onClick={() => arrayHelpers.remove(index)}
@@ -160,8 +174,8 @@ export default function CreateTicket({ eventId }: { eventId: string }) {
                     onClick={() =>
                       arrayHelpers.push({
                         category: "",
-                        seats: "",
-                        price: "",
+                        seats: 0,
+                        price: 0,
                         desc: "",
                       })
                     }
@@ -172,7 +186,19 @@ export default function CreateTicket({ eventId }: { eventId: string }) {
                     }`}
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Creating Ticket..." : "Add Tickets"}
+                    Add Ticket
+                  </button>
+
+                  <button
+                    type="submit"
+                    className={`mt-4 py-2 rounded-lg transition ease-linear font-semibold border-2 ${
+                      isLoading
+                        ? "opacity-50 cursor-not-allowed"
+                        : "border-lightBlue text-lightBlue hover:bg-lightBlue hover:text-white"
+                    }`}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Loading ..." : "Create Tickets"}
                   </button>
                 </>
               )}
@@ -180,6 +206,6 @@ export default function CreateTicket({ eventId }: { eventId: string }) {
           </Form>
         )}
       </Formik>
-    </>
+    </div>
   );
 }

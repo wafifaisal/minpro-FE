@@ -20,7 +20,7 @@ export interface IEvent {
 }
 
 export interface ITicket {
-  ticket_id: string;
+  eventId: string;
   category: string;
   desc?: string;
   seats?: string;
