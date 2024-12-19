@@ -21,6 +21,7 @@ export default function SelectDate(Props: FormikProps<FormValueEvent>) {
       document.body.classList.remove("overflow-hidden");
     }
   }, [open]);
+
   return (
     <>
       <button
@@ -32,7 +33,7 @@ export default function SelectDate(Props: FormikProps<FormValueEvent>) {
       </button>
       <div
         className={`fixed ${
-          hidden ? "" : "hidden"
+          open ? "" : "hidden"
         } z-10 inset-0 bg-[rgba(0,0,0,0.5)]`}
       ></div>
       <div
@@ -50,19 +51,19 @@ export default function SelectDate(Props: FormikProps<FormValueEvent>) {
           <IoMdClose />
         </button>
         <div className="flex flex-col">
-          <label htmlFor="start_date" className="pb-2 font-semibold">
-            Start Date :
+          <label htmlFor="event_date" className="pb-2 font-semibold">
+            Event Date :
           </label>
           <Field
             type="date"
-            name="start_date"
-            id="start_date"
+            name="event_date"
+            id="event_date"
             min={minDate}
             onChange={handleChange}
-            value={values.start_time}
+            value={values.event_date}
             className="border-2 rounded-md px-2 py-1 bg-slate-500"
           />
-          <ErrorMessage name="start_date">
+          <ErrorMessage name="event_date">
             {(msg) => (
               <div className="text-red-500 text-xs mt-1 ml-1">
                 <sup>*</sup>
@@ -71,39 +72,18 @@ export default function SelectDate(Props: FormikProps<FormValueEvent>) {
             )}
           </ErrorMessage>
         </div>
-        <div className="flex flex-col">
-          <label htmlFor="end_date" className="pb-2 font-semibold">
-            End Date :
-          </label>
-          <Field
-            type="date"
-            name="end_date"
-            id="end_date"
-            min={values.start_time || minDate}
-            onChange={handleChange}
-            value={values.end_time}
-            className="border-2 rounded-md px-2 py-1 bg-slate-500"
-          />
-          <ErrorMessage name="end_date">
-            {(msg) => (
-              <div className="text-red-500 text-xs mt-1 ml-1">
-                <sup>*</sup>
-                {msg}
-              </div>
-            )}
-          </ErrorMessage>
-        </div>
+
         <button
           type="button"
-          disabled={values.start_time == "" || values.end_time == ""}
+          disabled={values.event_date == ""}
           onClick={menuHandler}
           className={`${
-            values.start_time == "" || values.end_time == ""
+            values.event_date == ""
               ? "disabled:cursor-not-allowed"
               : "hover:bg-slate-600 hover:text-gray-800"
           } rounded-md font-[550] mt-4 py-2 bg-gray-800 transition duration-300 w-full`}
         >
-          SIMPAN
+          Save
         </button>
       </div>
     </>

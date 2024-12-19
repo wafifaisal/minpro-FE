@@ -28,7 +28,7 @@ const TicketDescription: React.FC<FieldRichTextProps> = ({
 
   return (
     <ReactQuill
-      value={values.desc}
+      value={values.description}
       onChange={handleChange}
       modules={modules}
       formats={formats}

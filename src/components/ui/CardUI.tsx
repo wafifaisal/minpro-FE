@@ -9,7 +9,7 @@ interface CardUIProps {
   title: string;
   imageUrl: string;
   hoverImageUrl: string;
-  slug: string;
+  id: string;
   lokasi: string;
   price: number;
   tempat: string;
@@ -20,7 +20,7 @@ interface CardUIProps {
 export function CardUI({
   title,
   imageUrl,
-  slug,
+  id,
   hoverImageUrl,
   lokasi,
   price,
@@ -51,7 +51,7 @@ export function CardUI({
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Image Link */}
-      <Link href={`/events/${slug}`}>
+      <Link href={`/events/${id}`}>
         <div
           className={cn(
             "relative h-64 w-full rounded-xl shadow-lg overflow-hidden",
@@ -60,10 +60,9 @@ export function CardUI({
             "transition-transform duration-500 ease-in-out transform group-hover:scale-105 rounded-lg"
           )}
           style={{
-            backgroundImage: `url(${imageUrl})`, // Set the background to the image
+            backgroundImage: `url(${imageUrl})`,
           }}
         >
-          {/* Background Change on Hover */}
           <div
             className={cn(
               "absolute inset-0 transition-all duration-500 opacity-0 ",
@@ -72,22 +71,21 @@ export function CardUI({
           >
             {isYouTube && videoId && isHovered ? (
               <iframe
-                width="100%" // Ensure iframe is responsive
-                height="100%" // Ensure iframe is responsive
+                width="100%"
+                height="100%"
                 src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&modestbranding=1&showinfo=0&rel=0&fs=0&autohide=1&iv_load_policy=3`}
                 allow="autoplay; encrypted-media"
                 allowFullScreen
                 className="w-full h-full "
               ></iframe>
             ) : (
-              // Otherwise, render an image or default hover content
               <div
                 className={cn(
                   "absolute inset-0 transition-all duration-500 opacity-0",
                   "group-hover:opacity-100 group-hover:bg-cover group-hover:bg-center"
                 )}
                 style={{
-                  backgroundImage: `url(${hoverImageUrl})`, // Set the background to the hover image
+                  backgroundImage: `url(${hoverImageUrl})`,
                 }}
               />
             )}

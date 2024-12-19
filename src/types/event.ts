@@ -9,9 +9,9 @@ export interface IEvent {
   event_name: string;
   event_thumbnail: string;
   event_preview: string;
-  slug: string;
   start_time: string;
   end_time: string;
+  event_date: string;
   location: string;
   description: string;
   Organizer: IOrganizer;
@@ -20,7 +20,7 @@ export interface IEvent {
 }
 
 export interface ITicket {
-  id: string;
+  ticket_id: string;
   category: string;
   desc?: string;
   seats?: string;
@@ -29,6 +29,6 @@ export interface ITicket {
 }
 
 export interface IOrderDetails {
-  id: string;
+  order_id: string;
   quantity?: string;
 }

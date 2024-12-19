@@ -1,15 +1,19 @@
-export const getEvents = async () => {
-  const res = await fetch(`http://localhost:8000/api/events`, {
-    next: { revalidate: 60 },
-  });
-  const data = await res.json();
-  return data.events;
+import axios from "@/helpers/axios";
+
+export const getEvent = async (sorts: string = "asc") => {
+  try {
+    const { data } = await axios.get(`/events/?sorts=${sorts}`);
+    return data.events;
+  } catch (err) {
+    console.log(err);
+  }
 };
 
-export const getEventSlug = async (slug: string) => {
-  const res = await fetch(`http://localhost:8000/api/events/${slug}`, {
-    next: { revalidate: 60 },
-  });
-  const data = await res.json();
-  return data.event;
+export const getEventbyID = async (id: string) => {
+  try {
+    const { data } = await axios.get(`/events/${id}`);
+    return data.result;
+  } catch (err) {
+    console.log(err);
+  }
 };

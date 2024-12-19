@@ -8,19 +8,25 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
+import axios from "@/helpers/axios";
+
 // Mengambil data event dari API
-async function getEvents(): Promise<IEvent[]> {
-  const response = await fetch("http://localhost:8000/api/events"); // Pastikan ini sesuai dengan endpoint API Anda
-  const data = await response.json();
-  return data.events; //response JSON berisi objek dengan property 'events'
-}
+export const getEvent = async (sorts: string = "asc") => {
+  try {
+    const { data } = await axios.get(`/events/?sorts=${sorts}`);
+    return data.events;
+  } catch (err) {
+    console.error("Error fetching events:", err);
+    return null; // Kembalikan null jika terjadi error
+  }
+};
 
 export default function Home() {
   const [events, setEvents] = useState<IEvent[]>([]);
   console.log(events);
   useEffect(() => {
     // Ambil data event saat halaman dimuat
-    getEvents().then(setEvents);
+    getEvent().then(setEvents);
   }, []);
 
   // Filter event berdasarkan kategori
@@ -63,7 +69,7 @@ export default function Home() {
                 title={item.event_name}
                 imageUrl={item.event_thumbnail}
                 hoverImageUrl={item.event_preview}
-                slug={item.slug}
+                id={item.id}
                 lokasi={item.location}
                 tempat={item.venue}
                 price={Math.min(...item.Ticket.map((ticket) => ticket.price))}

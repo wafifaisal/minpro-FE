@@ -4,6 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import { useEffect } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { FormValueEvent } from "@/types/form";
+import { locations } from "./locations";
 
 export default function SetLocation(Props: FormikProps<FormValueEvent>) {
   const { handleChange, values } = Props;
@@ -49,13 +50,30 @@ export default function SetLocation(Props: FormikProps<FormValueEvent>) {
             City
           </label>
           <Field
-            type="text"
+            as="select"
             name="location"
             id="location"
             onChange={handleChange}
             value={values.location}
-            className="border-2 rounded-md px-2 py-1 bg-slate-500"
-          />
+            className="outline-none border-b pb-2 font-[500] bg-gray-800 text-white"
+          >
+            <option value={""} disabled className="text-gray-400 font-[500]">
+              Select Category
+            </option>
+            {locations.map((location) => (
+              <option
+                key={location}
+                value={location}
+                className={
+                  values.location === location
+                    ? "text-blue-500"
+                    : "text-gray-400"
+                }
+              >
+                {location}
+              </option>
+            ))}
+          </Field>
           <ErrorMessage name="location">
             {(msg) => (
               <div className="text-red-500 text-xs mt-1 ml-1">

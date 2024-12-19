@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import CreateTicket from "./createTicket";
 
 interface EventTypeProps {
   setFieldValue: (a: string, b: string) => void;
@@ -13,27 +12,27 @@ export default function EventType({ setFieldValue }: EventTypeProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSelectedType(value);
-    setFieldValue("type", value);
+    setFieldValue("event_type", value);
   };
 
   return (
     <>
       <h3 className="mb-5 ml-2 text-lg font-medium text-slate-400">
-        4. Choose your Event Type:
+        5. Choose your Event Type:
       </h3>
       <ul className="grid w-full gap-6 xl:grid-cols-2">
         <li>
           <input
             type="radio"
-            id="free"
+            id="Free"
             name="type"
-            value="free"
+            value="Free"
             className="hidden peer"
             onChange={handleChange}
-            checked={selectedType === "free"}
+            checked={selectedType === "Free"}
           />
           <label
-            htmlFor="free"
+            htmlFor="Free"
             className="inline-flex items-center justify-between w-full p-5 cursor-pointer border hover:border-blue-500 hover:text-blue-500 rounded-xl peer-checked:text-blue-500 peer-checked:border-blue-500"
           >
             <div className="block">
@@ -47,15 +46,15 @@ export default function EventType({ setFieldValue }: EventTypeProps) {
         <li>
           <input
             type="radio"
-            id="paid"
+            id="Paid"
             name="type"
-            value="paid"
+            value="Paid"
             className="hidden peer"
             onChange={handleChange}
-            checked={selectedType === "paid"}
+            checked={selectedType === "Paid"}
           />
           <label
-            htmlFor="paid"
+            htmlFor="Paid"
             className="inline-flex items-center justify-between w-full p-5 cursor-pointer border hover:border-blue-500 hover:text-blue-500 rounded-xl peer-checked:text-blue-500 peer-checked:border-blue-500"
           >
             <div className="block">
@@ -67,13 +66,6 @@ export default function EventType({ setFieldValue }: EventTypeProps) {
           </label>
         </li>
       </ul>
-
-      {/* Conditionally Render the Form */}
-      {selectedType === "paid" && (
-        <div className="mt-6">
-          <CreateTicket />
-        </div>
-      )}
     </>
   );
 }
