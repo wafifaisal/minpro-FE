@@ -26,6 +26,8 @@ export const FieldThumbnail: React.FC<FieldThumbnailProps> = ({
       formik.setFieldValue(name, file);
       const imageUrl = URL.createObjectURL(file);
       setPreviewUrl(imageUrl);
+    } else {
+      console.log("No file selected");
     }
   };
 
@@ -55,11 +57,9 @@ export const FieldThumbnail: React.FC<FieldThumbnailProps> = ({
           ></motion.p>
         </div>
       ) : (
-        <motion.div
+        <div
           onClick={() => imgRef.current?.click()}
           className="w-full max-w-4xl mx-auto min-h-96 border border-dashed rounded-lg cursor-pointer transition duration-200 hover:shadow-xl"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
         >
           <Image
             src={previewUrl}
@@ -70,15 +70,10 @@ export const FieldThumbnail: React.FC<FieldThumbnailProps> = ({
             objectFit="cover"
             className="rounded-lg"
           />
-          <motion.div
-            className="absolute top-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded-lg"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
+          <div className="relative  bg-black/50 text-white text-xs px-2 py-1 rounded-lg">
             Click to change
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
     </div>
   );

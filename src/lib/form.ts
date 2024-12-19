@@ -1,8 +1,8 @@
 import * as Yup from "yup";
 
 export const eventSchema = Yup.object().shape({
-  name: Yup.string().required("Event name is required"),
-  image: Yup.mixed()
+  event_name: Yup.string().required("Event name is required"),
+  event_thumbnail: Yup.mixed()
     .test(
       "filesize",
       "the image is too large",
@@ -20,20 +20,28 @@ export const eventSchema = Yup.object().shape({
           ))
     )
     .required("Image is required"),
-  start_date: Yup.date().required("Start Date is required"),
-  end_date: Yup.date().required("End date is required"),
+
+  event_date: Yup.date().required("Event Date is required"),
   start_time: Yup.string().required("Start Time is required"),
   end_time: Yup.string().required("End time is required"),
-  name_place: Yup.string().required("Name of place is required"),
-  address: Yup.string().required("Address is required"),
-  city: Yup.string().required("Name of city is required"),
+  venue: Yup.string().required("Venue is required"),
+  location: Yup.string().required("Name of city is required"),
   category: Yup.string()
     .oneOf(["Concert", "Sports", "Theater", "Socials", "Other"])
     .required("Category is required"),
-  type: Yup.string()
-    .oneOf(["paid", "free"])
+  event_type: Yup.string()
+    .oneOf(["Paid", "Free"])
     .required("Choose type of your event"),
   description: Yup.string(),
-  terms_condition: Yup.string(),
-  coupon_seat: Yup.number().nullable(),
+
+  event_preview: Yup.string()
+    .url("Event preview must be a valid URL")
+    .matches(
+      /^https:\/\/(www\.)?youtube\.com\/.+/,
+      "Event preview must be a valid YouTube URL"
+    )
+    .required("Event preview is required"),
+
+  // terms_condition: Yup.string(),
+  // coupon_seat: Yup.number().nullable(),
 });

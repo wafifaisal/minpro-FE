@@ -55,7 +55,7 @@ export default function SelectTime(Props: FormikProps<FormValueEvent>) {
             id="start_time"
             onChange={handleChange}
             value={values.start_time}
-            className="border-2 rounded-md px-2 py-1"
+            className="border-2 rounded-md px-2 py-1 bg-slate-500"
           />
           <ErrorMessage name="start_time">
             {(msg) => (
@@ -76,7 +76,7 @@ export default function SelectTime(Props: FormikProps<FormValueEvent>) {
             id="end_time"
             onChange={handleChange}
             value={values.end_time}
-            className="border-2 rounded-md px-2 py-1"
+            className="border-2 rounded-md px-2 py-1 bg-slate-500"
           />
           <ErrorMessage name="end_time">
             {(msg) => (
@@ -92,10 +92,10 @@ export default function SelectTime(Props: FormikProps<FormValueEvent>) {
           disabled={values.start_time === "" || values.end_time === ""}
           onClick={menuHandler}
           className={`${
-            values.start_time === "" || values.end_time === ""
+            values.event_date == ""
               ? "disabled:cursor-not-allowed"
-              : "hover:bg-slate-400"
-          } rounded-md font-[550] mt-4 py-2 bg-slate-200 transition duration-300 w-full`}
+              : "hover:bg-slate-600 hover:text-gray-800"
+          } rounded-md font-[550] mt-4 py-2 bg-gray-800 transition duration-300 w-full`}
         >
           SAVE
         </button>

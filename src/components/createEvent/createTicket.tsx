@@ -1,10 +1,11 @@
 "use client";
 
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Field, Form, ErrorMessage, FieldArray } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
+import TicketDescription from "./ticketTextEditor";
 
-const ticketEventSchema = Yup.object().shape({
+const ticketSchema = Yup.object().shape({
   category: Yup.string().required("Ticket name is required"),
   seats: Yup.number()
     .min(1, "At least 1 seat is required")
@@ -12,32 +13,30 @@ const ticketEventSchema = Yup.object().shape({
   price: Yup.number()
     .min(20000, "Minimum price is Rp20.000")
     .required("Price is required"),
-  description: Yup.string(),
-  start_date: Yup.date().required("Start date is required"),
-  end_date: Yup.date().required("End date is required"),
+  desc: Yup.string(),
 });
 
-export default function CreateTicket() {
+const ticketEventSchema = Yup.object().shape({
+  tickets: Yup.array().of(ticketSchema),
+});
+
+export default function CreateTicket({ eventId }: { eventId: string }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const initialValues = {
-    category: "",
-    seats: "",
-    price: "",
-    description: "",
-    start_date: "",
-    end_date: "",
+    tickets: [
+      {
+        category: "",
+        seats: "",
+        price: "",
+        description: "",
+      },
+    ],
   };
-
-  const date = new Date();
-  const minDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-    2,
-    "0"
-  )}-${String(date.getDate()).padStart(2, "0")}`;
 
   return (
     <>
-      <h1 className="text-4xl font-bold">CREATE YOUR EVENT TICKET</h1>
+      <h1 className="text-4xl font-bold">CREATE YOUR EVENT TICKETS</h1>
       <Formik
         initialValues={initialValues}
         validationSchema={ticketEventSchema}
@@ -46,110 +45,138 @@ export default function CreateTicket() {
           resetForm();
         }}
       >
-        {({ isSubmitting }) => (
+        {({ values, isSubmitting, setFieldValue }) => (
           <Form className="flex flex-col gap-4 mt-4">
-            {/* Ticket Name */}
-            <div>
-              <label htmlFor="category" className="font-semibold block mb-1">
-                Ticket Name:
-              </label>
-              <Field
-                type="text"
-                name="category"
-                placeholder="Enter ticket name"
-                className="w-full p-2 border rounded-md focus:ring focus:ring-blue-300 bg-slate-600"
-              />
-              <ErrorMessage
-                name="category"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
+            <FieldArray
+              name="tickets"
+              render={(arrayHelpers) => (
+                <>
+                  {values.tickets.map((ticket, index) => (
+                    <div key={index} className="border p-4 rounded-md">
+                      <h2 className="text-2xl font-semibold mb-4">
+                        Ticket {index + 1}
+                      </h2>
 
-            {/* Ticket Seats */}
-            <div>
-              <label htmlFor="seats" className="font-semibold block mb-1">
-                Ticket Seats:
-              </label>
-              <Field
-                type="number"
-                name="seats"
-                placeholder="Enter total seats"
-                className="w-full p-2 border rounded-md focus:ring focus:ring-blue-300 bg-slate-600"
-              />
-              <ErrorMessage
-                name="seats"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
+                      {/* Ticket Name */}
+                      <div>
+                        <label
+                          htmlFor={`tickets.${index}.category`}
+                          className="font-semibold block mb-1"
+                        >
+                          Ticket Name:
+                        </label>
+                        <Field
+                          type="text"
+                          name={`tickets.${index}.category`}
+                          placeholder="Enter ticket name"
+                          className="w-full p-2 border rounded-md focus:ring focus:ring-blue-300 bg-slate-600"
+                        />
+                        <ErrorMessage
+                          name={`tickets.${index}.category`}
+                          component="div"
+                          className="text-red-500 text-sm"
+                        />
+                      </div>
 
-            {/* Ticket Price */}
-            <div>
-              <label htmlFor="price" className="font-semibold block mb-1">
-                Ticket Price (Rp):
-              </label>
-              <Field
-                type="number"
-                name="price"
-                placeholder="Enter ticket price"
-                className="w-full p-2 border rounded-md focus:ring focus:ring-blue-300 bg-slate-600"
-              />
-              <ErrorMessage
-                name="price"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
+                      {/* Ticket Seats */}
+                      <div>
+                        <label
+                          htmlFor={`tickets.${index}.seats`}
+                          className="font-semibold block mb-1"
+                        >
+                          Ticket Seats:
+                        </label>
+                        <Field
+                          type="number"
+                          name={`tickets.${index}.seats`}
+                          placeholder="Enter total seats"
+                          className="w-full p-2 border rounded-md focus:ring focus:ring-blue-300 bg-slate-600"
+                        />
+                        <ErrorMessage
+                          name={`tickets.${index}.seats`}
+                          component="div"
+                          className="text-red-500 text-sm"
+                        />
+                      </div>
 
-            {/* Start Date */}
-            <div>
-              <label htmlFor="start_date" className="font-semibold block mb-1">
-                Start Date:
-              </label>
-              <Field
-                type="date"
-                name="start_date"
-                min={minDate}
-                className="w-full p-2 border rounded-md focus:ring focus:ring-blue-300 bg-slate-600"
-              />
-              <ErrorMessage
-                name="start_date"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
+                      {/* Ticket Price */}
+                      <div>
+                        <label
+                          htmlFor={`tickets.${index}.price`}
+                          className="font-semibold block mb-1"
+                        >
+                          Ticket Price (Rp):
+                        </label>
+                        <Field
+                          type="number"
+                          name={`tickets.${index}.price`}
+                          placeholder="Enter ticket price"
+                          className="w-full p-2 border rounded-md focus:ring focus:ring-blue-300 bg-slate-600"
+                        />
+                        <ErrorMessage
+                          name={`tickets.${index}.price`}
+                          component="div"
+                          className="text-red-500 text-sm"
+                        />
+                      </div>
 
-            {/* End Date */}
-            <div>
-              <label htmlFor="end_date" className="font-semibold block mb-1">
-                End Date:
-              </label>
-              <Field
-                type="date"
-                name="end_date"
-                min={minDate}
-                className="w-full p-2 border rounded-md focus:ring focus:ring-blue-300 bg-slate-600"
-              />
-              <ErrorMessage
-                name="end_date"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
+                      {/* Ticket Desc */}
+                      <div className="flex flex-col">
+                        <label
+                          htmlFor={`tickets.${index}.desc`}
+                          className="pb-2 font-semibold"
+                        >
+                          Ticket Description:
+                        </label>
+                        <TicketDescription
+                          setFieldValue={(field, value) =>
+                            setFieldValue(`tickets.${index}.${field}`, value)
+                          }
+                          values={ticket}
+                        />
+                        <ErrorMessage name={`tickets.${index}.desc`}>
+                          {(msg) => (
+                            <div className="text-red-500 text-xs mt-1 ml-1">
+                              <sup>*</sup>
+                              {msg}
+                            </div>
+                          )}
+                        </ErrorMessage>
+                      </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              className={`py-2 px-4 rounded-md font-semibold text-white ${
-                isSubmitting
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-green-500 hover:bg-green-600"
-              }`}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Submitting..." : "Create Ticket"}
-            </button>
+                      {/* Remove Ticket Button */}
+                      <button
+                        type="button"
+                        onClick={() => arrayHelpers.remove(index)}
+                        className="mt-4 py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600"
+                      >
+                        Remove Ticket
+                      </button>
+                    </div>
+                  ))}
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      arrayHelpers.push({
+                        category: "",
+                        seats: "",
+                        price: "",
+                        desc: "",
+                      })
+                    }
+                    className={`py-2 px-4 rounded-md font-semibold text-white ${
+                      isSubmitting
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-blue-500 hover:bg-blue-600"
+                    }`}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Creating Ticket..." : "Add Tickets"}
+                  </button>
+                </>
+              )}
+            />
           </Form>
         )}
       </Formik>

@@ -161,7 +161,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                   title={item.event_name}
                   imageUrl={item.event_thumbnail}
                   hoverImageUrl={item.event_preview}
-                  slug={item.slug}
+                  id={item.id}
                   lokasi={item.location}
                   tempat={item.venue}
                   price={Math.min(...item.Ticket.map((ticket) => ticket.price))} // Harga termurah
