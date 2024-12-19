@@ -1,6 +1,5 @@
 import CreateTicket from "@/components/createEvent/createTicket";
 import { formatCurrency } from "@/helpers/formatDate";
-import { formatDate } from "@/helpers/formatDate";
 import { getTickets } from "@/lib/tickets";
 import { ITicket } from "@/types/event";
 import Link from "next/link";
