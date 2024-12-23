@@ -4,8 +4,8 @@ import { IEvent } from "@/types/event";
 export default function LocationAndTime({ result }: { result: IEvent }) {
   return (
     <div>
-      <div className="my-2 relative group">
-        <p className="relative z-10 text-lg sm:text-md md:text-xl whitespace-nowrap bg-gray-400 text-white bg-opacity-40 py-1 rounded-full border-double group-hover:border-solid border-4 transform transition duration-300 group-hover:md:translate-y-[-25%] group-hover:md:bg-opacity-100  cursor-default md:cursor-pointer">
+      <div className="my-5 relative group">
+        <p className="relative z-10 text-lg sm:text-md md:text-xl whitespace-nowrap bg-gray-400 text-white bg-opacity-40 py-1 rounded-full border-double group-hover:border-solid border-4 transform transition duration-300 group-hover:md:translate-y-[-25%] group-hover:md:bg-opacity-100 cursor-default md:cursor-pointer">
           {result.location}
         </p>
 
