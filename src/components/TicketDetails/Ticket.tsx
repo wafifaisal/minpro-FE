@@ -1,29 +1,102 @@
 "use client";
-import { ITicket } from "@/types/event";
+
+import { ITicket, IEvent } from "@/types/event";
 import TicketCard from "./TicketCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { formatCurrency } from "@/helpers/formatDate";
+import axios from "@/helpers/axios";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
-export default function TicketSection({ tickets }: { tickets: ITicket[] }) {
-  const [totalTickets, setTotalTickets] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [isIncrementActive, setIsIncrementActive] = useState(false);
+export default function TicketSection({
+  tickets,
+  event,
+}: {
+  tickets: ITicket[];
+  event: IEvent;
+}) {
+  const router = useRouter();
 
-  const handleUpdateTotal = (delta: number, deltaPrice: number) => {
-    const newTotalTickets = totalTickets + delta;
+  // State Management
+  const [totalTickets, setTotalTickets] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [ticketCart, setTicketCart] = useState<
+    { Ticket: ITicket; quantity: number }[]
+  >([]);
+  const [isIncrementActive, setIsIncrementActive] = useState<boolean>(false);
 
-    // Batasi total tickets maksimal 5
-    if (newTotalTickets <= 5 && newTotalTickets >= 0) {
-      setTotalTickets(newTotalTickets);
-      setTotalPrice(totalPrice + deltaPrice);
+  const handleOrderTicket = async () => {
+    try {
+      setIsLoading(true);
 
-      // Aktifkan animasi saat increment
-      if (delta > 0) {
-        setIsIncrementActive(true);
-        setTimeout(() => setIsIncrementActive(false), 300);
-      }
+      // API call to place order
+      const { data } = await axios.post("/order", {
+        total_price: totalPrice,
+        final_price: totalPrice,
+        ticketCart,
+      });
+
+      toast.success(data.message);
+      router.push(`/order/${data.orderId}`);
+    } catch (err: any) {
+      toast.error(err.response?.data?.error || "An error occurred");
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  const handleUpdateTotal = (
+    delta: number,
+    deltaPrice: number,
+    ticket: ITicket
+  ) => {
+    const newTotalTickets = totalTickets + delta;
+
+    // Ensure the total number of tickets doesn't exceed 5
+    if (newTotalTickets < 0 || newTotalTickets > 5) {
+      toast.warn("You can select between 0 and 5 tickets in total.");
+      return;
+    }
+
+    // Update the total number of tickets and price
+    setTotalTickets(newTotalTickets);
+    setTotalPrice((prevPrice) => prevPrice + deltaPrice);
+
+    // Update ticket cart
+    setTicketCart((prevCart) => {
+      const existingTicket = prevCart.find(
+        (item) => item.Ticket.id === ticket.id
+      );
+
+      if (existingTicket) {
+        // If the quantity after delta goes to 0 or below, remove the ticket from cart
+        if (existingTicket.quantity + delta <= 0) {
+          return prevCart.filter((item) => item.Ticket.id !== ticket.id);
+        }
+
+        // Otherwise, update the quantity of the ticket in the cart
+        return prevCart.map((item) =>
+          item.Ticket.id === ticket.id
+            ? { ...item, quantity: item.quantity + delta }
+            : item
+        );
+      } else if (delta > 0) {
+        // If it's a new ticket being added to the cart
+        return [...prevCart, { Ticket: ticket, quantity: delta }];
+      }
+      return prevCart;
+    });
+
+    setIsIncrementActive(delta > 0);
+  };
+
+  useEffect(() => {
+    if (isIncrementActive) {
+      const timer = setTimeout(() => setIsIncrementActive(false), 300);
+      return () => clearTimeout(timer); // Cleanup
+    }
+  }, [isIncrementActive]);
 
   return (
     <div className="py-16">
@@ -31,29 +104,42 @@ export default function TicketSection({ tickets }: { tickets: ITicket[] }) {
         <h2 className="text-3xl md:text-4xl font-semibold text-white mb-8 mx-10">
           Ticket Categories
         </h2>
+
+        {/* Ticket Cards */}
         <div className="flex flex-wrap gap-4 justify-center mx-4 overflow-y-auto max-h-60 px-5 md:mx-6">
           {tickets.map((ticket) => (
             <TicketCard
-              key={ticket.eventId}
+              key={ticket.id}
               ticket={ticket}
+              event={event}
               totalTickets={totalTickets}
-              onUpdateTotal={handleUpdateTotal}
+              onUpdateTotal={(delta, deltaPrice) =>
+                handleUpdateTotal(delta, deltaPrice, ticket)
+              }
               isIncrementActive={isIncrementActive}
             />
           ))}
         </div>
-        <div
-          className={`transition-opacity duration-300 ${
-            totalTickets > 0 ? "opacity-100" : "opacity-0 pointer-events-none"
-          }`}
-        >
-          <div className="mt-8 p-4 bg-gradient-to-r mx-0 md:mx-60 from-green-500 to-purple-500 rounded-lg shadow-md text-center text-white text-xl font-bold transition-transform duration-300 hover:scale-105 cursor-pointer">
-            Total Price: {formatCurrency(totalPrice)}
+
+        {/* Order Button */}
+        {totalTickets > 0 && (
+          <div className="transition-opacity duration-300 opacity-100">
+            <button
+              disabled={isLoading}
+              onClick={handleOrderTicket}
+              className={`mt-8 p-4 bg-gradient-to-r mx-0 md:mx-60 from-green-500 to-purple-500 rounded-lg shadow-md text-center text-white text-xl font-bold transition-transform duration-300 ${
+                isLoading ? "cursor-not-allowed opacity-50" : "hover:scale-105"
+              }`}
+            >
+              {isLoading
+                ? "Processing..."
+                : `Buy with Total Price: ${formatCurrency(totalPrice)}`}
+            </button>
+            <p className="text-center mt-2 text-white text-lg">
+              {totalTickets}/5 Tickets Selected
+            </p>
           </div>
-          <p className="text-center mt-2 text-white text-lg">
-            {totalTickets}/5 Tickets Selected
-          </p>
-        </div>
+        )}
       </div>
     </div>
   );
