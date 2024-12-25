@@ -79,11 +79,11 @@ export default function TicketCard({
     <div className="relative mx-5 md:w-[calc(50%-1rem)] w-full">
       {/* Ticket Card */}
       <div
-        className="group bg-white shadow-lg rounded-lg rounded-r-none  transition-all flex flex-col justify-between cursor-pointer relative"
+        className="group bg-white shadow-lg rounded-lg rounded-r-none transition-all flex flex-col justify-between cursor-pointer relative"
         onClick={handleCardClick}
       >
         <div className="flex justify-center items-center flex-1"></div>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center ">
           <div>
             <h3 className="text-2xl font-semibold text-black px-4 ">
               {ticket.category}
@@ -98,7 +98,7 @@ export default function TicketCard({
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-center items-center">
           <button
             onClick={handleCardClick}
-            className="bg-sky-500 text-white w-full h-full rounded-lg text-xl font-semibold bg-opacity-45"
+            className="bg-blue-800 text-white w-full h-full rounded-lg text-xl font-semibold bg-opacity-45"
           >
             More Info
           </button>
@@ -129,7 +129,7 @@ export default function TicketCard({
         <button
           onClick={handleIncrement}
           disabled={count >= 5}
-          className="text-sm sm:text-base md:text-xl my-1 text-white font-bold h-full bg-green-700 hover:bg-green-500 px-3 shadow-md transition-transform duration-300 transform rounded-lg rounded-l-none "
+          className="text-sm sm:text-base md:text-xl my-1 text-white font-bold h-full bg-blue-700 hover:bg-blue-500 px-3 shadow-md transition-transform duration-300 transform rounded-lg rounded-l-none "
         >
           +
         </button>
