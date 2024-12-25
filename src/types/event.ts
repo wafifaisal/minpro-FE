@@ -20,7 +20,8 @@ export interface IEvent {
 }
 
 export interface ITicket {
-  ticket_id: string;
+  eventId: string;
+  id: number;
   category: string;
   desc?: string;
   seats?: string;
@@ -29,6 +30,6 @@ export interface ITicket {
 }
 
 export interface IOrderDetails {
-  order_id: string;
+  orderId: number;
   quantity?: string;
 }

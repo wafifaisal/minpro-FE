@@ -14,7 +14,7 @@ export interface FormValueEvent {
 
 export interface FormValueTicketEvent {
   category: string;
-  seats: string;
-  price: string;
-  description: string;
+  seats: number;
+  price: number;
+  desc: string;
 }

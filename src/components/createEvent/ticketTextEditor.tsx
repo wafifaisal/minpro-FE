@@ -3,7 +3,6 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
-import { FormValueTicketEvent } from "@/types/form";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -13,22 +12,22 @@ const modules = {
 
 const formats = ["list", "bullet"];
 
-interface FieldRichTextProps {
-  setFieldValue: (a: any, b: any) => void;
-  values: FormValueTicketEvent;
+interface TicketDescriptionProps {
+  setFieldValue: (field: string, value: string) => void;
+  value: string; // Menggunakan `value` untuk string langsung
 }
 
-const TicketDescription: React.FC<FieldRichTextProps> = ({
+const TicketDescription: React.FC<TicketDescriptionProps> = ({
   setFieldValue,
-  values,
+  value,
 }) => {
   const handleChange = (e: string) => {
-    setFieldValue("description", e);
+    setFieldValue("desc", e); // Mengupdate nilai desc
   };
 
   return (
     <ReactQuill
-      value={values.description}
+      value={value}
       onChange={handleChange}
       modules={modules}
       formats={formats}

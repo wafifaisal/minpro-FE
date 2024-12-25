@@ -5,5 +5,5 @@ export default function CreateEventLayout({
 }: {
   children: ReactNode;
 }) {
-  return <div>{children}</div>;
+  return <div >{children}</div>;
 }
