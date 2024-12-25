@@ -123,11 +123,11 @@ export default function TicketSection({
 
         {/* Order Button */}
         {totalTickets > 0 && (
-          <div className="transition-opacity duration-300 opacity-100">
+          <div className="transition-opacity duration-300 opacity-100 flex justify-center flex-col">
             <button
               disabled={isLoading}
               onClick={handleOrderTicket}
-              className={`mt-8 p-4 bg-gradient-to-r mx-0 md:mx-60 from-green-500 to-purple-500 rounded-lg shadow-md text-center text-white text-xl font-bold transition-transform duration-300 ${
+              className={`mt-8 p-4 bg-gradient-to-r mx-0 md:mx-60 from-blue-800 to-black rounded-lg shadow-md text-center text-white text-xl font-bold transition-transform duration-300 ${
                 isLoading ? "cursor-not-allowed opacity-50" : "hover:scale-105"
               }`}
             >

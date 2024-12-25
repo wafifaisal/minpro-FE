@@ -7,9 +7,9 @@ export default function PayButton({ token }: { token: string }) {
   return (
     <button
       onClick={handleClick}
-      className="py-2 bg-blue-400 text-white font-semibold rounded-md"
+      className="py-2 bg-gradient-to-l from-blue-500 to-black shadow-xl text-white font-semibold rounded-md"
     >
-      Bayar Tiket
+      Buy Ticket
     </button>
   );
 }
