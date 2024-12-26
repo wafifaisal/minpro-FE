@@ -9,14 +9,14 @@ export async function getOrderDetail(orderId: number) {
   }
 }
 
-export async function getSnapToken(orderId: number, final_price: number) {
+export async function getSnapToken(orderId: number, gross_amount: number) {
   try {
     const { data } = await axios.post("/order/payment", {
       orderId: orderId,
-      gross_amount: final_price,
+      gross_amount: gross_amount,
     });
-    return data.result;
+    return data.result; // Token is expected here
   } catch (err) {
-    console.log(err);
+    console.log("Error fetching snap token:", err);
   }
 }

@@ -19,15 +19,13 @@ export default function Description({ result }: { result: string }) {
   }, [result]);
 
   return (
-    <div className="py-16">
-      <div className="flex flex-col md:flex-row max-w-full mx-auto text-start">
-        <h2 className="text-3xl md:text-4xl font-semibold text-white mb-8 mx-10">
-          Description
-        </h2>
+    <div className="py-16 flex flex-wrap px-10">
+      <div className="max-w-full w-full text-start">
+        <h2 className=" text-4xl font-semibold text-white mb-6">Description</h2>
         <div
           ref={contentRef}
-          className={`relative px-0 lg:px-44 py-3 md:py-5 text-white text-2xl transition-all${
-            isExpanded ? "max-h-full" : "max-h-40 overflow-hidden"
+          className={`relative text-white text-base sm:text-lg md:text-xl lg:text-2xl transition-all${
+            isExpanded ? " max-h-full" : " max-h-[8rem] overflow-hidden"
           }`}
           style={{
             WebkitMaskImage: !isExpanded
@@ -39,15 +37,16 @@ export default function Description({ result }: { result: string }) {
           }}
           dangerouslySetInnerHTML={{ __html: result }}
         />
-        {isOverflowing && (
-          <button
-            onClick={toggleExpand}
-            className="mt-5 px-4 py-2 bg-white text-black rounded-lg font-semibold hover:bg-gray-300"
-          >
-            {isExpanded ? "See Less" : "See More"}
-          </button>
-        )}
       </div>
+
+      {isOverflowing && (
+        <button
+          onClick={toggleExpand}
+          className="mt-5 px-4 py-2 bg-white  text-black rounded-lg font-bold hover:bg-gray-300"
+        >
+          {isExpanded ? "- See Less" : "+ See More"}
+        </button>
+      )}
     </div>
   );
 }
