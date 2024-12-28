@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { type FC } from "react";
 
 interface Event {
@@ -57,12 +58,15 @@ export const EventList: FC = () => {
     <div className="space-y-4">
       <div className="flex justify-between">
         <h2 className="text-3xl font-bold tracking-tight">Events</h2>
+        <Link href="/createevent">
         <button
           type="button"
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
         >
+          
           Add New Event
         </button>
+          </Link>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left text-gray-500">

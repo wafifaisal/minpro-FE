@@ -27,8 +27,8 @@ const ticketEventSchema = Yup.object().shape({
     .required(),
 });
 
-export default function CreateTicket({ eventId }: { eventId: string }) {
-  const [isLoading, setIsLoading] = useState(false);
+export default function CreateTicket({ _eventId }: { _eventId: string }) {
+  const [_isLoading, _setIsLoading] = useState(false);
 
   const initialValues = {
     tickets: [
