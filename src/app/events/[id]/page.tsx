@@ -60,7 +60,6 @@ export default async function EventsDetail({
       <Navbar backgroundImage={result.Organizer.avatar} isEventPage />
       <HeroSection result={result} />
       <TicketSection tickets={result.Ticket} event={result} />{" "}
-      {/* Pass event as a prop */}
       <Description result={result.description} />
       <Preview result={result} />
     </div>
