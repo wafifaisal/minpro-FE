@@ -120,10 +120,8 @@ export function CardUI({
 
       {/* Text Section */}
       <div className="mt-4 text-start">
-        <h1 className="font-bold text-lg text-gray-800 dark:text-gray-200">
-          {title}
-        </h1>
-        <span className="ml-2 text-sm">{organizer.name}</span>
+        <h1 className="font-bold text-lg text-gray-200">{title}</h1>
+        <span className="ml-2 text-sm text-gray-200">{organizer.name}</span>
       </div>
     </div>
   );

@@ -55,8 +55,8 @@ export default function Home() {
             setIsBeginning(swiper.isBeginning);
             setIsEnd(swiper.isEnd);
           }}
-          slidesPerView={1}
-          spaceBetween={10}
+          slidesPerView={"auto"}
+          spaceBetween={30}
           breakpoints={{
             640: { slidesPerView: 1 },
             768: { slidesPerView: 2 },
@@ -128,9 +128,9 @@ export default function Home() {
   };
 
   return (
-    <div>
+    <div className="bg-black">
       <Navbar />
-      <HeroSlider />
+      <HeroSlider result={events} />
       <div className="px-20 py-40 bg-black text-white">
         {RenderCategorySlider("Concert", "Concert")}
         {RenderCategorySlider("Sports", "Sports")}
