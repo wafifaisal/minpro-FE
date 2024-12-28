@@ -19,6 +19,7 @@
   margin: 0 6px;
   display: inline-block;
   position: relative;
+  cursor: pointer;
   transition: all 0.3s ease; /* Menambahkan transisi */
 }
 

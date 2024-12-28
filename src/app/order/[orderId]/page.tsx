@@ -15,9 +15,10 @@ export default async function OrderPage({
 }) {
   const order: IOrder = await getOrderDetail(+params.orderId);
   const token: string = await getSnapToken(+params.orderId, +order.final_price);
+
   return (
     <main className="flex gap-16 h-min-screen tablet:flex-row flex-col sm:px-10 tablet:px-20 py-4 bg-gradient-to-tl  from-blue-500 via-black to-black text-white">
-      <CountDown date={order.expiredAt} />
+      <CountDown expiredAt={order.expiredAt} />
       <div className="tablet:w-[60%]">
         <h1 className="text-2xl font-semibold my-2">Order Details</h1>
         <div className="rounded-md border-white border p-3 tablet:mb-4">
