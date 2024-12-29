@@ -106,7 +106,7 @@ export default function TicketSection({
         </h2>
 
         {/* Ticket Cards */}
-        <div className="flex flex-wrap gap-4 justify-center mx-4 overflow-y-auto max-h-60 px-5 md:mx-6">
+        <div className="flex flex-wrap gap-4 justify-center mx-4 overflow-y-auto max-h-60 px-3">
           {tickets.map((ticket) => (
             <TicketCard
               key={ticket.id}

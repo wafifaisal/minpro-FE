@@ -59,13 +59,13 @@ const Navbar: React.FC<NavbarProps> = ({ backgroundImage, isEventPage }) => {
       <div
         className={`w-full fixed z-40 transition-all duration-300 ease-in-out ${
           isScrolled
-            ? "bg-black bg-opacity-70 backdrop-blur-sm"
+            ? "bg-black bg-opacity-70 backdrop-blur-sm "
             : isEventPage
-            ? "bg-transparent"
+            ? "bg-transparent py-2 md:py-5"
             : "bg-transparent backdrop-blur-none"
         }`}
       >
-        <div className={`mx-10 flex items-center`}>
+        <div className={`px-10 flex items-center justify-center py-2`}>
           {isEventPage && backgroundImage && isScrolled && (
             <div className="relative flex items-center">
               <Link href={"/events"}>
@@ -74,7 +74,7 @@ const Navbar: React.FC<NavbarProps> = ({ backgroundImage, isEventPage }) => {
                   alt="Navbar Background"
                   width={600}
                   height={600}
-                  className="w-[80px] h-[80px] object-cover"
+                  className="md:w-[80px] md:h-[80px] w-[50px] h-[50px] object-cover"
                 />
               </Link>
             </div>
@@ -90,12 +90,13 @@ const Navbar: React.FC<NavbarProps> = ({ backgroundImage, isEventPage }) => {
                     alt="Navbar Background"
                     width={600}
                     height={600}
-                    className="w-[80px] h-[80px] object-cover"
+                    className="md:w-[80px] md:h-[80px] w-[50px] h-[50px] object-cover"
                   />
                 </Link>
               </div>
             </Link>
           )}
+
           <div className="flex items-center ml-auto">
             <div className="md:flex mr-4">
               <button
@@ -129,7 +130,7 @@ const Navbar: React.FC<NavbarProps> = ({ backgroundImage, isEventPage }) => {
               </div>
             </Link>
             <div
-              className="w-10 h-10 flex justify-center items-center bg-transparent"
+              className="w-10 flex justify-center items-center h-full"
               onClick={toggleMenu}
               style={{
                 position: "relative",
@@ -142,7 +143,7 @@ const Navbar: React.FC<NavbarProps> = ({ backgroundImage, isEventPage }) => {
       </div>
       {isEventPage && backgroundImage && (
         <div
-          className="absolute top-0 left-0 right-0"
+          className="absolute top-0 left-0 right-0 w-36 h-36 md:w-52 md:h-52"
           style={{
             top: `${avatarPosition}px`,
             transition: "top 0.3s ease-in-out, opacity 0.3s ease-in-out",
@@ -155,7 +156,7 @@ const Navbar: React.FC<NavbarProps> = ({ backgroundImage, isEventPage }) => {
             alt="Organizer Avatar"
             width={avatarSize}
             height={avatarSize}
-            className="transition-all duration-300 opacity-0 md:opacity-100 object-cover transform"
+            className="transition-all duration-300 opacity-100 object-cover transform"
           />
         </div>
       )}

@@ -50,7 +50,6 @@ export function CardUI({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Image Link */}
       <Link href={`/events/${id}`}>
         <div
           className={cn(
