@@ -25,8 +25,6 @@ export default function HeroSlider({ result }: { result: IEvent[] }) {
 
   const blurAmount = Math.min(scrollY / 100, 2);
 
-  const isBlurred = blurAmount > 1;
-
   return (
     <div className="relative w-full overflow-hidden">
       <Swiper
@@ -58,13 +56,10 @@ export default function HeroSlider({ result }: { result: IEvent[] }) {
                   fill
                   priority
                   className="object-fill"
-                  quality={100}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black z-10 "></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-[rgba(0,0,0,0)] to-[rgba(0,0,0,0.2)] z-10"></div>
                 <div
-                  className={`relative z-10 translate-y-[200px] ${
-                    isBlurred ? "pointer-events-none" : ""
-                  }`} // Disable hover on LocationAndTime if blurred
+                  className={`relative z-10 translate-y-[200px]`} // Disable hover on LocationAndTime if blurred
                 >
                   <div>
                     <LocationAndTime result={item} />

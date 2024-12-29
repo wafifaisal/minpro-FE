@@ -59,9 +59,11 @@ export default async function EventsDetail({
     <div className="relative bg-black text-white">
       <Navbar backgroundImage={result.Organizer.avatar} isEventPage />
       <HeroSection result={result} />
-      <TicketSection tickets={result.Ticket} event={result} />{" "}
-      <Description result={result.description} />
-      <Preview result={result} />
+      <div className="pt-80 md:pt-0">
+        <TicketSection tickets={result.Ticket} event={result} />{" "}
+        <Description result={result.description} />
+        <Preview result={result} />
+      </div>
     </div>
   );
 }
