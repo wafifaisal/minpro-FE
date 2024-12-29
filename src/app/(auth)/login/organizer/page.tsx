@@ -4,7 +4,7 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { FormikHelpers } from "formik";
 
-const Login = () => {
+const orgLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loginMessage, setLoginMessage] = useState<string | null>(null);
 
@@ -22,7 +22,7 @@ const Login = () => {
 
   const handleSubmit = async (
     values: typeof initialValues,
-    { setSubmitting }: FormikHelpers<typeof initialValues>
+    { setSubmitting }: FormikHelpers<typeof initialValues>,
   ) => {
     try {
       const response = await fetch("http://localhost:8000/api/login", {
@@ -31,18 +31,23 @@ const Login = () => {
         body: JSON.stringify(values),
       });
 
-      console.log('Response status:', response.status);
-      console.log('Content-Type:', response.headers.get("content-type"));
+      console.log("Response status:", response.status);
+      console.log("Content-Type:", response.headers.get("content-type"));
       const responseText = await response.text();
-      console.log('Response body:', responseText);
+      console.log("Response body:", responseText);
 
       let data;
       try {
         data = JSON.parse(responseText);
       } catch {
-        throw new Error(`Server returned invalid response: ${responseText.substring(0, 100)}...`);
+        throw new Error(
+          `Server returned invalid response: ${responseText.substring(
+            0,
+            100,
+          )}...`,
+        );
       }
-      
+
       if (!response.ok) {
         throw new Error(data.message || "An error occurred during login");
       }
@@ -50,7 +55,8 @@ const Login = () => {
       setLoginMessage("Login successful!");
       console.log("Logged in user:", data);
     } catch (error: Error | unknown) {
-      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      const errorMessage =
+        error instanceof Error ? error.message : "An unexpected error occurred";
       setLoginMessage(null);
       alert(errorMessage);
     } finally {
@@ -125,4 +131,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default orgLogin;
