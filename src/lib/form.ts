@@ -33,15 +33,46 @@ export const eventSchema = Yup.object().shape({
     .oneOf(["Paid", "Free"])
     .required("Choose type of your event"),
   description: Yup.string(),
+  event_preview: Yup.string().matches(
+    /^https:\/\/(www\.)?youtube\.com\/.+/,
+    "Event preview must be a valid YouTube URL"
+  ),
 
-  event_preview: Yup.string()
-    .url("Event preview must be a valid URL")
-    .matches(
-      /^https:\/\/(www\.)?youtube\.com\/.+/,
-      "Event preview must be a valid YouTube URL"
-    )
-    .required("Event preview is required"),
+  coupon_seat: Yup.number().when("event_type", {
+    is: "Paid",
+    then: (schema) => schema.nullable(),
+    otherwise: (schema) =>
+      schema.test(
+        "no-value",
+        "There is no coupon promo for free event",
+        (value) => value === 0
+      ),
+  }),
+});
 
-  // terms_condition: Yup.string(),
-  // coupon_seat: Yup.number().nullable(),
+export const reviewSchema = Yup.object().shape({
+  rating: Yup.number()
+    .oneOf([1, 2, 3, 4, 5], "You have to set rating for this event")
+    .required("You have to set the rate first"),
+  comment: Yup.string().required("Give your honest review about this event"),
+});
+
+// Validation for each ticket
+export const ticketSchema = Yup.object().shape({
+  category: Yup.string().required("Ticket name is required"),
+  seats: Yup.number()
+    .min(1, "At least 1 seat is required")
+    .required("Seats are required"),
+  price: Yup.number()
+    .min(20000, "Minimum price is Rp20.000")
+    .required("Price is required"),
+  desc: Yup.string().optional(),
+});
+
+// Validation for the whole ticket array
+export const ticketEventSchema = Yup.object().shape({
+  tickets: Yup.array()
+    .of(ticketSchema)
+    .min(1, "At least one ticket is required")
+    .required(),
 });

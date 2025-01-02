@@ -1,7 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatCurrency } from "@/helpers/formatDate";
 import { IEvent, ITicket } from "@/types/event";
+import useRemainingTime from "./useRemainingTime";
+import { FaClock } from "react-icons/fa";
 
 export default function TicketCard({
   ticket,
@@ -18,6 +20,23 @@ export default function TicketCard({
 }) {
   const [count, setCount] = useState(0); // Start count at 0 for each ticket
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const remainingTime = useRemainingTime(event);
+
+  useEffect(() => {
+    if (isModalOpen) {
+      // Disable scroll when modal is open
+      document.body.style.overflow = "hidden";
+    } else {
+      // Enable scroll when modal is closed
+      document.body.style.overflow = "auto";
+    }
+
+    // Cleanup: Restore scrolling on unmount or modal close
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isModalOpen]);
 
   const handleIncrement = () => {
     if (totalTickets < 5) {
@@ -46,35 +65,6 @@ export default function TicketCard({
     setIsModalOpen(false);
   };
 
-  // Calculate remaining time for ticket sales
-  const getRemainingTime = () => {
-    const currentDate = new Date();
-    const startDate = new Date(event.start_time); // Start time of the event
-    const endDate = new Date(event.end_time); // End time of the event
-
-    const timeDiff = endDate.getTime() - currentDate.getTime(); // Time difference in milliseconds
-
-    // If the event is already over, return 'Event started'
-    if (timeDiff <= 0) return "Event started";
-
-    // Calculate days, hours, and minutes
-    const daysRemaining = Math.floor(timeDiff / (1000 * 3600 * 24)); // Days remaining
-    const hoursRemaining = Math.floor(
-      (timeDiff % (1000 * 3600 * 24)) / (1000 * 3600)
-    ); // Hours remaining
-    const minutesRemaining = Math.floor(
-      (timeDiff % (1000 * 3600)) / (1000 * 60)
-    ); // Minutes remaining
-
-    if (daysRemaining > 0) {
-      return `${daysRemaining} days`;
-    } else if (hoursRemaining > 0) {
-      return `${hoursRemaining} hours`;
-    } else {
-      return `${minutesRemaining} minutes`; // If less than an hour remaining
-    }
-  };
-
   return (
     <div className="relative mx-5 md:w-[calc(50%-1rem)] w-full">
       {/* Ticket Card */}
@@ -90,6 +80,11 @@ export default function TicketCard({
             </h3>
             <p className="text-lg text-black mt-1 px-4 ">
               {formatCurrency(ticket.price)}
+            </p>
+            <p className="text-sm text-gray-500 px-4 mt-1 pb-2">
+              <span className="font-bold text-black">{ticket.seats ?? 0}</span>{" "}
+              seats
+              <span className="font-semibold text-blue-600"> available</span>
             </p>
           </div>
         </div>
@@ -128,7 +123,7 @@ export default function TicketCard({
         )}
         <button
           onClick={handleIncrement}
-          disabled={count >= 5}
+          disabled={count >= (ticket.seats ?? 0)}
           className="text-sm sm:text-base md:text-xl my-1 text-white font-bold h-full bg-blue-700 hover:bg-blue-500 px-3 shadow-md transition-transform duration-300 transform rounded-lg rounded-l-none "
         >
           +
@@ -138,28 +133,29 @@ export default function TicketCard({
       {/* Modal for ticket details */}
       {isModalOpen && (
         <div
-          className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50"
+          className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50 overflow-hidden"
           onClick={handleCloseModal}
         >
           <div
-            className="flex backdrop-blur-xl p-6 rounded-lg w-full h-full items-center justify-center text-start"
+            className="flex backdrop-blur-xl w-full h-full items-center justify-center text-start"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex-col relative">
-              <h2 className="text-3xl font-semibold">{ticket.category}</h2>
-              <p className="mt-2">{formatCurrency(ticket.price)}</p>
-              <div className="py-5">
-                <p className="mt-4">
-                  <strong>Remaining Time:</strong> {getRemainingTime()}
+            <div className="flex-col relative w-full h-full p-8 overflow-auto py-28">
+              <h2 className="text-2xl font-semibold">{ticket.category}</h2>
+              <p className="mt-2 text-sm">{formatCurrency(ticket.price)}</p>
+              <div className="py-2 md:py-5">
+                <p className="mt-4 text-sm font-bold p-2 bg-white bg-opacity-20 backdrop-blur-xl rounded-lg inline-flex items-center">
+                  <FaClock className="mr-2 text-white" /> {/* Clock Icon */}
+                  <span className="text-white">{remainingTime}</span>{" "}
+                  {/* Remaining Time */}
                 </p>
               </div>
-              <div className="flex items-start">
-                <span className="py-5 text-xl font-bold -translate-x-80">
+              <div className="flex items-start flex-col md:flex-row">
+                <span className="py-2 md:py-5 text-lg font-bold">
                   Description
                 </span>
-
                 <p
-                  className="py-5 text-xl -translate-x-28"
+                  className="py-2 md:py-5 text-sm mx-2 md:mx-10"
                   dangerouslySetInnerHTML={{
                     __html: ticket.desc || "No description available",
                   }}
@@ -167,7 +163,7 @@ export default function TicketCard({
               </div>
               <button
                 onClick={handleCloseModal}
-                className="fixed top-28 right-56 text-2xl text-white font-bold"
+                className="absolute top-6 right-6 text-2xl text-white font-bold"
               >
                 X
               </button>

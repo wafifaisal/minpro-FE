@@ -1,5 +1,4 @@
 "use client";
-
 import { ErrorMessage, Field, Form, Formik, FormikProps } from "formik";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -31,10 +30,11 @@ export default function CreateEvent() {
     event_type: "",
     description: "",
     event_date: "",
+    coupon_seat: "",
   };
   const router = useRouter();
   const [isLoading, SetIsLoading] = useState<boolean>(false);
-  // const [checklistVisible, setChecklistVisible] = useState<boolean>(false); // State untuk checklist
+
 
   const handleAdd = async (event: FormValueEvent) => {
     try {
@@ -48,10 +48,11 @@ export default function CreateEvent() {
           formData.append(key, value);
         }
       }
-      const { data } = await axios.post("/events", formData);
-      console.log(data);
+      const { data } = await axios.post("/events", formData, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
 
-      router.push(`/dashboard/create-event/${data.event_id}`);
+      router.push(`/dashboard/create-event/${data.eventId}`);
       toast.success(data.message);
     } catch (err: any) {
       console.log(err);
@@ -62,7 +63,7 @@ export default function CreateEvent() {
   };
 
   return (
-    <div className="bg-gray-900 text-white rounded-2xl sm:mx-10 tablet:mx-52 shadow-2xl ">
+    <div className="bg-neutral-900 text-white rounded-2xl sm:mx-5 md:mx-10 lg:mx-20 xl:mx-40 shadow-2xl py-8">
       <Formik
         initialValues={initialValue}
         validationSchema={eventSchema}
@@ -73,18 +74,13 @@ export default function CreateEvent() {
         }}
       >
         {(props: FormikProps<FormValueEvent>) => {
-          console.log(props);
           const { handleChange, values, errors, touched } = props;
 
-          function setFieldValue(arg0: string, file: File) {
-            throw new Error("Function not implemented.");
-          }
-
           return (
-            <Form className="flex flex-col gap-4 ">
-              <div className="px-5 flex flex-col gap-6 py-4">
+            <Form className="flex flex-col gap-6 px-4 sm:px-6 md:px-8 lg:px-10">
+              <div className="flex flex-col gap-6">
                 <div className="flex flex-col">
-                  <h1 className="my-5 px-2 text-gray-400 font-[500]">
+                  <h1 className="my-4 text-gray-400 font-semibold text-lg">
                     1. Set Your Event Name :
                   </h1>
                   <Field
@@ -107,7 +103,7 @@ export default function CreateEvent() {
                 </div>
 
                 <div className="flex flex-col">
-                  <h1 className=" my-5 text-gray-400 font-[500]">
+                  <h1 className="text-gray-400 font-semibold text-lg">
                     2. Select your event category :
                   </h1>
                   <Field
@@ -116,12 +112,12 @@ export default function CreateEvent() {
                     id="category"
                     onChange={handleChange}
                     value={values.category}
-                    className="outline-none border-b pb-2 font-[500] bg-gray-800 text-white"
+                    className="outline-none border-b pb-2 font-semibold bg-gray-800 text-white"
                   >
                     <option
                       value={""}
                       disabled
-                      className="text-gray-400 font-[500]"
+                      className="text-gray-400 font-semibold"
                     >
                       Select Category
                     </option>
@@ -148,42 +144,33 @@ export default function CreateEvent() {
                     )}
                   </ErrorMessage>
                 </div>
-                <h1 className="my-5 px-2 text-gray-400 font-[500]">
+
+                <h1 className="text-gray-400 font-semibold text-lg">
                   3. Set Your Event Location :
                 </h1>
-                <div className="flex gap-2 px-2">
-                  <div className="flex-1">
-                    <SetLocation {...props} />
-                    {(errors.location || errors.venue) &&
-                    (touched.location || touched.venue) ? (
-                      <div className="text-red-500 text-xs mt-1 ml-1">
-                        <sup>*</sup>
-                        {errors.location || errors.venue}
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
+                <SetLocation {...props} />
+                {(errors.location || errors.venue) &&
+                  (touched.location || touched.venue) && (
+                    <div className="text-red-500 text-xs mt-1 ml-1">
+                      <sup>*</sup>
+                      {errors.location || errors.venue}
+                    </div>
+                  )}
 
-                <h1 className=" px-2 text-gray-400 font-[500]">
+                <h1 className="text-gray-400 font-semibold text-lg">
                   4. Set Your Event Time :
                 </h1>
-                <div className="flex-1 flex px-2 gap-10">
+                <div className="flex flex-col sm:flex-row gap-4">
                   <SelectDate {...props} />
-                  {errors.event_date && touched.event_date ? (
+                  <SelectTime {...props} />
+                  {errors.event_date && touched.event_date && (
                     <div className="text-red-500 text-xs mt-1 ml-1">
                       <sup>*</sup>
                       {errors.event_date}
                     </div>
-                  ) : null}
-                  <SelectTime {...props} />
-                  {(errors.start_time || errors.end_time) &&
-                  (touched.start_time || touched.end_time) ? (
-                    <div className="text-red-500 text-xs mt-1 ml-1">
-                      <sup>*</sup>
-                      {errors.start_time || errors.end_time}
-                    </div>
-                  ) : null}
+                  )}
                 </div>
+
                 <div className="flex flex-col">
                   <EventType setFieldValue={props.setFieldValue} />
                   <ErrorMessage name="event_type">
@@ -196,10 +183,9 @@ export default function CreateEvent() {
                   </ErrorMessage>
                 </div>
 
-                <div className="flex flex-col px-2"></div>
-                <div className="px-2">
-                  <h1 className="my-2 text-gray-400 font-[500]">
-                    6. Set Description :
+                <div className="flex flex-col">
+                  <h1 className="text-gray-400 font-semibold text-lg">
+                    5. Set Description (Optional) :
                   </h1>
                   <RichTextEditor
                     setFieldValue={props.setFieldValue}
@@ -209,8 +195,8 @@ export default function CreateEvent() {
                 </div>
 
                 <div className="flex flex-col">
-                  <h1 className="my-5 px-2 text-gray-400 font-[500]">
-                    7. Set Your Event Name :
+                  <h1 className="text-gray-400 font-semibold text-lg">
+                    6. Set Your Events Preview Using Youtube Link (Optional) :
                   </h1>
                   <Field
                     name="event_preview"
@@ -218,7 +204,7 @@ export default function CreateEvent() {
                     placeholder="Youtube Link"
                     className="outline-none text-2xl px-1 focus:placeholder:text-transparent bg-gray-800 text-white"
                   />
-                  <ErrorMessage name="event_name">
+                  <ErrorMessage name="event_preview">
                     {(msg) => (
                       <div className="text-red-500 text-xs mt-1 ml-1">
                         <sup>*</sup>
@@ -228,7 +214,7 @@ export default function CreateEvent() {
                   </ErrorMessage>
                 </div>
 
-                <div className="overflow-hidden ">
+                <div className="overflow-hidden">
                   <FieldThumbnail name="event_thumbnail" formik={props} />
                 </div>
                 <ErrorMessage name="event_thumbnail">
@@ -240,12 +226,48 @@ export default function CreateEvent() {
                   )}
                 </ErrorMessage>
 
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="coupon_seat"
+                    className="text-gray-400 font-semibold text-lg"
+                  >
+                    7. Set the number of promotions
+                  </label>
+                  <Field
+                    type="number"
+                    name="coupon_seat"
+                    id="coupon_seat"
+                    onChange={handleChange}
+                    value={values.coupon_seat}
+                    className="py-1 px-4 outline-none border rounded-md w-full sm:w-auto text-white bg-neutral-800"
+                    min={0}
+                  />
+                  {errors.coupon_seat ? (
+                    <ErrorMessage name="coupon_seat">
+                      {(msg) => (
+                        <div className="text-red-500 text-xs mt-1 ml-1">
+                          <sup>*</sup>
+                          {msg}
+                        </div>
+                      )}
+                    </ErrorMessage>
+                  ) : (
+                    <div className="text-xs ml-2 text-gray-400">
+                      * Determine how many people can get a discount using their
+                      coupons for{" "}
+                      <span className="font-semibold">paid events</span>. If not
+                      specified, everyone will be eligible to use their coupons
+                      to receive the promotion.
+                    </div>
+                  )}
+                </div>
+
                 <button
                   disabled={isLoading}
                   type="submit"
                   className={`${
                     isLoading
-                      ? "disabled:opacity-[0.5] disabled:bg-blue-500 text-white"
+                      ? "disabled:opacity-50 disabled:bg-blue-500"
                       : "hover:bg-blue-500 hover:text-white"
                   } py-2 mx-2 rounded-lg transition ease-linear font-semibold border-2 border-blue-500 bg-gray-800 text-white`}
                 >

@@ -5,13 +5,19 @@ import Link from "next/link";
 import BurgerMenu from "./BurgerMenu";
 import SearchModal from "./SearchModal";
 import Image from "next/image";
+import Share from "./share";
 
 interface NavbarProps {
   backgroundImage?: string;
   isEventPage?: boolean;
+  eventId?: string;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ backgroundImage, isEventPage }) => {
+const Navbar: React.FC<NavbarProps> = ({
+  backgroundImage,
+  isEventPage,
+  eventId,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -98,27 +104,35 @@ const Navbar: React.FC<NavbarProps> = ({ backgroundImage, isEventPage }) => {
           )}
 
           <div className="flex items-center ml-auto">
-            <div className="md:flex mr-4">
-              <button
-                className="w-10 h-10 bg-[#f1f1f1] bg-opacity-0 hover:bg-opacity-30 flex justify-center rounded-full items-center"
-                onClick={handleOpenModal}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  className="w-6 h-6 text-white"
+            {!isEventPage && (
+              <div className="md:flex md:mr-4">
+                <button
+                  className="w-10 h-10 bg-[#f1f1f1] bg-opacity-0 hover:bg-opacity-30 flex justify-center rounded-full items-center"
+                  onClick={handleOpenModal}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M11 18a7 7 0 100-14 7 7 0 000 14zM21 21l-4.35-4.35"
-                  />
-                </svg>
-              </button>
-            </div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    className="w-6 h-6 text-white"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M11 18a7 7 0 100-14 7 7 0 000 14zM21 21l-4.35-4.35"
+                    />
+                  </svg>
+                </button>
+              </div>
+            )}
+            {isEventPage && (
+              <div className="md:flex">
+                <Share slug={`${eventId}`} />
+              </div>
+            )}
+
             <Link href="/login/user">
               <div className="w-[80px] h-[40px] bg-[white] rounded-full hidden md:flex justify-center items-center text-black text-sm font-medium mr-4">
                 Login
@@ -166,6 +180,7 @@ const Navbar: React.FC<NavbarProps> = ({ backgroundImage, isEventPage }) => {
           onClick={handleCloseModal}
         ></div>
       )}
+
       {isModalOpen && (
         <SearchModal
           isModalOpen={isModalOpen}

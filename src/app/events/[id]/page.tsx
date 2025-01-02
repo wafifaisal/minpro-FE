@@ -1,4 +1,5 @@
 import Navbar from "@/components/shared/Navbar";
+import Share from "@/components/shared/share";
 import Description from "@/components/TicketDetails/Description";
 import HeroSection from "@/components/TicketDetails/HeroSection";
 import Preview from "@/components/TicketDetails/Preview";
@@ -27,7 +28,7 @@ export async function generateMetadata({
   name: string;
   location: string;
   thumbnail: string;
-  preview: string;
+  preview?: string;
   avatar: string | undefined;
   ticket: ITicket[];
 }> {
@@ -36,7 +37,7 @@ export async function generateMetadata({
   return {
     title: result.event_name,
     description: result.description,
-    name: result.Organizer.name,
+    name: result.Organizer.organizer_name,
     location: result.location,
     thumbnail: result.event_thumbnail,
     preview: result.event_preview,
@@ -57,7 +58,11 @@ export default async function EventsDetail({
   // Pass the event data to the child components
   return (
     <div className="relative bg-black text-white">
-      <Navbar backgroundImage={result.Organizer.avatar} isEventPage />
+      <Navbar
+        eventId={result.id}
+        backgroundImage={result.Organizer.avatar}
+        isEventPage
+      />
       <HeroSection result={result} />
       <div className="pt-80 md:pt-0">
         <TicketSection tickets={result.Ticket} event={result} />{" "}

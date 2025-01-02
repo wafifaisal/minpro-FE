@@ -1,6 +1,6 @@
 import { IEvent } from "@/types/event";
 
-export default function Preview({ result }: { result: IEvent }) {
+export default function Preview({ result }: { result?: IEvent }) {
   // Function to convert YouTube link to embed format
   const getEmbedUrl = (url: string): string => {
     const regex =
@@ -12,30 +12,31 @@ export default function Preview({ result }: { result: IEvent }) {
       : "";
   };
 
-  const embedUrl = getEmbedUrl(result.event_preview);
+  const embedUrl = result?.event_preview
+    ? getEmbedUrl(result.event_preview)
+    : "";
+
+  // If there's no embed URL, return null to hide the preview section
+  if (!embedUrl) return null;
 
   return (
     <div className="py-20 md:py-40">
       <div className="max-w-full mx-auto px-5 ">
         <div className="grid grid-cols-1 items-center">
           {/* "Preview" text aligned to the left */}
-          <h2 className="text-3xl md:text-4xl font-semibold text-white  py-5 ">
+          <h2 className="text-3xl md:text-4xl font-semibold text-white py-5 ">
             Preview
           </h2>
 
           {/* Video centered in its column */}
           <div className="flex justify-center items-center ">
-            {embedUrl ? (
-              <iframe
-                className="w-full max-w-[900px] aspect-video rounded-lg shadow-lg"
-                src={embedUrl}
-                title="Event Preview"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            ) : (
-              <p className="text-white text-lg">No preview available.</p>
-            )}
+            <iframe
+              className="w-full max-w-[900px] aspect-video rounded-lg shadow-lg"
+              src={embedUrl}
+              title="Event Preview"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
           </div>
         </div>
       </div>

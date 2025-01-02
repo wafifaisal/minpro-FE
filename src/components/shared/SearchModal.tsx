@@ -137,7 +137,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
               className="py-2 cursor-pointer hover:bg-gray-700 flex"
               onClick={() => handleSuggestionClick(suggestion)}
             >
-              <FaMagnifyingGlass className="mx-6" />
+              <FaMagnifyingGlass className="mx-2" />
               {highlightMatch(suggestion, text)}
             </li>
           ))}
@@ -166,6 +166,10 @@ const SearchModal: React.FC<SearchModalProps> = ({
                   tempat={item.venue}
                   price={Math.min(...item.Ticket.map((ticket) => ticket.price))} // Harga termurah
                   organizer={item.Organizer}
+                  start_time={item.start_time}
+                  end_time={item.end_time}
+                  event_date={item.event_date}
+                  isLoading={false}
                 />
               </div>
             ))}
