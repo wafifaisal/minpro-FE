@@ -133,6 +133,7 @@ export default function TicketSection({
             >
               {isLoading
                 ? "Processing..."
+
                 : `Buy with Total Price: ${
                     totalPrice === 0 ? "Free" : formatCurrency(totalPrice)
                   }`}

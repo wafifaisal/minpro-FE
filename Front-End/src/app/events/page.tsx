@@ -76,6 +76,7 @@ export default function Home() {
             />
           </div>
         ) : (
+
           <Swiper
             modules={[Navigation]}
             navigation={{
