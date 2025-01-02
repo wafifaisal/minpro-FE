@@ -1,11 +1,11 @@
-export function formatDate(dateString: string) {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("id-ID", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-}
+// export function formatDate(dateString: string) {
+//   const date = new Date(dateString);
+//   return date.toLocaleDateString("id-ID", {
+//     day: "2-digit",
+//     month: "short",
+//     year: "numeric",
+//   });
+// }
 
 export function formatTime(dateTime: string) {
   const time = new Date(dateTime);

@@ -8,6 +8,7 @@ import { formatCurrency } from "@/helpers/formatDate";
 import { ITicket } from "@/types/event";
 import { ticketEventSchema } from "@/lib/form";
 
+
 export default function CreateTicket({
   eventId,
   event_type,
@@ -18,6 +19,7 @@ export default function CreateTicket({
   onTicketUpdated?: (updatedTicket: ITicket) => void;
 }) {
   const [isLoading, setIsLoading] = useState(false);
+
 
   const initialValues = {
     tickets: [
