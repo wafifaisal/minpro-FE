@@ -1,7 +1,7 @@
 export interface FormValueEvent {
   event_name: string;
   event_thumbnail: File | null;
-  event_preview: string;
+  event_preview?: string;
   start_time: string;
   end_time: string;
   event_date: string;
@@ -10,6 +10,7 @@ export interface FormValueEvent {
   category: string;
   event_type: string;
   description: string;
+  coupon_seat: string;
 }
 
 export interface FormValueTicketEvent {

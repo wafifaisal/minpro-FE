@@ -1,6 +1,6 @@
 export interface IOrganizer {
-  name: string;
-  avatar?: string;
+  organizer_name: string;
+  avatar: string;
 }
 
 export interface IEvent {
@@ -8,7 +8,7 @@ export interface IEvent {
   category: string;
   event_name: string;
   event_thumbnail: string;
-  event_preview: string;
+  event_preview?: string;
   start_time: string;
   end_time: string;
   event_date: string;
@@ -16,6 +16,7 @@ export interface IEvent {
   description: string;
   Organizer: IOrganizer;
   venue: string;
+  event_type: string;
   Ticket: ITicket[];
 }
 
@@ -24,7 +25,7 @@ export interface ITicket {
   id: number;
   category: string;
   desc?: string;
-  seats?: string;
+  seats?: number;
   price: number;
   order_details?: IOrderDetails;
 }

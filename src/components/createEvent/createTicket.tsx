@@ -1,33 +1,22 @@
 "use client";
-
 import { Formik, Field, Form, ErrorMessage, FieldArray } from "formik";
-import * as Yup from "yup";
 import { useState } from "react";
 import TicketDescription from "./ticketTextEditor";
 import axios from "@/helpers/axios";
 import { toast } from "react-toastify";
+import { formatCurrency } from "@/helpers/formatDate";
+import { ITicket } from "@/types/event";
+import { ticketEventSchema } from "@/lib/form";
 
-// Validasi untuk setiap tiket
-const ticketSchema = Yup.object().shape({
-  category: Yup.string().required("Ticket name is required"),
-  seats: Yup.number()
-    .min(1, "At least 1 seat is required")
-    .required("Seats are required"),
-  price: Yup.number()
-    .min(20000, "Minimum price is Rp20.000")
-    .required("Price is required"),
-  desc: Yup.string().optional(),
-});
-
-// Validasi untuk seluruh array tiket
-const ticketEventSchema = Yup.object().shape({
-  tickets: Yup.array()
-    .of(ticketSchema)
-    .min(1, "At least one ticket is required")
-    .required(),
-});
-
-export default function CreateTicket({ eventId }: { eventId: string }) {
+export default function CreateTicket({
+  eventId,
+  event_type,
+}: {
+  eventId: string;
+  event_type: "Free" | "Paid";
+  initialTicket?: ITicket | null;
+  onTicketUpdated?: (updatedTicket: ITicket) => void;
+}) {
   const [isLoading, setIsLoading] = useState(false);
 
   const initialValues = {
@@ -42,6 +31,14 @@ export default function CreateTicket({ eventId }: { eventId: string }) {
   };
 
   const handleAddTickets = async (values: any, resetForm: () => void) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to create the tickets? (People can buy your tickets immediately)"
+    );
+
+    if (!isConfirmed) {
+      return;
+    }
+
     try {
       setIsLoading(true);
       const { data } = await axios.post(`/tickets/${eventId}`, {
@@ -60,9 +57,22 @@ export default function CreateTicket({ eventId }: { eventId: string }) {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const allowedKeys = [
+      "Backspace",
+      "ArrowLeft",
+      "ArrowRight",
+      "Tab",
+      "Delete",
+    ];
+    if (!/^[0-9]$/.test(e.key) && !allowedKeys.includes(e.key)) {
+      e.preventDefault();
+    }
+  };
+
   return (
-    <div>
-      <h1 className="text-4xl font-bold text-white">
+    <div className="p-4 sm:p-6 md:p-8 bg-neutral-900 rounded-lg shadow-lg">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-6">
         CREATE YOUR EVENT TICKETS
       </h1>
       <Formik
@@ -73,21 +83,24 @@ export default function CreateTicket({ eventId }: { eventId: string }) {
         }
       >
         {({ values, isSubmitting, setFieldValue }) => (
-          <Form className="flex flex-col gap-4 mt-4 text-white">
+          <Form className="flex flex-col gap-6 text-white">
             <FieldArray
               name="tickets"
               render={(arrayHelpers) => (
                 <>
                   {values.tickets.map((ticket, index) => (
-                    <div key={index} className="border p-4 rounded-md">
-                      <h2 className="text-2xl font-semibold mb-4">
+                    <div
+                      key={index}
+                      className="border p-4 sm:p-6 md:p-8 rounded-md bg-neutral-800 shadow-md"
+                    >
+                      <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-white">
                         Ticket {index + 1}
                       </h2>
 
-                      <div>
+                      <div className="mb-4">
                         <label
                           htmlFor={`tickets.${index}.category`}
-                          className="font-semibold block mb-1"
+                          className="font-semibold block mb-2 text-gray-300"
                         >
                           Ticket Name:
                         </label>
@@ -95,7 +108,7 @@ export default function CreateTicket({ eventId }: { eventId: string }) {
                           type="text"
                           name={`tickets.${index}.category`}
                           placeholder="Enter ticket name"
-                          className="w-full p-2 border rounded-md focus:ring focus:ring-blue-300 bg-slate-600"
+                          className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300 bg-slate-700 text-white"
                         />
                         <ErrorMessage
                           name={`tickets.${index}.category`}
@@ -104,10 +117,10 @@ export default function CreateTicket({ eventId }: { eventId: string }) {
                         />
                       </div>
 
-                      <div>
+                      <div className="mb-4">
                         <label
                           htmlFor={`tickets.${index}.seats`}
-                          className="font-semibold block mb-1"
+                          className="font-semibold block mb-2 text-gray-300"
                         >
                           Ticket Seats:
                         </label>
@@ -115,7 +128,7 @@ export default function CreateTicket({ eventId }: { eventId: string }) {
                           type="number"
                           name={`tickets.${index}.seats`}
                           placeholder="Enter total seats"
-                          className="w-full p-2 border rounded-md focus:ring focus:ring-blue-300 bg-slate-600"
+                          className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300 bg-slate-700 text-white"
                         />
                         <ErrorMessage
                           name={`tickets.${index}.seats`}
@@ -124,30 +137,46 @@ export default function CreateTicket({ eventId }: { eventId: string }) {
                         />
                       </div>
 
-                      <div>
-                        <label
-                          htmlFor={`tickets.${index}.price`}
-                          className="font-semibold block mb-1"
-                        >
-                          Ticket Price (Rp):
-                        </label>
-                        <Field
-                          type="number"
-                          name={`tickets.${index}.price`}
-                          placeholder="Enter ticket price"
-                          className="w-full p-2 border rounded-md focus:ring focus:ring-blue-300 bg-slate-600"
-                        />
-                        <ErrorMessage
-                          name={`tickets.${index}.price`}
-                          component="div"
-                          className="text-red-500 text-sm"
-                        />
-                      </div>
+                      {event_type === "Paid" && (
+                        <div className="mb-4">
+                          <label
+                            htmlFor={`tickets.${index}.price`}
+                            className="font-semibold block mb-2 text-gray-300"
+                          >
+                            Ticket Price:
+                          </label>
+                          <Field
+                            type="text"
+                            name={`tickets.${index}.price`}
+                            placeholder="Enter ticket price"
+                            value={formatCurrency(ticket.price)} // Menampilkan "Rp50.000"
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              const rawValue = e.target.value.replace(
+                                /[^\d]/g,
+                                ""
+                              );
+                              setFieldValue(
+                                `tickets.${index}.price`,
+                                parseInt(rawValue, 10) || 0
+                              );
+                            }}
+                            onKeyDown={handleKeyDown}
+                            className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300 bg-slate-700 text-white"
+                          />
+                          <ErrorMessage
+                            name={`tickets.${index}.price`}
+                            component="div"
+                            className="text-red-500 text-sm"
+                          />
+                        </div>
+                      )}
 
-                      <div className="flex flex-col">
+                      <div className="mb-4">
                         <label
                           htmlFor={`tickets.${index}.desc`}
-                          className="pb-2 font-semibold"
+                          className="pb-2 font-semibold text-gray-300"
                         >
                           Ticket Description:
                         </label>
@@ -159,39 +188,41 @@ export default function CreateTicket({ eventId }: { eventId: string }) {
                         />
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={() => arrayHelpers.remove(index)}
-                        className="mt-4 py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600"
-                      >
-                        Remove Ticket
-                      </button>
+                      <div className="flex gap-4">
+                        <button
+                          type="button"
+                          onClick={() => arrayHelpers.remove(index)}
+                          className="py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600"
+                        >
+                          Remove Ticket
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            arrayHelpers.push({
+                              category: "",
+                              seats: 0,
+                              price: 0,
+                              desc: "",
+                            })
+                          }
+                          className={`py-2 px-4 rounded-md font-semibold text-white ${
+                            isSubmitting
+                              ? "bg-gray-400 cursor-not-allowed"
+                              : "bg-blue-500 hover:bg-blue-600"
+                          }`}
+                          disabled={isSubmitting}
+                        >
+                          Add Ticket
+                        </button>
+                      </div>
                     </div>
                   ))}
 
                   <button
-                    type="button"
-                    onClick={() =>
-                      arrayHelpers.push({
-                        category: "",
-                        seats: 0,
-                        price: 0,
-                        desc: "",
-                      })
-                    }
-                    className={`py-2 px-4 rounded-md font-semibold text-white ${
-                      isSubmitting
-                        ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-blue-500 hover:bg-blue-600"
-                    }`}
-                    disabled={isSubmitting}
-                  >
-                    Add Ticket
-                  </button>
-
-                  <button
                     type="submit"
-                    className={`mt-4 py-2 rounded-lg transition ease-linear font-semibold border-2 ${
+                    className={`mt-6 py-3 px-6 rounded-lg transition-all duration-500 ease-in-out font-semibold border-2 bg-gradient-to-r from-blue-500 to-blue-950 transform hover:scale-105 hover:bg-gradient-to-l hover:from-blue-950 hover:to-blue-500 ${
                       isLoading
                         ? "opacity-50 cursor-not-allowed"
                         : "border-lightBlue text-lightBlue hover:bg-lightBlue hover:text-white"
