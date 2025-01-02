@@ -158,7 +158,9 @@ export function CardUI({
             </span>
             {/* Price */}
             <span className="text-white text-sm mt-2 font-medium px-4 py-1 rounded-md">
-              Price: {formatCurrency(price)}
+
+              Price: {price === 0 ? "Free" : formatCurrency(price)}
+
             </span>
           </div>
         </div>

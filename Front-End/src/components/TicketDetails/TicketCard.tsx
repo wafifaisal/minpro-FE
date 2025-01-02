@@ -79,7 +79,9 @@ export default function TicketCard({
               {ticket.category}
             </h3>
             <p className="text-lg text-black mt-1 px-4 ">
-              {formatCurrency(ticket.price)}
+
+              {ticket.price === 0 ? "Free" : formatCurrency(ticket.price)}
+
             </p>
             <p className="text-sm text-gray-500 px-4 mt-1 pb-2">
               <span className="font-bold text-black">{ticket.seats ?? 0}</span>{" "}
@@ -142,7 +144,11 @@ export default function TicketCard({
           >
             <div className="flex-col relative w-full h-full p-8 overflow-auto py-28">
               <h2 className="text-2xl font-semibold">{ticket.category}</h2>
-              <p className="mt-2 text-sm">{formatCurrency(ticket.price)}</p>
+
+              <p className="mt-2 text-sm">
+                {ticket.price === 0 ? "Free" : formatCurrency(ticket.price)}
+              </p>
+
               <div className="py-2 md:py-5">
                 <p className="mt-4 text-sm font-bold p-2 bg-white bg-opacity-20 backdrop-blur-xl rounded-lg inline-flex items-center">
                   <FaClock className="mr-2 text-white" /> {/* Clock Icon */}

@@ -57,22 +57,33 @@ export const reviewSchema = Yup.object().shape({
   comment: Yup.string().required("Give your honest review about this event"),
 });
 
-// Validation for each ticket
+// Schema untuk tiket
 export const ticketSchema = Yup.object().shape({
   category: Yup.string().required("Ticket name is required"),
   seats: Yup.number()
     .min(1, "At least 1 seat is required")
     .required("Seats are required"),
-  price: Yup.number()
-    .min(20000, "Minimum price is Rp20.000")
-    .required("Price is required"),
+  price: Yup.number().when("event_type", {
+    is: "Paid",
+    then: (schema) =>
+      schema
+        .required("Price is required")
+        .min(20000, "Minimum price is Rp20.000"),
+    otherwise: (schema) =>
+      schema.test(
+        "free-ticket-price",
+        "The ticket is free; the ticket price must be 0",
+        (value) => value === 0 || value === null
+      ),
+  }),
   desc: Yup.string().optional(),
+  event_type: Yup.string().required("Event type is required"), // Harus ada di data yang divalidasi
 });
 
-// Validation for the whole ticket array
+// Schema untuk array tiket
 export const ticketEventSchema = Yup.object().shape({
   tickets: Yup.array()
     .of(ticketSchema)
     .min(1, "At least one ticket is required")
-    .required(),
+    .required("Tickets are required"),
 });

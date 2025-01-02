@@ -133,7 +133,10 @@ export default function TicketSection({
             >
               {isLoading
                 ? "Processing..."
-                : `Buy with Total Price: ${formatCurrency(totalPrice)}`}
+
+                : `Buy with Total Price: ${
+                    totalPrice === 0 ? "Free" : formatCurrency(totalPrice)
+                  }`}
             </button>
             <p className="text-center mt-2 text-white text-lg">
               {totalTickets}/5 Tickets Selected

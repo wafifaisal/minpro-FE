@@ -5,7 +5,7 @@ import TicketDescription from "./ticketTextEditor";
 import axios from "@/helpers/axios";
 import { toast } from "react-toastify";
 import { formatCurrency } from "@/helpers/formatDate";
-import { ITicket } from "@/types/event";
+import { FormValueTicketEvent } from "@/types/form";
 import { ticketEventSchema } from "@/lib/form";
 
 
@@ -15,8 +15,6 @@ export default function CreateTicket({
 }: {
   eventId: string;
   event_type: "Free" | "Paid";
-  initialTicket?: ITicket | null;
-  onTicketUpdated?: (updatedTicket: ITicket) => void;
 }) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,11 +26,15 @@ export default function CreateTicket({
         seats: 0,
         price: 0,
         desc: "",
+        event_type,
       },
     ],
   };
 
-  const handleAddTickets = async (values: any, resetForm: () => void) => {
+  const handleAddTickets = async (
+    values: { tickets: FormValueTicketEvent[] },
+    resetForm: () => void
+  ) => {
     const isConfirmed = window.confirm(
       "Are you sure you want to create the tickets? (People can buy your tickets immediately)"
     );
@@ -44,7 +46,12 @@ export default function CreateTicket({
     try {
       setIsLoading(true);
       const { data } = await axios.post(`/tickets/${eventId}`, {
-        tickets: values.tickets,
+        tickets: values.tickets.map((ticket) => ({
+          category: ticket.category,
+          seats: ticket.seats,
+          desc: ticket.desc,
+          price: ticket.price, // Backend akan memutuskan harga berdasarkan event_type
+        })),
       });
       toast.success(data.message || "Tickets created successfully!");
       resetForm();
@@ -225,13 +232,13 @@ export default function CreateTicket({
                   <button
                     type="submit"
                     className={`mt-6 py-3 px-6 rounded-lg transition-all duration-500 ease-in-out font-semibold border-2 bg-gradient-to-r from-blue-500 to-blue-950 transform hover:scale-105 hover:bg-gradient-to-l hover:from-blue-950 hover:to-blue-500 ${
-                      isLoading
+                      isSubmitting
                         ? "opacity-50 cursor-not-allowed"
                         : "border-lightBlue text-lightBlue hover:bg-lightBlue hover:text-white"
                     }`}
-                    disabled={isLoading}
+                    disabled={isSubmitting}
                   >
-                    {isLoading ? "Loading ..." : "Create Tickets"}
+                    {isSubmitting ? "Loading ..." : "Create Tickets"}
                   </button>
                 </>
               )}

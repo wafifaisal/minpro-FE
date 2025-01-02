@@ -99,7 +99,6 @@
 .custom-next {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
   z-index: 10;
   background: rgba(0, 0, 0, 0.5);
   color: white;
@@ -221,6 +220,7 @@ body.modal-open {
   transform: translate(-50%, -50%); /* Koreksi agar benar-benar di tengah */
   z-index: 10; /* Letakkan teks di atas elemen lainnya */
 }
+
 
 @keyframes spin {
   from {

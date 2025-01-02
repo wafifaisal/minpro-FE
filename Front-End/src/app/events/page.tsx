@@ -76,7 +76,7 @@ export default function Home() {
             />
           </div>
         ) : (
-          // Jika lebih dari 1 event, tampilkan Swiper
+
           <Swiper
             modules={[Navigation]}
             navigation={{
