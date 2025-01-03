@@ -29,7 +29,7 @@ export function UserNav() {
               <p className="text-xs text-gray-500">john@example.com</p>
             </div>
             <div className="border-t border-gray-100"></div>
-            <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Profile</Link>
+            <Link href="/profile/organizer" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Profile</Link>
             <Link href="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Settings</Link>
             <div className="border-t border-gray-100"></div>
             <Link href="/logout" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Log out</Link>
