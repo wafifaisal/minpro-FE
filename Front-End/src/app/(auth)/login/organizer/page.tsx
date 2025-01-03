@@ -1,18 +1,22 @@
-"use client";
+"use client"; // Mark the component as a client component
+
 import { useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { FormikHelpers } from "formik";
 
-const orgLogin = () => {
+const OrgLogin = () => {
+  // State hooks for showing password and login messages
   const [showPassword, setShowPassword] = useState(false);
   const [loginMessage, setLoginMessage] = useState<string | null>(null);
 
+  // Initial values for the form
   const initialValues = {
     loginIdentifier: "",
     password: "",
   };
 
+  // Validation schema using Yup
   const validationSchema = Yup.object({
     loginIdentifier: Yup.string().required("Email or Username is required"),
     password: Yup.string()
@@ -20,6 +24,7 @@ const orgLogin = () => {
       .required("Password is required"),
   });
 
+  // Handle form submission
   const handleSubmit = async (
     values: typeof initialValues,
     { setSubmitting }: FormikHelpers<typeof initialValues>,
@@ -31,12 +36,9 @@ const orgLogin = () => {
         body: JSON.stringify(values),
       });
 
-      console.log("Response status:", response.status);
-      console.log("Content-Type:", response.headers.get("content-type"));
       const responseText = await response.text();
-      console.log("Response body:", responseText);
-
       let data;
+
       try {
         data = JSON.parse(responseText);
       } catch {
@@ -131,4 +133,4 @@ const orgLogin = () => {
   );
 };
 
-export default orgLogin;
+export default OrgLogin;

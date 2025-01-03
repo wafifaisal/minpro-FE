@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { ITicket, IEvent } from "@/types/event";
-import TicketCard from "./TicketCard";
-import { useState, useEffect } from "react";
-import { formatCurrency } from "@/helpers/formatDate";
-import axios from "@/helpers/axios";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { ITicket, IEvent } from '@/types/event';
+import TicketCard from './TicketCard';
+import { useState, useEffect } from 'react';
+import { formatCurrency } from '@/helpers/formatDate';
+import axios, { AxiosError } from 'axios'; // Import AxiosError from axios directly
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 export default function TicketSection({
   tickets,
@@ -31,7 +31,7 @@ export default function TicketSection({
       setIsLoading(true);
 
       // API call to place order
-      const { data } = await axios.post("/order", {
+      const { data } = await axios.post('/order', {
         total_price: totalPrice,
         final_price: totalPrice,
         ticketCart,
@@ -39,8 +39,13 @@ export default function TicketSection({
 
       toast.success(data.message);
       router.push(`/order/${data.orderId}`);
-    } catch (err: any) {
-      toast.error(err.response?.data?.error || "An error occurred");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        // Accessing response data safely when it's an AxiosError
+        toast.error(error.response?.data?.error || 'An error occurred');
+      } else {
+        toast.error('An unexpected error occurred');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -55,7 +60,7 @@ export default function TicketSection({
 
     // Ensure the total number of tickets doesn't exceed 5
     if (newTotalTickets < 0 || newTotalTickets > 5) {
-      toast.warn("You can select between 0 and 5 tickets in total.");
+      toast.warn('You can select between 0 and 5 tickets in total.');
       return;
     }
 
@@ -128,14 +133,13 @@ export default function TicketSection({
               disabled={isLoading}
               onClick={handleOrderTicket}
               className={`mt-8 p-4 bg-gradient-to-r mx-0 md:mx-60 from-blue-800 to-black rounded-lg shadow-md text-center text-white text-xl font-bold transition-transform duration-300 ${
-                isLoading ? "cursor-not-allowed opacity-50" : "hover:scale-105"
+                isLoading ? 'cursor-not-allowed opacity-50' : 'hover:scale-105'
               }`}
             >
               {isLoading
-                ? "Processing..."
-
+                ? 'Processing...'
                 : `Buy with Total Price: ${
-                    totalPrice === 0 ? "Free" : formatCurrency(totalPrice)
+                    totalPrice === 0 ? 'Free' : formatCurrency(totalPrice)
                   }`}
             </button>
             <p className="text-center mt-2 text-white text-lg">

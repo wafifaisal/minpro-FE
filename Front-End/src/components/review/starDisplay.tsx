@@ -9,6 +9,7 @@ export default function StarDisplay({ rate }: { rate: number }) {
         const pointRate = idx + 1;
         return (
           <FaStar
+            key={idx} // Add a unique 'key' prop
             className={`text-3xl ${
               pointRate <= rate ? "text-yellow-300" : "text-slate-400"
             }`}

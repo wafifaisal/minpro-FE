@@ -1,13 +1,14 @@
 "use client";
+
 import { Formik, Field, Form, ErrorMessage, FieldArray } from "formik";
 import { useState } from "react";
 import TicketDescription from "./ticketTextEditor";
-import axios from "@/helpers/axios";
+import axios from "@/helpers/axios"; // Import axios instance
+import { AxiosError } from "axios"; // Import AxiosError directly from 'axios'
 import { toast } from "react-toastify";
 import { formatCurrency } from "@/helpers/formatDate";
 import { FormValueTicketEvent } from "@/types/form";
 import { ticketEventSchema } from "@/lib/form";
-
 
 export default function CreateTicket({
   eventId,
@@ -17,7 +18,6 @@ export default function CreateTicket({
   event_type: "Free" | "Paid";
 }) {
   const [isLoading, setIsLoading] = useState(false);
-
 
   const initialValues = {
     tickets: [
@@ -33,10 +33,10 @@ export default function CreateTicket({
 
   const handleAddTickets = async (
     values: { tickets: FormValueTicketEvent[] },
-    resetForm: () => void
+    resetForm: () => void,
   ) => {
     const isConfirmed = window.confirm(
-      "Are you sure you want to create the tickets? (People can buy your tickets immediately)"
+      "Are you sure you want to create the tickets? (People can buy your tickets immediately)",
     );
 
     if (!isConfirmed) {
@@ -44,25 +44,31 @@ export default function CreateTicket({
     }
 
     try {
-      setIsLoading(true);
+      setIsLoading(true); // Set loading state to true while making the request
       const { data } = await axios.post(`/tickets/${eventId}`, {
         tickets: values.tickets.map((ticket) => ({
           category: ticket.category,
           seats: ticket.seats,
           desc: ticket.desc,
-          price: ticket.price, // Backend akan memutuskan harga berdasarkan event_type
+          price: ticket.price, // Backend will decide the price based on event_type
         })),
       });
       toast.success(data.message || "Tickets created successfully!");
       resetForm();
-    } catch (err: any) {
-      console.error(err);
-      toast.error(
-        err.response?.data?.message ||
-          "An error occurred while creating tickets."
-      );
+    } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+        // Handle AxiosError properly by accessing the response
+        toast.error(
+          err.response?.data?.message ||
+            "An error occurred while creating tickets.",
+        );
+      } else {
+        // Generic error handling if it's not an AxiosError
+        toast.error("An unexpected error occurred");
+      }
+      console.error(err); // Log error for debugging
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Set loading state to false after the request completes
     }
   };
 
@@ -158,17 +164,17 @@ export default function CreateTicket({
                             type="text"
                             name={`tickets.${index}.price`}
                             placeholder="Enter ticket price"
-                            value={formatCurrency(ticket.price)} // Menampilkan "Rp50.000"
+                            value={formatCurrency(ticket.price)} // Displaying formatted price
                             onChange={(
-                              e: React.ChangeEvent<HTMLInputElement>
+                              e: React.ChangeEvent<HTMLInputElement>,
                             ) => {
                               const rawValue = e.target.value.replace(
                                 /[^\d]/g,
-                                ""
+                                "",
                               );
                               setFieldValue(
                                 `tickets.${index}.price`,
-                                parseInt(rawValue, 10) || 0
+                                parseInt(rawValue, 10) || 0,
                               );
                             }}
                             onKeyDown={handleKeyDown}
@@ -190,7 +196,7 @@ export default function CreateTicket({
                           Ticket Description:
                         </label>
                         <TicketDescription
-                          value={ticket.desc} // Pastikan ini adalah string
+                          value={ticket.desc} // Ensure this is a string
                           setFieldValue={(field, value) =>
                             setFieldValue(`tickets.${index}.${field}`, value)
                           }
@@ -217,11 +223,11 @@ export default function CreateTicket({
                             })
                           }
                           className={`py-2 px-4 rounded-md font-semibold text-white ${
-                            isSubmitting
+                            isSubmitting || isLoading
                               ? "bg-gray-400 cursor-not-allowed"
                               : "bg-blue-500 hover:bg-blue-600"
                           }`}
-                          disabled={isSubmitting}
+                          disabled={isSubmitting || isLoading}
                         >
                           Add Ticket
                         </button>
@@ -232,13 +238,15 @@ export default function CreateTicket({
                   <button
                     type="submit"
                     className={`mt-6 py-3 px-6 rounded-lg transition-all duration-500 ease-in-out font-semibold border-2 bg-gradient-to-r from-blue-500 to-blue-950 transform hover:scale-105 hover:bg-gradient-to-l hover:from-blue-950 hover:to-blue-500 ${
-                      isSubmitting
+                      isSubmitting || isLoading
                         ? "opacity-50 cursor-not-allowed"
                         : "border-lightBlue text-lightBlue hover:bg-lightBlue hover:text-white"
                     }`}
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isLoading}
                   >
-                    {isSubmitting ? "Loading ..." : "Create Tickets"}
+                    {isSubmitting || isLoading
+                      ? "Loading ..."
+                      : "Create Tickets"}
                   </button>
                 </>
               )}
