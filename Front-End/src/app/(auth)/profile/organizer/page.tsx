@@ -8,6 +8,5 @@ export default async function OrganizerProfilePage() {
     return <div>Organizer not found</div>
   }
 
-  return <OrganizerProfile organizer={organizer} />
+  return <OrganizerProfile organizer={undefined} {...organizer} />
 }
-

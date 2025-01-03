@@ -1,6 +1,8 @@
+'use client';
+
 import { IEvent } from "@/types/event";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDebounce } from "use-debounce";
 import { CardUI } from "../ui/CardUI";
 import { FaRegWindowClose } from "react-icons/fa";
@@ -30,7 +32,8 @@ const SearchModal: React.FC<SearchModalProps> = ({
   const [text] = useDebounce(value, 500);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const getData = async () => {
+  // useCallback is used to ensure getData function doesn't get recreated on every render
+  const getData = useCallback(async () => {
     try {
       setIsLoading(true);
       const res = await fetch(
@@ -47,7 +50,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [text]); // Only recreate getData if text changes
 
   useEffect(() => {
     if (text) {
@@ -60,7 +63,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
       setEvents([]);
       router.push(`${pathname}`);
     }
-  }, [text, searchParams, pathname, router]);
+  }, [text, searchParams, pathname, router, getData]); // Added getData to the dependencies
 
   const handleSuggestionClick = (suggestion: string) => {
     setValue(suggestion);
@@ -101,6 +104,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
       document.body.style.overflow = "auto";
     };
   }, [isModalOpen]);
+
   return (
     <div
       className={`fixed inset-0 z-50 ${className} text-white z-50 w-full bg-black bg-opacity-50 h-full py-10 px-6 sm:px-10 lg:px-32 transition-all duration-300 ease-in-out`}

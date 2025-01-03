@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 
-export default function ProfileForm() {
+export default function UserProfileForm() {
   const [firstName, setFirstName] = useState('John')
   const [lastName, setLastName] = useState('Doe')
   const [avatar, setAvatar] = useState('sample')

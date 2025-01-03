@@ -1,16 +1,35 @@
-"use client";
+"use client"; // Add this line to indicate that this is a client-side component
 
 import { useState } from "react";
 import Image from "next/image";
 
-export default function ProfileForm() {
+// Define the prop type
+interface Organizer {
+  id: string;
+  organizer_name: string;
+  email?: string;
+  avatar?: string;
+  isVerify: boolean;
+}
+
+interface OrganizerProfileProps {
+  organizer?: Organizer; // Allow `organizer` to be undefined
+}
+
+export default function OrganizerProfileForm({
+  organizer,
+}: OrganizerProfileProps) {
+  // Call useState hooks unconditionally
   const [firstName, setFirstName] = useState("John");
   const [lastName, setLastName] = useState("Doe");
-  const [avatar, setAvatar] = useState(
-    "https://res.cloudinary.com/dkyco4yqp/image/upload/v1735131879/HYPETIX-removebg-preview_qxyuj5.png",
-  );
+  const [avatar] = useState(organizer?.avatar || "default-avatar-url"); // No need for setAvatar
   const [password, setPassword] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
+
+  // Early return if organizer is not found, before any hooks are used
+  if (!organizer) {
+    return <div>Organizer not found</div>;
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,41 +44,15 @@ export default function ProfileForm() {
     }, 2000);
   };
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setAvatar(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto">
       <div className="text-center">
         <Image
-          src={avatar}
+          src={avatar} // Using the avatar state here
           alt="Profile Avatar"
           width={200}
           height={200}
           className="mx-auto rounded-full"
-        />
-      </div>
-
-      <div>
-        <label
-          htmlFor="avatar"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Change Avatar
-        </label>
-        <input
-          type="file"
-          id="avatar"
-          onChange={handleAvatarChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
         />
       </div>
 
@@ -113,7 +106,7 @@ export default function ProfileForm() {
 
       <div>
         <label className="block text-sm font-medium text-gray-700">Email</label>
-        <p className="mt-1 text-sm text-gray-500">johndoe@example.com</p>
+        <p className="mt-1 text-sm text-gray-500">{organizer.email}</p>
       </div>
 
       <div>

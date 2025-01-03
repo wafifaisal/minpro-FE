@@ -1,5 +1,4 @@
 import Navbar from "@/components/shared/Navbar";
-import Share from "@/components/shared/share";
 import Description from "@/components/TicketDetails/Description";
 import HeroSection from "@/components/TicketDetails/HeroSection";
 import Preview from "@/components/TicketDetails/Preview";

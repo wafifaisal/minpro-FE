@@ -1,16 +1,21 @@
-"use client";
-import { useEffect, useState } from "react";
+'use client';
+
+import { useEffect, useState, useCallback } from "react";
 
 export default function CountDown({ expiredAt }: { expiredAt: string }) {
-  const calculateTimeLeft = () =>
-    Math.max(new Date(expiredAt).getTime() - new Date().getTime());
-
-  const [timeLeft, setTimeLeft] = useState<number>(calculateTimeLeft);
-
-  useEffect(() => {
-    setTimeLeft(calculateTimeLeft());
+  // Memoizing the calculateTimeLeft function to avoid unnecessary re-renders
+  const calculateTimeLeft = useCallback(() => {
+    return Math.max(new Date(expiredAt).getTime() - new Date().getTime(), 0);
   }, [expiredAt]);
 
+  const [timeLeft, setTimeLeft] = useState<number>(calculateTimeLeft());
+
+  // Update timeLeft when expiredAt changes
+  useEffect(() => {
+    setTimeLeft(calculateTimeLeft());
+  }, [expiredAt, calculateTimeLeft]); // Add calculateTimeLeft as a dependency
+
+  // Countdown logic (decrease every second)
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeLeft((prevTimeLeft) => {
@@ -23,7 +28,7 @@ export default function CountDown({ expiredAt }: { expiredAt: string }) {
       });
     }, 1000);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); // Cleanup the interval on unmount
   }, []);
 
   const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));

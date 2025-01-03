@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { CardUI } from "@/components/ui/CardUI";
 import HeroSlider from "@/components/organizer/HeroSlider";
@@ -9,55 +10,54 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import axios from "@/helpers/axios";
-import Image from "next/image";
 
-// Mengambil data event dari API
-export const getEvent = async (sorts: string = "asc") => {
+// Utility function to fetch events
+const getEvent = async (sorts: string = "asc") => {
   try {
     const { data } = await axios.get(`/events/?sorts=${sorts}`);
     return data.events;
   } catch (err) {
     console.error("Error fetching events:", err);
-    return null; // Kembalikan null jika terjadi error
+    return []; // Return empty array if error occurs
   }
 };
 
 export default function Home() {
   const [events, setEvents] = useState<IEvent[]>([]);
-  const [isMounted, setIsMounted] = useState(false); // Tambahkan state untuk cek apakah komponen sudah di-mount
-  const [isBeginning, setIsBeginning] = useState(true); // Dipindahkan ke luar RenderCategorySlider
-  const [isEnd, setIsEnd] = useState(false); // Dipindahkan ke luar RenderCategorySlider
+  const [isMounted, setIsMounted] = useState(false); // Check if component is mounted
 
+  const [isBeginning, setIsBeginning] = useState(true); // Control the swiper's beginning state
+  const [isEnd, setIsEnd] = useState(false); // Control the swiper's end state
+
+  // Set mounted state to true after component is mounted
   useEffect(() => {
-    // Set isMounted ke true setelah komponen di-mount di klien
     setIsMounted(true);
   }, []);
 
+  // Fetch events when the page loads
   useEffect(() => {
-    // Ambil data event saat halaman dimuat
-    getEvent().then((events) => {
-      setEvents(events || []); // Pastikan data tidak null
+    getEvent().then((fetchedEvents) => {
+      setEvents(fetchedEvents || []);
     });
   }, []);
 
-  // Filter event berdasarkan kategori
+  // Filter events by category
   const getCardsByCategory = (category: string) => {
     return events.filter((event) => event.category === category);
   };
 
+  // Render category slider with filtered events
   const RenderCategorySlider = (category: string, title: string) => {
     const filteredEvents = getCardsByCategory(category);
-    if (filteredEvents.length === 0) {
-      return null; // Atau tampilkan elemen alternatif jika diinginkan
-    }
+
+    if (filteredEvents.length === 0) return null;
 
     return (
       <div className="relative">
         <h2 className="text-3xl font-bold mb-5">{title}</h2>
 
         {filteredEvents.length === 1 ? (
-          // Jika hanya 1 event, tampilkan CardUI langsung
-          <div className="flex justify-center ">
+          <div className="flex justify-center">
             <CardUI
               title={filteredEvents[0].event_name}
               imageUrl={filteredEvents[0].event_thumbnail}
@@ -119,7 +119,6 @@ export default function Home() {
           </Swiper>
         )}
 
-        {/* Tombol Navigasi Kustom */}
         {filteredEvents.length > 1 && (
           <>
             <button
@@ -127,7 +126,6 @@ export default function Home() {
                 isBeginning ? "opacity-0 pointer-events-none" : "opacity-100"
               } z-10`}
             >
-              {/* Panah Kiri */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -149,7 +147,6 @@ export default function Home() {
               } z-10`}
               disabled={isEnd}
             >
-              {/* Panah Kanan */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -179,9 +176,7 @@ export default function Home() {
             <div className="configure-core"></div>
           </div>
           <div className="configure-border-2">
-            <div className="configure-core">
-              {/* Teks tidak perlu ada di sini lagi */}
-            </div>
+            <div className="configure-core"></div>
           </div>
         </div>
         <span className="hollow-text-spinner">HYPETIX</span>
@@ -193,7 +188,6 @@ export default function Home() {
     <div className="bg-black h-screen">
       <Navbar />
       <HeroSlider result={events} />
-
       <div className="px-20 py-40 bg-black text-white">
         {RenderCategorySlider("Concert", "Concert")}
         {RenderCategorySlider("Sports", "Sports")}
