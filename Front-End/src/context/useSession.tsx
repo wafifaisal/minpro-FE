@@ -7,13 +7,18 @@ import React, {
   useState,
   ReactNode,
 } from "react";
-import { IEvent } from "@/types/event";
+
+interface User {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
 
 interface SessionContextProps {
   isAuth: boolean;
-  user: IEvent | null;
+  user: User | null;
   setIsAuth: (isAuth: boolean) => void;
-  setUser: (user: IEvent | null) => void;
+  setUser: (user: User | null) => void;
 }
 
 const SessionContext = createContext<SessionContextProps | undefined>(
@@ -24,20 +29,35 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [isAuth, setIsAuth] = useState<boolean>(false);
-  const [user, setUser] = useState<IEvent | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   const checkSession = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) return;
+
     try {
-      const res = await fetch("http://localhost:8000/api/events", {
+      const res = await fetch("http://localhost:8000/api/auth/user", {
         method: "GET",
-        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       });
+
+      if (!res.ok) throw new Error("Failed to fetch user data");
+
       const result = await res.json();
-      if (!res.ok) throw result;
-      setUser(result.event);
+      setUser({
+        firstName: result.firstName,
+        lastName: result.lastName,
+        email: result.email,
+      });
       setIsAuth(true);
     } catch (err) {
-      console.log(err);
+      console.error("Error checking session:", err);
+      setUser(null);
+      setIsAuth(false);
+      localStorage.removeItem("authToken");
     }
   };
 

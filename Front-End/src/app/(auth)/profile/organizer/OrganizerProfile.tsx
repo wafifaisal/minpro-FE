@@ -1,170 +1,172 @@
-"use client"; // Add this line to indicate that this is a client-side component
+"use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import { Organizer } from "@/lib/types";
+import { updateOrganizer, sendVerificationEmail } from "@/lib/actions";
 
-// Define the prop type
-interface Organizer {
-  id: string;
-  organizer_name: string;
-  email?: string;
-  avatar?: string;
-  isVerify: boolean;
-}
-
-interface OrganizerProfileProps {
-  organizer?: Organizer; // Allow `organizer` to be undefined
-}
-
-export default function OrganizerProfileForm({
+export default function OrganizerProfile({
   organizer,
-}: OrganizerProfileProps) {
-  // Call useState hooks unconditionally
-  const [firstName, setFirstName] = useState("John");
-  const [lastName, setLastName] = useState("Doe");
-  const [avatar] = useState(organizer?.avatar || "default-avatar-url"); // No need for setAvatar
-  const [password, setPassword] = useState("");
-  const [isVerifying, setIsVerifying] = useState(false);
+}: {
+  organizer: Organizer;
+}) {
+  const [formData, setFormData] = useState(organizer);
+  const [isEditing, setIsEditing] = useState(false);
 
-  // Early return if organizer is not found, before any hooks are used
-  if (!organizer) {
-    return <div>Organizer not found</div>;
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Update profile", { firstName, lastName, avatar, password });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleVerifyEmail = () => {
-    setIsVerifying(true);
-    setTimeout(() => {
-      setIsVerifying(false);
-      alert("Verification email sent!");
-    }, 2000);
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "your_cloudinary_upload_preset");
+
+      try {
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/your_cloud_name/image/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+        const data = await response.json();
+        setFormData((prev) => ({ ...prev, avatar: data.secure_url }));
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await updateOrganizer(formData);
+    setIsEditing(false);
+  };
+
+  const handleVerify = async () => {
+    await sendVerificationEmail(organizer.email);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto">
-      <div className="text-center">
-        <Image
-          src={avatar} // Using the avatar state here
-          alt="Profile Avatar"
-          width={200}
-          height={200}
-          className="mx-auto rounded-full"
-        />
+    <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="px-4 py-5 sm:px-6">
+          <h3 className="text-lg leading-6 font-medium text-gray-900">
+            Organizer Profile
+          </h3>
+        </div>
+        <div className="border-t border-gray-200">
+          <form onSubmit={handleSubmit} className="px-4 py-5 sm:p-6">
+            <div className="mb-4">
+              <label
+                htmlFor="avatar"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Avatar
+              </label>
+              <div className="mt-1 flex flex-col items-center">
+                <img
+                  src={
+                    formData.avatar ||
+                    "https://res.cloudinary.com/dkyco4yqp/image/upload/v1735131879/HYPETIX-removebg-preview_qxyuj5.png"
+                  }
+                  alt="Organizer Avatar"
+                  className="h-24 w-24 rounded-full object-cover"
+                />
+                {isEditing && (
+                  <input
+                    type="file"
+                    name="avatar"
+                    id="avatar"
+                    onChange={handleAvatarChange}
+                    accept="image/*"
+                    className="mt-3"
+                  />
+                )}
+              </div>
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="organizer_name"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Organizer Name
+              </label>
+              <input
+                type="text"
+                name="organizer_name"
+                id="organizer_name"
+                value={formData.organizer_name ?? ""}
+                onChange={handleChange}
+                disabled={!isEditing}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value={formData.email ?? ""}
+                disabled
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm bg-gray-100"
+              />
+            </div>
+            <div className="mb-4">
+              <span className="block text-sm font-medium text-gray-700">
+                Verification Status
+              </span>
+              {formData.isVerify ? (
+                <span className="text-green-600">Email Verified</span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleVerify}
+                  className="mt-1 text-white bg-indigo-600 px-4 py-2 rounded"
+                >
+                  Verify Email
+                </button>
+              )}
+            </div>
+            <div className="flex justify-end">
+              {isEditing ? (
+                <>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-indigo-600 text-white rounded"
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsEditing(false)}
+                    className="px-4 py-2 bg-gray-300 rounded ml-2"
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(true)}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded"
+                >
+                  Edit
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
       </div>
-
-      <div>
-        <label
-          htmlFor="firstName"
-          className="block text-sm font-medium text-gray-700"
-        >
-          First Name
-        </label>
-        <input
-          type="text"
-          id="firstName"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-        />
-      </div>
-
-      <div>
-        <label
-          htmlFor="lastName"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Last Name
-        </label>
-        <input
-          type="text"
-          id="lastName"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-        />
-      </div>
-
-      <div>
-        <label
-          htmlFor="password"
-          className="block text-sm font-medium text-gray-700"
-        >
-          New Password
-        </label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Email</label>
-        <p className="mt-1 text-sm text-gray-500">{organizer.email}</p>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Email Verification
-        </label>
-        <button
-          type="button"
-          onClick={handleVerifyEmail}
-          disabled={isVerifying}
-          className="mt-1 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300"
-        >
-          {isVerifying ? "Verifying..." : "Verify Email"}
-        </button>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Referral Code
-        </label>
-        <p className="mt-1 text-sm text-gray-500">JOHNDOE123</p>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Referred By
-        </label>
-        <p className="mt-1 text-sm text-gray-500">N/A</p>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700">
-          User Coupons
-        </label>
-        <ul className="mt-1 text-sm text-gray-500">
-          <li>COUPON1 - Active</li>
-          <li>COUPON2 - Used</li>
-        </ul>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700">
-          User Points
-        </label>
-        <ul className="mt-1 text-sm text-gray-500">
-          <li>100 points - Available</li>
-          <li>50 points - Used</li>
-        </ul>
-      </div>
-
-      <div>
-        <button
-          type="submit"
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          Update Profile
-        </button>
-      </div>
-    </form>
+    </div>
   );
 }
