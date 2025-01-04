@@ -6,9 +6,10 @@ import { motion } from "framer-motion";
 import { FormikProps } from "formik";
 import { HoverEffectCard } from "../ui/fileUpload";
 
+// Define the type for the form data
 interface FieldThumbnailProps {
   name: string;
-  formik: FormikProps<any>;
+  formik: FormikProps<{ event_thumbnail: File | null }>; // Correct type for formik prop
   className?: string;
 }
 
@@ -23,7 +24,7 @@ export const FieldThumbnail: React.FC<FieldThumbnailProps> = ({
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.currentTarget.files?.[0];
     if (file) {
-      formik.setFieldValue(name, file);
+      formik.setFieldValue(name, file); // Set the file for event_thumbnail
       const imageUrl = URL.createObjectURL(file);
       setPreviewUrl(imageUrl);
     } else {
@@ -70,7 +71,7 @@ export const FieldThumbnail: React.FC<FieldThumbnailProps> = ({
             objectFit="cover"
             className="rounded-lg"
           />
-          <div className="relative  bg-black/50 text-white text-xs px-2 py-1 rounded-lg">
+          <div className="relative bg-black/50 text-white text-xs px-2 py-1 rounded-lg">
             Click to change
           </div>
         </div>

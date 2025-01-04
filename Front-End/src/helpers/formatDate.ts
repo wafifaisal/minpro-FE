@@ -1,3 +1,4 @@
+
 export function formatDate(dateString: string) {
   const date = new Date(dateString);
   return date.toLocaleDateString("id-ID", {
@@ -6,6 +7,7 @@ export function formatDate(dateString: string) {
     year: "numeric",
   });
 }
+
 
 export function formatTime(dateTime: string) {
   const time = new Date(dateTime);
