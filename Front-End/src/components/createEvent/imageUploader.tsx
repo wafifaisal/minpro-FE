@@ -5,11 +5,12 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { FormikProps } from "formik";
 import { HoverEffectCard } from "../ui/fileUpload";
+import { FormValueEvent } from "@/types/form";
 
 // Define the type for the form data
 interface FieldThumbnailProps {
-  name: string;
-  formik: FormikProps<{ event_thumbnail: File | null }>; // Correct type for formik prop
+  name: keyof FormValueEvent;
+  formik: FormikProps<FormValueEvent>; // Correct type for formik prop
   className?: string;
 }
 

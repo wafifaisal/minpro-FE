@@ -37,13 +37,14 @@ export default function PayButton({
       status: "settlement",
       order_id: orderId,
     };
+
     try {
       const { data } = await axios.post("/order/midtrans-webhook", resBody);
       router.push("/");
       toast.success(data.message);
     } catch (err: unknown) {
       const errorMessage =
-        err instanceof Error ? err.message : "An error occurred during login.";
+        err instanceof Error ? err.message : "An error occurred during payment";
       toast.error(errorMessage || "An error occurred", {
         position: "bottom-right",
         autoClose: 5000,
