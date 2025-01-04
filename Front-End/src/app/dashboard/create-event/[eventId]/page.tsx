@@ -41,7 +41,11 @@ export default async function TicketPage({
                   />
                   <div className="py-4 border-t border-gray-700 border-dashed flex items-center justify-between">
                     <span className="font-semibold text-lg text-white">
+
                       {item.price === 0 ? "Free" : formatCurrency(item.price)}
+
+                      {formatCurrency(item.price)}
+
                     </span>
                   </div>
                 </div>
