@@ -1,7 +1,8 @@
+"use client";
 import axios from "@/helpers/axios";
 import { getSnapToken } from "@/lib/order";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 interface IProps {

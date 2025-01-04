@@ -10,7 +10,7 @@ import { FormValueEvent } from "@/types/form";
 // Define the type for the form data
 interface FieldThumbnailProps {
   name: keyof FormValueEvent;
-  formik: FormikProps<FormValueEvent>; // Correct type for formik prop
+  formik: FormikProps<FormValueEvent>;
   className?: string;
 }
 

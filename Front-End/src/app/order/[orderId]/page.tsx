@@ -1,7 +1,7 @@
 import PayButton from "@/components/midtrans/payBtn";
 import CountDown from "@/components/order/CountDown";
 import { formatCurrency, formatDate, formatTime } from "@/helpers/formatDate";
-import { getSnapToken, getOrderDetail } from "@/lib/order";
+import { getOrderDetail } from "@/lib/order";
 import { IOrder } from "@/types/order";
 import Image from "next/image";
 import { FaClock } from "react-icons/fa";

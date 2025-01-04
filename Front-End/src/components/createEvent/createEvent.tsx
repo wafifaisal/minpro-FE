@@ -50,9 +50,14 @@ export default function CreateEvent() {
 
       router.push(`/dashboard/create-event/${data.eventId}`);
       toast.success(data.message);
-    } catch (err: any) {
-      console.log(err);
-      toast.error(err.response);
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : "An error occurred during payment";
+      toast.error(errorMessage || "An error occurred", {
+        position: "bottom-right",
+        autoClose: 5000,
+        theme: "colored",
+      });
     } finally {
       SetIsLoading(false);
     }

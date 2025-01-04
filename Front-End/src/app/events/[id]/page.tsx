@@ -3,18 +3,8 @@ import Description from "@/components/TicketDetails/Description";
 import HeroSection from "@/components/TicketDetails/HeroSection";
 import Preview from "@/components/TicketDetails/Preview";
 import TicketSection from "@/components/TicketDetails/Ticket";
-import { getEvent, getEventbyID } from "@/lib/event";
+import { getEventbyID } from "@/lib/event";
 import { IEvent, ITicket } from "@/types/event";
-
-// Generate static params for each event
-export const generateStaticParams = async () => {
-  const events: IEvent[] = await getEvent();
-  console.log(Array.isArray(events)); // This should log `true` if it's an array
-  console.log(events); // Log the actual data to inspect its structure
-  return events.map((item) => ({
-    id: item.id,
-  }));
-};
 
 // Generate metadata for event details page
 export async function generateMetadata({
@@ -31,18 +21,32 @@ export async function generateMetadata({
   avatar: string | undefined;
   ticket: ITicket[];
 }> {
-  const result: IEvent = await getEventbyID(params.id);
+  try {
+    const result: IEvent = await getEventbyID(params.id);
+    return {
+      title: result.event_name,
+      description: result.description,
+      name: result.Organizer.organizer_name,
+      location: result.location,
+      thumbnail: result.event_thumbnail,
+      preview: result.event_preview,
+      avatar: result.Organizer.avatar,
+      ticket: result.Ticket,
+    };
+  } catch (error) {
+    console.error("Error generating metadata:", error);
 
-  return {
-    title: result.event_name,
-    description: result.description,
-    name: result.Organizer.organizer_name,
-    location: result.location,
-    thumbnail: result.event_thumbnail,
-    preview: result.event_preview,
-    avatar: result.Organizer.avatar,
-    ticket: result.Ticket,
-  };
+    return {
+      title: "Unknown Event",
+      description: "Details are not available.",
+      name: "Unknown Organizer",
+      location: "Unknown Location",
+      thumbnail: "",
+      preview: undefined,
+      avatar: undefined,
+      ticket: [],
+    };
+  }
 }
 
 // Default exported component for the event page
