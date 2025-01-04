@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
 import { ErrorMessage, Form, Formik, FormikProps } from "formik";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { useState } from "react";
 import type { FormReview } from "@/types/review";
-import axios from "@/helpers/axios";
+import axios from "@/helpers/axios"; // Import your custom axios instance
+import { AxiosError } from "axios"; // Import AxiosError directly from 'axios'
 import { toast } from "react-toastify";
 import { reviewSchema } from "@/lib/form";
 import StarRating from "./starRating";
@@ -27,13 +28,20 @@ export default function FormReview({ eventId }: { eventId: string }) {
       });
 
       toast.success(data.message);
-    } catch (err: any) {
-      console.log(err);
-      toast.error(err.response.data.message);
+    } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+        // Access the response data properly if it's an AxiosError
+        toast.error(err.response?.data?.message || "An error occurred");
+      } else {
+        // Handle non-Axios errors
+        toast.error("An unexpected error occurred");
+      }
+      console.log(err); // Log the error for debugging purposes
     } finally {
       SetIsLoading(false);
     }
   };
+
   return (
     <>
       <Formik
@@ -48,7 +56,6 @@ export default function FormReview({ eventId }: { eventId: string }) {
         {({ setFieldValue, values }: FormikProps<FormReview>) => {
           const commentChange = (e: string) => {
             setFieldValue("comment", e);
-            // console.log(e);
           };
           return (
             <Form className="flex flex-col gap-4">

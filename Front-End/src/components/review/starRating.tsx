@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { FaStar } from "react-icons/fa6";
 
 interface IProps {
@@ -9,22 +8,22 @@ interface IProps {
 }
 
 export default function StarRating({ setFieldValue, values }: IProps) {
-  const [rate, setRate] = useState<number>(0);
   const handleClick = (e: number) => {
-    // console.log(e);
-    setRate(e);
-    setFieldValue("rating", e);
+    setFieldValue("rating", e); // Update rating using setFieldValue from Formik
   };
+
   return (
     <>
       {Array.from({ length: 5 }).map((_, idx) => {
         const pointRate = idx + 1;
         return (
-          <label>
+          <label key={idx}>
+            {" "}
+            {/* Add the key prop */}
             <input
               type="radio"
               name="rating"
-              value={values}
+              value={pointRate}
               onClick={() => handleClick(pointRate)}
               className="hidden"
             />
