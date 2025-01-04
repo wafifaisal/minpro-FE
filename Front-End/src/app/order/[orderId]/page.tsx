@@ -14,7 +14,6 @@ export default async function OrderPage({
   params: { orderId: number };
 }) {
   const order: IOrder = await getOrderDetail(+params.orderId);
-  const token: string = await getSnapToken(+params.orderId, +order.final_price);
 
   return (
     <main className="flex gap-16 h-min-screen tablet:flex-row flex-col sm:px-10 tablet:px-20 py-4 bg-gradient-to-tl  from-blue-500 via-black to-black text-white">
@@ -86,8 +85,6 @@ export default async function OrderPage({
             </tbody>
           </table>
         </div>
-        {/* <h1 className="text-2xl font-semibold">Metode Pembayaran</h1> */}
-        {/* <div id="snap-container"></div> */}
       </div>
       <div className="flex flex-col rounded-md shadow-xl py-6 px-4 tablet:w-[40%] gap-2">
         <h1 className="text-2xl font-semibold mb-2">Price Details</h1>
@@ -95,14 +92,16 @@ export default async function OrderPage({
           <span>Total Ticket Price</span>{" "}
           <span>{formatCurrency(order.total_price)}</span>
         </div>
-        {/* <div><span>Biaya Tambahan</span></div>
-        <div><span>Biaya Platform</span></div> */}
+
         <div className="flex justify-between items-center font-semibold text-xl border-t border-b py-2">
           <span>Total Payment</span>
           <span>{formatCurrency(order.final_price)}</span>
         </div>
-        {/* <button className="py-2 bg-lightBlue text-white font-semibold rounded-md">Bayar Tiket</button> */}
-        <PayButton token={token} />
+        <PayButton
+          total_price={order.total_price}
+          final_price={order.final_price}
+          orderId={params.orderId}
+        />
       </div>
     </main>
   );

@@ -179,9 +179,7 @@ export default function Home() {
             <div className="configure-core"></div>
           </div>
           <div className="configure-border-2">
-            <div className="configure-core">
-              {/* Teks tidak perlu ada di sini lagi */}
-            </div>
+            <div className="configure-core"></div>
           </div>
         </div>
         <span className="hollow-text-spinner">HYPETIX</span>

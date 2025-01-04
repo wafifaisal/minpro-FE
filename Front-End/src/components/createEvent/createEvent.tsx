@@ -13,9 +13,6 @@ import { FormValueEvent } from "@/types/form";
 import { eventSchema } from "@/lib/form";
 import axios from "@/helpers/axios";
 import EventType from "./eventType";
-  const [checklistVisible, setChecklistVisible] = useState<boolean>(false); // State untuk checklist
-  const setFieldValue = (arg0: string, file: any) => {};
-
 
 export default function CreateEvent() {
   const initialValue: FormValueEvent = {
@@ -34,7 +31,6 @@ export default function CreateEvent() {
   };
   const router = useRouter();
   const [isLoading, SetIsLoading] = useState<boolean>(false);
-
 
   const handleAdd = async (event: FormValueEvent) => {
     try {
