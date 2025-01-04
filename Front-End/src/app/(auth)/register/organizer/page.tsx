@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { FormikHelpers } from 'formik';
+import { FormikHelpers } from "formik";
 
 const Register = () => {
   const [success, setSuccess] = useState<string | null>(null);
@@ -13,16 +13,16 @@ const Register = () => {
   const API_URL = "http://localhost:8000/api/auth";
 
   const initialValues = {
-    username: "",
+    organizer_name: "",
     email: "",
     password: "",
     confirmPassword: "",
   };
 
   const validationSchema = Yup.object({
-    username: Yup.string()
-      .min(3, "Username must be at least 3 characters")
-      .required("Username is required"),
+    organizer_name: Yup.string()
+      .min(3, "Organizer name must be at least 3 characters")
+      .required("Organizer name is required"),
     email: Yup.string()
       .email("Invalid email address")
       .required("Email is required"),
@@ -36,7 +36,7 @@ const Register = () => {
 
   const handleSubmit = async (
     values: typeof initialValues,
-    { setSubmitting, resetForm }: FormikHelpers<typeof initialValues>
+    { setSubmitting, resetForm }: FormikHelpers<typeof initialValues>,
   ) => {
     try {
       const response = await fetch(API_URL, {
@@ -52,12 +52,15 @@ const Register = () => {
 
       const data = await response.json();
       setSuccess(
-        data.message || "Registration successful! You can now log in."
+        data.message || "Registration successful! You can now log in.",
       );
       resetForm();
     } catch (error: Error | unknown) {
       setSuccess(null);
-      const errorMessage = error instanceof Error ? error.message : "Failed to register. Please try again.";
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to register. Please try again.";
       alert(errorMessage);
     } finally {
       setSubmitting(false);
@@ -80,11 +83,11 @@ const Register = () => {
               <div>
                 <Field
                   type="text"
-                  name="username"
-                  placeholder="Username"
+                  name="organizer name"
+                  placeholder="Organizer name"
                   className="w-full p-3 border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <ErrorMessage name="username">
+                <ErrorMessage name="organizer name">
                   {(msg) => (
                     <div className="text-red-500 text-sm mt-1">{msg}</div>
                   )}

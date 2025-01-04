@@ -11,12 +11,14 @@ const Login = () => {
   const [loginMessage, setLoginMessage] = useState<string | null>(null);
 
   const initialValues = {
-    loginIdentifier: "",
+    email: "",
     password: "",
   };
 
   const validationSchema = Yup.object({
-    loginIdentifier: Yup.string().required("Email is required"),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
     password: Yup.string()
       .min(3, "Password must be at least 3 characters")
       .required("Password is required"),
@@ -26,33 +28,29 @@ const Login = () => {
     values: typeof initialValues,
     { setSubmitting }: FormikHelpers<typeof initialValues>,
   ) => {
+    console.log("Submit button clicked"); 
     try {
-      const response = await fetch("http://localhost:8000/api/login", {
+      const response = await fetch("http://localhost:8000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-
-      const responseText = await response.text();
-      let data;
-      try {
-        data = JSON.parse(responseText);
-      } catch {
-        throw new Error(
-          `Server returned invalid response: ${responseText.substring(
-            0,
-            100,
-          )}...`,
-        );
-      }
-
+  
+      console.log("Server response:", response); 
+  
+      const result = await response.json();
+      console.log("Parsed result:", result); 
+  
       if (!response.ok) {
-        throw new Error(data.message || "An error occurred during login");
+        throw new Error(result.message || "An error occurred during login");
       }
-
+  
+      localStorage.setItem("authToken", result.token);
+      console.log("Token saved to localStorage:", result.token);
+  
       setLoginMessage("Login successful!");
-      console.log("Logged in user:", data);
-
+      console.log("Logged in user:", result);
+  
       router.push("/events");
     } catch (error: Error | unknown) {
       const errorMessage =
@@ -61,8 +59,10 @@ const Login = () => {
       alert(errorMessage);
     } finally {
       setSubmitting(false);
+      console.log("Submitting state reset"); 
     }
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -79,12 +79,12 @@ const Login = () => {
             <Form className="space-y-4">
               <div>
                 <Field
-                  type="text"
-                  name="loginIdentifier"
+                  type="email"
+                  name="email"
                   placeholder="Email"
                   className="w-full p-3 border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <ErrorMessage name="loginIdentifier">
+                <ErrorMessage name="email">
                   {(msg) => (
                     <div className="text-red-500 text-sm mt-1">{msg}</div>
                   )}

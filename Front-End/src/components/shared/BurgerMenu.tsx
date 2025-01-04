@@ -82,6 +82,12 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isMenuOpen, toggleMenu }) => {
               Register
             </Link>
             <Link
+              href="/profile/user"
+              className="flex justify-center items-center py-2 px-4 rounded-full font-semibold shadow-md bg-purple-500 text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+            >
+              firstName + lastName
+            </Link>
+            <Link
               href="/events"
               className="flex justify-center items-center py-2 px-4 rounded-full font-semibold shadow-md bg-purple-500 text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
             >
