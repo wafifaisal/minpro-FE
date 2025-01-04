@@ -12,9 +12,9 @@ import { Navigation } from "swiper/modules";
 import axios from "@/helpers/axios";
 
 // Utility function to fetch events
-const getEvent = async (sorts: string = "asc") => {
+const getEvent = async () => {
   try {
-    const { data } = await axios.get(`/events/?sorts=${sorts}`);
+    const { data } = await axios.get(`/events`);
     return data.events;
   } catch (err) {
     console.error("Error fetching events:", err);
@@ -66,7 +66,7 @@ export default function Home() {
               lokasi={filteredEvents[0].location}
               tempat={filteredEvents[0].venue}
               price={Math.min(
-                ...filteredEvents[0].Ticket.map((ticket) => ticket.price),
+                ...filteredEvents[0].Ticket.map((ticket) => ticket.price)
               )}
               organizer={filteredEvents[0].Organizer}
               start_time={filteredEvents[0].start_time}
