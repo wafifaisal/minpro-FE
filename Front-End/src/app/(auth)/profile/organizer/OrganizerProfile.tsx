@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Organizer } from "@/lib/types";
+import { IOrganizer } from "@/types/profile";
 import { updateOrganizer, sendVerificationEmail } from "@/lib/actions";
+import Image from "next/image";
 
 export default function OrganizerProfile({
   organizer,
 }: {
-  organizer: Organizer;
+  organizer: IOrganizer;
 }) {
   const [formData, setFormData] = useState(organizer);
   const [isEditing, setIsEditing] = useState(false);
@@ -68,7 +69,7 @@ export default function OrganizerProfile({
                 Avatar
               </label>
               <div className="mt-1 flex flex-col items-center">
-                <img
+                <Image
                   src={
                     formData.avatar ||
                     "https://res.cloudinary.com/dkyco4yqp/image/upload/v1735131879/HYPETIX-removebg-preview_qxyuj5.png"
@@ -76,6 +77,7 @@ export default function OrganizerProfile({
                   alt="Organizer Avatar"
                   className="h-24 w-24 rounded-full object-cover"
                 />
+
                 {isEditing && (
                   <input
                     type="file"

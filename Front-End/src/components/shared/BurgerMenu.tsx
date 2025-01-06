@@ -1,6 +1,8 @@
 "use client";
 
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useSession } from "@/context/useSession";
 
 interface BurgerMenuProps {
   isMenuOpen: boolean;
@@ -8,6 +10,38 @@ interface BurgerMenuProps {
 }
 
 const BurgerMenu: React.FC<BurgerMenuProps> = ({ isMenuOpen, toggleMenu }) => {
+  const { isAuth, userId } = useSession();
+  const [userName, setUserName] = useState<string>("");
+
+  const fetchUser = useCallback(async () => {
+    try {
+      if (!userId) return;
+  
+      const response = await fetch(`/api/users/${userId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+  
+      if (response.ok) {
+        const user = await response.json();
+        setUserName(`${user.result.firstName} ${user.result.lastName}`);
+      } else {
+        console.error("Failed to fetch user data");
+      }
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+    }
+  }, [userId]); // Add userId as a dependency
+  
+  useEffect(() => {
+    if (isAuth && userId) {
+      fetchUser();
+    }
+  }, [isAuth, userId, fetchUser]); // Now fetchUser is stable and memoized
+  
+
   return (
     <>
       {/* Button to toggle the menu */}
@@ -66,27 +100,32 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isMenuOpen, toggleMenu }) => {
           className={`fixed right-0 top-0 w-full md:w-[350px] bg-black h-screen text-white shadow-lg p-6 transition-transform duration-500 ease-in-out ${
             isMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}
-          onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the sidebar
+          onClick={(e) => e.stopPropagation()}
         >
           <div className="flex flex-col gap-4 mx-5 py-20">
-            <Link
-              href="/login"
-              className="flex md:hidden justify-center items-center py-2 px-4 rounded-full font-semibold shadow-md bg-white text-black transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
-            >
-              Login
-            </Link>
-            <Link
-              href="/register"
-              className="flex md:hidden justify-center items-center py-2 px-4 rounded-full font-semibold shadow-md bg-white text-black transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
-            >
-              Register
-            </Link>
-            <Link
-              href="/profile/user"
-              className="flex justify-center items-center py-2 px-4 rounded-full font-semibold shadow-md bg-purple-500 text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
-            >
-              firstName + lastName
-            </Link>
+            {!isAuth ? (
+              <div>
+                <Link
+                  href="/login"
+                  className="flex md:hidden justify-center items-center py-2 px-4 rounded-full font-semibold shadow-md bg-white text-black transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className="flex md:hidden justify-center items-center py-2 px-4 rounded-full font-semibold shadow-md bg-white text-black transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                >
+                  Register
+                </Link>
+              </div>
+            ) : (
+              <Link
+                href="/profile/user"
+                className="flex justify-center items-center py-2 px-4 rounded-full font-semibold shadow-md bg-purple-500 text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+              >
+                {userName || "Profile"} {/* Menampilkan nama pengguna */}
+              </Link>
+            )}
             <Link
               href="/events"
               className="flex justify-center items-center py-2 px-4 rounded-full font-semibold shadow-md bg-purple-500 text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg"

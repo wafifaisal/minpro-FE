@@ -15,7 +15,7 @@ export async function getSnapToken(orderId: number, gross_amount: number) {
       orderId: orderId,
       gross_amount: gross_amount,
     });
-    return data.result; // Token is expected here
+    return data.result;
   } catch (err) {
     console.log("Error fetching snap token:", err);
   }

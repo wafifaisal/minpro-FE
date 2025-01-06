@@ -6,67 +6,65 @@ import React, {
   useEffect,
   useState,
   ReactNode,
+  useCallback,
 } from "react";
-
-interface User {
-  firstName: string;
-  lastName: string;
-  email: string;
-}
+import { IUser } from "@/types/profile";
 
 interface SessionContextProps {
   isAuth: boolean;
-  user: User | null;
+  user: IUser | null;
   setIsAuth: (isAuth: boolean) => void;
-  setUser: (user: User | null) => void;
+  setUser: (user: IUser | null) => void;
+  userId: string | null;
 }
 
 const SessionContext = createContext<SessionContextProps | undefined>(
   undefined
 );
 
+const base_url = process.env.NEXT_PUBLIC_BASE_URL_BE;
+
 export const SessionProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [isAuth, setIsAuth] = useState<boolean>(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<IUser | null>(null);
+  const [userId] = useState<string | null>(null);
 
-  const checkSession = async () => {
-    const token = localStorage.getItem("authToken");
-    if (!token) return;
-
+  const checkSession =useCallback( async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/auth/user", {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.log("Login First");
+        return;
+      }
+
+      const res = await fetch(`${base_url}/users/${userId}`, {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
 
-      if (!res.ok) throw new Error("Failed to fetch user data");
-
       const result = await res.json();
-      setUser({
-        firstName: result.firstName,
-        lastName: result.lastName,
-        email: result.email,
-      });
+      if (!res.ok) throw result;
+      setUser(result.result);
       setIsAuth(true);
     } catch (err) {
-      console.error("Error checking session:", err);
-      setUser(null);
+      console.log(err);
       setIsAuth(false);
-      localStorage.removeItem("authToken");
+      setUser(null);
     }
-  };
+  },[userId]);
 
   useEffect(() => {
     checkSession();
-  }, []);
+  }, [checkSession]);
 
   return (
-    <SessionContext.Provider value={{ isAuth, user, setIsAuth, setUser }}>
+    <SessionContext.Provider
+      value={{ isAuth, user, setIsAuth, setUser, userId }}
+    >
       {children}
     </SessionContext.Provider>
   );
