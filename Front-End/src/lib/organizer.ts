@@ -1,6 +1,6 @@
-import { Organizer } from "./types";
+import { IOrganizer } from "../types/profile";
 
-export async function getOrganizerData(): Promise<Organizer | null> {
+export async function getOrganizerData(): Promise<IOrganizer | null> {
   return {
     id: "1",
     organizer_name: "Test Organizer",

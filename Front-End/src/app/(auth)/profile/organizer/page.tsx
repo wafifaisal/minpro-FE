@@ -7,6 +7,5 @@ export default async function OrganizerProfilePage() {
   if (!organizer) {
     return <div>Organizer not found</div>
   }
-
-  return <OrganizerProfile organizer={undefined} {...organizer} />
+  return <OrganizerProfile organizerId={organizer.id} {...organizer} />
 }

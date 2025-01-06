@@ -190,7 +190,7 @@ export function CardUI({
         <h1 className="font-bold text-lg text-gray-200">{title}</h1>
         <div className="flex gap-2 py-2">
           <Image
-            src={organizer.avatar}
+            src={organizer?.avatar}
             alt="Organizer Avatar"
             width={40}
             height={40}
@@ -198,7 +198,7 @@ export function CardUI({
             className="w-10 h-10 object-cover rounded-full bg-neutral-900 p-1"
           />
           <div className="ml-2 text-sm text-gray-200 flex flex-col">
-            {organizer.organizer_name}
+            {organizer?.organizer_name}
             <p className="text-sm text-gray-400">
               {formatDate(event_date)}, {formatTime(start_time)} -{" "}
               {formatTime(end_time)}

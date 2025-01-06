@@ -28,6 +28,7 @@ export async function getSnapToken(
         },
       }
     );
+
     return data.result;
   } catch (err) {
     console.log("Error fetching snap token:", err);
