@@ -14,6 +14,15 @@ import { Autoplay, Navigation, Pagination } from "swiper/modules";
 export default function HeroSlider({ result }: { result: IEvent[] }) {
   const [scrollY, setScrollY] = useState(0);
 
+  // Ambil maksimal 5 event dengan tanggal terdekat dari hari ini
+  const events = result
+    .filter((event) => new Date(event.event_date) >= new Date()) // Hanya event mendatang
+    .sort(
+      (a, b) =>
+        new Date(a.event_date).getTime() - new Date(b.event_date).getTime()
+    ) // Urutkan berdasarkan tanggal terdekat
+    .slice(0, 5); // Ambil 5 event teratas
+
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
@@ -41,12 +50,12 @@ export default function HeroSlider({ result }: { result: IEvent[] }) {
         }}
         pagination={{
           clickable: true,
-          bulletClass: "custom-bullet", // Custom class untuk bullet
-          bulletActiveClass: "custom-bullet-active", // Menggunakan kelas kustom
+          bulletClass: "custom-bullet",
+          bulletActiveClass: "custom-bullet-active",
         }}
         loop={true}
       >
-        {result.map((item) => (
+        {events.map((item) => (
           <SwiperSlide key={item.id}>
             <Link
               href={`/events/${item.id}`}

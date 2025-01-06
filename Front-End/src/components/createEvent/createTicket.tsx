@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { formatCurrency } from "@/helpers/formatDate";
 import { FormValueTicketEvent } from "@/types/form";
 import { ticketEventSchema } from "@/lib/form";
+import { useRouter } from "next/navigation";
 
 export default function CreateTicket({
   eventId,
@@ -18,6 +19,7 @@ export default function CreateTicket({
   event_type: "Free" | "Paid";
 }) {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const initialValues = {
     tickets: [
@@ -33,10 +35,10 @@ export default function CreateTicket({
 
   const handleAddTickets = async (
     values: { tickets: FormValueTicketEvent[] },
-    resetForm: () => void,
+    resetForm: () => void
   ) => {
     const isConfirmed = window.confirm(
-      "Are you sure you want to create the tickets? (People can buy your tickets immediately)",
+      "Are you sure you want to create the tickets? (People can buy your tickets immediately)"
     );
 
     if (!isConfirmed) {
@@ -55,12 +57,13 @@ export default function CreateTicket({
       });
       toast.success(data.message || "Tickets created successfully!");
       resetForm();
+      router.push("/dashboard");
     } catch (err: unknown) {
       if (err instanceof AxiosError) {
         // Handle AxiosError properly by accessing the response
         toast.error(
           err.response?.data?.message ||
-            "An error occurred while creating tickets.",
+            "An error occurred while creating tickets."
         );
       } else {
         // Generic error handling if it's not an AxiosError
@@ -166,15 +169,15 @@ export default function CreateTicket({
                             placeholder="Enter ticket price"
                             value={formatCurrency(ticket.price)} // Displaying formatted price
                             onChange={(
-                              e: React.ChangeEvent<HTMLInputElement>,
+                              e: React.ChangeEvent<HTMLInputElement>
                             ) => {
                               const rawValue = e.target.value.replace(
                                 /[^\d]/g,
-                                "",
+                                ""
                               );
                               setFieldValue(
                                 `tickets.${index}.price`,
-                                parseInt(rawValue, 10) || 0,
+                                parseInt(rawValue, 10) || 0
                               );
                             }}
                             onKeyDown={handleKeyDown}
@@ -206,7 +209,13 @@ export default function CreateTicket({
                       <div className="flex gap-4">
                         <button
                           type="button"
-                          onClick={() => arrayHelpers.remove(index)}
+                          onClick={() => {
+                            if (values.tickets.length > 1) {
+                              arrayHelpers.remove(index);
+                            } else {
+                              toast.error("You must have at least one ticket.");
+                            }
+                          }}
                           className="py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600"
                         >
                           Remove Ticket
@@ -214,14 +223,22 @@ export default function CreateTicket({
 
                         <button
                           type="button"
-                          onClick={() =>
-                            arrayHelpers.push({
-                              category: "",
-                              seats: 0,
-                              price: 0,
-                              desc: "",
-                            })
-                          }
+                          onClick={() => {
+                            // Prevent adding tickets if the count is greater than 1
+                            if (values.tickets.length < 10) {
+                              // You can set your own max limit here
+                              arrayHelpers.push({
+                                category: "",
+                                seats: 0,
+                                price: 0,
+                                desc: "",
+                              });
+                            } else {
+                              toast.error(
+                                "You cannot add more than 10 tickets."
+                              );
+                            }
+                          }}
                           className={`py-2 px-4 rounded-md font-semibold text-white ${
                             isSubmitting || isLoading
                               ? "bg-gray-400 cursor-not-allowed"

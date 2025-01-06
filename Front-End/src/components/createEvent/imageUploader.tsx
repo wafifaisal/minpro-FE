@@ -7,9 +7,8 @@ import { FormikProps } from "formik";
 import { HoverEffectCard } from "../ui/fileUpload";
 import { FormValueEvent } from "@/types/form";
 
-// Define the type for the form data
 interface FieldThumbnailProps {
-  name: keyof FormValueEvent;
+  name: string;
   formik: FormikProps<FormValueEvent>;
   className?: string;
 }

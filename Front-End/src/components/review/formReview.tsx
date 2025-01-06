@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { ErrorMessage, Form, Formik, FormikProps } from "formik";
 import dynamic from "next/dynamic";
@@ -13,7 +13,7 @@ import StarRating from "./starRating";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
-export default function FormReview({ eventId }: { eventId: string }) {
+export default function FormReview({ id }: { id: string }) {
   const [isLoading, SetIsLoading] = useState<boolean>(false);
   const initialValue: FormReview = {
     rating: 0,
@@ -23,27 +23,25 @@ export default function FormReview({ eventId }: { eventId: string }) {
   const handleAdd = async (review: FormReview) => {
     try {
       SetIsLoading(true);
-      const { data } = await axios.post(`/reviews/${eventId}`, review, {
+      const { data } = await axios.post(`/reviews/${id}`, review, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
       toast.success(data.message);
     } catch (err: unknown) {
       if (err instanceof AxiosError) {
-        // Access the response data properly if it's an AxiosError
         toast.error(err.response?.data?.message || "An error occurred");
       } else {
-        // Handle non-Axios errors
         toast.error("An unexpected error occurred");
       }
-      console.log(err); // Log the error for debugging purposes
+      console.log(err);
     } finally {
       SetIsLoading(false);
     }
   };
 
   return (
-    <>
+    <div className="bg-gray-900 text-gray-200 p-6 rounded-lg shadow-lg ">
       <Formik
         initialValues={initialValue}
         validationSchema={reviewSchema}
@@ -67,16 +65,20 @@ export default function FormReview({ eventId }: { eventId: string }) {
               </div>
               <ErrorMessage name="rating">
                 {(msg) => (
-                  <div className="text-red-500 text-xs mt-1 ml-1">
+                  <div className="text-red-400 text-xs mt-1 ml-1">
                     <sup>*</sup>
                     {msg}
                   </div>
                 )}
               </ErrorMessage>
-              <ReactQuill onChange={commentChange} value={values.comment} />
+              <ReactQuill
+                onChange={commentChange}
+                value={values.comment}
+                className="bg-gray-800 text-gray-200 rounded-md"
+              />
               <ErrorMessage name="comment">
                 {(msg) => (
-                  <div className="text-red-500 text-xs mt-1 ml-1">
+                  <div className="text-red-400 text-xs mt-1 ml-1">
                     <sup>*</sup>
                     {msg}
                   </div>
@@ -87,9 +89,9 @@ export default function FormReview({ eventId }: { eventId: string }) {
                 type="submit"
                 className={`${
                   isLoading
-                    ? "disabled:opacity-[0.5] disabled:bg-lightBlue text-white"
-                    : "hover:bg-lightBlue hover:text-white"
-                } py-2 mx-2 rounded-lg transition ease-linear font-semibold border-2 border-lightBlue`}
+                    ? "disabled:opacity-50 disabled:bg-gray-700 text-gray-500"
+                    : "hover:bg-blue-700 hover:text-white"
+                } bg-gray-800 text-gray-200 py-2 mx-2 rounded-lg transition ease-linear font-semibold border-2 border-blue-600`}
               >
                 {isLoading ? "Loading ..." : "Submit Review"}
               </button>
@@ -97,6 +99,6 @@ export default function FormReview({ eventId }: { eventId: string }) {
           );
         }}
       </Formik>
-    </>
+    </div>
   );
 }

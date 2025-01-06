@@ -13,41 +13,46 @@ import { SlCalender } from "react-icons/sl";
 export default async function ReviewPage({
   params,
 }: {
-  params: { eventId: string; id: string };
+  params: { id: string };
 }) {
   const result: IEvent = await getEventbyID(params.id);
-  const dataReviews: { result: IReview[] } = await getReviews(params.eventId);
+  const dataReviews: { result: IReview[] } = await getReviews(params.id);
   const date = formatDate(result.event_date);
   const time = `${formatTime(result.start_time)} - ${formatTime(
     result.end_time
   )}`;
   const location = `${result.location}, ${result.venue}`;
   return (
-    <main>
+    <main className="bg-gray-900 text-gray-200 min-h-screen ">
       <div className="sm:mx-20 md:mx-40 tablet:mx-60">
         <div className="flex flex-col gap-6 rounded-b-xl">
           <div className="relative overflow-hidden aspect-[16/9] min-h-[15rem] flex-1">
-            <Image src={result.event_thumbnail} alt={result.event_name} fill />
+            <Image
+              src={result.event_thumbnail}
+              alt={result.event_name}
+              fill
+              className="rounded-lg"
+            />
           </div>
-          <div className="shadow-2xl flex flex-col gap-2 rounded-b-xl">
+          <div className="bg-gray-800 shadow-2xl flex flex-col gap-2 rounded-b-xl">
             <div className="flex flex-col gap-2 px-6 py-4">
               <h1 className="text-xl font-semibold line-clamp-4">
                 {result.event_name}
               </h1>
               <div className="flex items-center gap-2">
-                <span className="text-lightBlue">
+                <span className="text-blue-500">
                   <SlCalender />
                 </span>
                 <span>{date}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-lightBlue">
+                <span className="text-blue-500">
                   <FaClock />
                 </span>
                 <span>{time}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-lightBlue">
+                <span className="text-blue-500">
                   <FaLocationDot />
                 </span>
                 <span>{location}</span>
@@ -60,20 +65,26 @@ export default async function ReviewPage({
           {dataReviews.result.length &&
             dataReviews.result.map((item, idx) => {
               return (
-                <div key={idx} className="flex flex-col my-2">
+                <div
+                  key={idx}
+                  className="flex flex-col my-2 bg-gray-800 p-4 rounded-md"
+                >
                   <div className="flex items-center gap-4">
                     <div className="relative w-[35px] h-[35px] rounded-full overflow-hidden">
                       <Image
                         src={item.user.avatar}
                         alt={item.user.firstName}
                         fill
+                        className="rounded-full"
                       />
                     </div>
                     <div className="flex flex-col">
-                      <span>
+                      <span className="font-semibold">
                         {item.user.firstName} {item.user.lastName}
                       </span>
-                      <span>{formatDate(item.createdAt)}</span>
+                      <span className="text-gray-400">
+                        {formatDate(item.createdAt)}
+                      </span>
                     </div>
                     <div className="flex">
                       <StarDisplay rate={item.rating} />
@@ -81,17 +92,17 @@ export default async function ReviewPage({
                   </div>
                   <div
                     dangerouslySetInnerHTML={{ __html: item.comment }}
-                    className="mt-2 indent-4"
+                    className="mt-2 indent-4 text-gray-300"
                   />
                 </div>
               );
             })}
         </div>
-        <div className="shadow-xl rounded-md my-4 p-4">
+        <div className="bg-gray-800 shadow-xl rounded-md  p-4">
           <h1 className="font-semibold text-2xl mb-4 text-center">
             Rate and drop your comment here
           </h1>
-          <FormReview eventId={params.eventId} />
+          <FormReview id={params.id} />
         </div>
       </div>
     </main>

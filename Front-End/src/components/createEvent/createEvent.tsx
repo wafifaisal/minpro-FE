@@ -44,20 +44,14 @@ export default function CreateEvent() {
           formData.append(key, value);
         }
       }
-      const { data } = await axios.post("/events", formData, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const { data } = await axios.post("/events", formData);
 
       router.push(`/dashboard/create-event/${data.eventId}`);
       toast.success(data.message);
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error ? err.message : "An error occurred during payment";
-      toast.error(errorMessage || "An error occurred", {
-        position: "bottom-right",
-        autoClose: 5000,
-        theme: "colored",
-      });
+      toast.error(errorMessage || "An error occurred");
     } finally {
       SetIsLoading(false);
     }
