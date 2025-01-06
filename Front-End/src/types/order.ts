@@ -24,6 +24,8 @@ interface ITicketOrder {
 
 export interface IOrder {
   expiredAt: string;
+  userCoupon: boolean;
+  userPoint: number;
   total_price: number;
   final_price: number;
   Order_Details: ITicketOrder[];

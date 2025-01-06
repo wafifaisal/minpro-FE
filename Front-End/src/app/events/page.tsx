@@ -25,7 +25,6 @@ const getEvent = async () => {
 export default function Home() {
   const [events, setEvents] = useState<IEvent[]>([]);
   const [isMounted, setIsMounted] = useState(false); // Check if component is mounted
-
   const [isBeginning, setIsBeginning] = useState(true); // Control the swiper's beginning state
   const [isEnd, setIsEnd] = useState(false); // Control the swiper's end state
 
@@ -86,10 +85,6 @@ export default function Home() {
               setIsBeginning(swiper.isBeginning);
               setIsEnd(swiper.isEnd);
             }}
-            onInit={(swiper) => {
-              setIsBeginning(swiper.isBeginning);
-              setIsEnd(swiper.isEnd);
-            }}
             slidesPerView={"auto"}
             spaceBetween={30}
             breakpoints={{
@@ -122,7 +117,7 @@ export default function Home() {
         {filteredEvents.length > 1 && (
           <>
             <button
-              className={`custom-prev-${category} absolute top-1/2 left-2 transform -translate-y-1/2 p-2 bg-black text-white rounded-full transition-opacity duration-300 flex items-center justify-center ${
+              className={`custom-prev-${category} absolute top-1/2 left-2 transform -translate-y-1/2 p-2 bg-black text-white rounded-full transition-opacity duration-300 flex items-center justify-center z-50 ${
                 isBeginning ? "opacity-0 pointer-events-none" : "opacity-100"
               } z-10`}
             >
@@ -188,7 +183,7 @@ export default function Home() {
     <div className="bg-black h-screen">
       <Navbar />
       <HeroSlider result={events} />
-      <div className="px-20 py-40 bg-black text-white">
+      <div className="px-10 md:px-20 py-40 bg-black text-white">
         {RenderCategorySlider("Concert", "Concert")}
         {RenderCategorySlider("Sports", "Sports")}
         {RenderCategorySlider("Socials", "Socials")}

@@ -10,7 +10,6 @@ interface BurgerMenuProps {
 const BurgerMenu: React.FC<BurgerMenuProps> = ({ isMenuOpen, toggleMenu }) => {
   return (
     <>
-      {/* Button to toggle the menu */}
       <button
         onClick={toggleMenu}
         className="fixed z-50 p-2 hover:bg-gray-500 rounded-full text-white shadow-lg transition-transform duration-300 ease-in-out transform top-[15px] right-[25px] md:top-[27px] md:right-[25px]"

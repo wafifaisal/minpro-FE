@@ -93,6 +93,23 @@ export default async function OrderPage({
           <span>{formatCurrency(order.total_price)}</span>
         </div>
 
+        {order.userPoint > 0 && (
+          <div className="flex justify-between items-center">
+            <span>Points</span>
+            <span className="font-semibold text-red-500">
+              - {formatCurrency(order.userPoint)}
+            </span>
+          </div>
+        )}
+        {order.userCoupon && (
+          <div className="flex justify-between items-center">
+            <span>Coupon</span>
+            <span className="font-semibold text-red-500">
+              - {formatCurrency((order.total_price - order.userPoint) / 10)}
+            </span>
+          </div>
+        )}
+
         <div className="flex justify-between items-center font-semibold text-xl border-t border-b py-2">
           <span>Total Payment</span>
           <span>{formatCurrency(order.final_price)}</span>
@@ -101,6 +118,7 @@ export default async function OrderPage({
           total_price={order.total_price}
           final_price={order.final_price}
           orderId={params.orderId}
+          userPoint={order.userPoint}
         />
       </div>
     </main>

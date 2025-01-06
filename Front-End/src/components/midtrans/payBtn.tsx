@@ -9,6 +9,7 @@ interface IProps {
   total_price: number;
   final_price: number;
   orderId: number;
+  userPoint: number;
 }
 
 export default function PayButton({
@@ -16,57 +17,93 @@ export default function PayButton({
   final_price,
   orderId,
 }: IProps) {
-  const [isLoading, SetIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const handleClick = async () => {
-    if (total_price) {
-      try {
-        SetIsLoading(true);
-        const token = await getSnapToken(final_price, Number(orderId));
-        window.snap.pay(token);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        SetIsLoading(false);
-      }
+    try {
+      setIsLoading(true);
+      const token = await getSnapToken(
+        final_price,
+        Number(orderId),
+        total_price
+      );
+      window.snap.pay(token);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const freeTransaction = async () => {
     const resBody = {
-      status: "settlement",
+      transaction_status: "settlement",
       order_id: orderId,
     };
 
     try {
       const { data } = await axios.post("/order/midtrans-webhook", resBody);
-      router.push("/");
+      router.push(`/events`);
       toast.success(data.message);
     } catch (err: unknown) {
       const errorMessage =
         err instanceof Error ? err.message : "An error occurred during payment";
-      toast.error(errorMessage || "An error occurred", {
-        position: "bottom-right",
-        autoClose: 5000,
-        theme: "colored",
-      });
+      toast.error(errorMessage || "An error occurred");
     }
   };
 
   return (
-    <button
-      onClick={handleClick}
-      disabled={isLoading}
-      className="py-2 bg-gradient-to-l from-blue-500 to-black shadow-xl text-white font-semibold rounded-md"
-    >
-      {isLoading ? "Loading ..." : "Buy Ticket"}
-      <button
-        onClick={freeTransaction}
-        className="py-2 bg-gradient-to-l from-blue-500 to-black shadow-xl text-white font-semibold rounded-md"
-      >
-        {isLoading ? "Loading ..." : "Get For Free"}
-      </button>
-    </button>
+    <div className="flex flex-col items-center space-y-4 my-4">
+      {/* Conditional Button Rendering */}
+      {total_price > 0 ? (
+        <button
+          onClick={handleClick}
+          disabled={isLoading}
+          className={`py-3 px-6 bg-gradient-to-r from-indigo-700 via-blue-600 to-cyan-500 text-white rounded-lg shadow-lg text-lg font-semibold transition-transform transform ${
+            isLoading
+              ? "opacity-50 cursor-not-allowed"
+              : "hover:scale-105 hover:shadow-xl"
+          }`}
+        >
+          {isLoading ? (
+            <span className="flex items-center space-x-2">
+              <span className="spinner-border animate-spin w-5 h-5 border-t-2 border-l-2 rounded-full"></span>
+              <span>Processing Payment...</span>
+            </span>
+          ) : (
+            "Buy Ticket"
+          )}
+        </button>
+      ) : (
+        <button
+          onClick={freeTransaction}
+          disabled={isLoading}
+          className={`py-3 px-6 bg-gradient-to-r from-green-600 via-green-500 to-lime-400 text-white rounded-lg shadow-lg text-lg font-semibold transition-transform transform ${
+            isLoading
+              ? "opacity-50 cursor-not-allowed"
+              : "hover:scale-105 hover:shadow-xl"
+          }`}
+        >
+          {isLoading ? (
+            <span className="flex items-center space-x-2">
+              <span className="spinner-border animate-spin w-5 h-5 border-t-2 border-l-2 rounded-full"></span>
+              <span>Processing...</span>
+            </span>
+          ) : (
+            "Get For Free"
+          )}
+        </button>
+      )}
+
+      {/* Informational Text */}
+      <p className="text-gray-300 text-sm italic">
+        {isLoading
+          ? "Please wait while we process your request."
+          : total_price > 0
+          ? "Secure your ticket by making the payment."
+          : "Enjoy your free ticket now!"}
+      </p>
+    </div>
   );
 }
