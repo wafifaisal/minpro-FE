@@ -10,7 +10,7 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const API_URL = "http://localhost:8000/api/auth";
+  const API_URL = "https://hypetix-back.vercel.app/api/auth";
 
   const initialValues = {
     organizer_name: "",
@@ -36,7 +36,7 @@ const Register = () => {
 
   const handleSubmit = async (
     values: typeof initialValues,
-    { setSubmitting, resetForm }: FormikHelpers<typeof initialValues>,
+    { setSubmitting, resetForm }: FormikHelpers<typeof initialValues>
   ) => {
     try {
       const response = await fetch(API_URL, {
@@ -52,7 +52,7 @@ const Register = () => {
 
       const data = await response.json();
       setSuccess(
-        data.message || "Registration successful! You can now log in.",
+        data.message || "Registration successful! You can now log in."
       );
       resetForm();
     } catch (error: Error | unknown) {
