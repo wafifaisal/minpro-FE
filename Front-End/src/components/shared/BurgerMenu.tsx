@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { useSession } from "@/context/useSession";
+import { useSession } from "../../context/useSession";
 
 interface BurgerMenuProps {
   isMenuOpen: boolean;
@@ -16,14 +16,14 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isMenuOpen, toggleMenu }) => {
   const fetchUser = useCallback(async () => {
     try {
       if (!userId) return;
-  
+
       const response = await fetch(`/api/users/${userId}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-  
+
       if (response.ok) {
         const user = await response.json();
         setUserName(`${user.result.firstName} ${user.result.lastName}`);
@@ -33,14 +33,13 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isMenuOpen, toggleMenu }) => {
     } catch (err) {
       console.error("Error fetching user data:", err);
     }
-  }, [userId]); // Add userId as a dependency
-  
+  }, [userId]);
+
   useEffect(() => {
     if (isAuth && userId) {
       fetchUser();
     }
-  }, [isAuth, userId, fetchUser]); // Now fetchUser is stable and memoized
-  
+  }, [isAuth, userId, fetchUser]);
 
   return (
     <>
