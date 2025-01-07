@@ -22,86 +22,89 @@ export default async function ReviewPage({
     result.end_time
   )}`;
   const location = `${result.location}, ${result.venue}`;
+
   return (
-    <main className="bg-gray-900 text-gray-200 min-h-screen ">
-      <div className="sm:mx-20 md:mx-40 tablet:mx-60">
-        <div className="flex flex-col gap-6 rounded-b-xl">
-          <div className="relative overflow-hidden aspect-[16/9] min-h-[15rem] flex-1">
+    <main className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-200 min-h-screen">
+      <div className="sm:mx-8 md:mx-16 lg:mx-32 xl:mx-40 py-10">
+        {/* Event Header */}
+        <div className="flex flex-col gap-6 rounded-lg shadow-lg overflow-hidden">
+          <div className="relative overflow-hidden aspect-[16/9] flex-1 group">
             <Image
               src={result.event_thumbnail}
               alt={result.event_name}
               fill
-              className="rounded-lg"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           </div>
-          <div className="bg-gray-800 shadow-2xl flex flex-col gap-2 rounded-b-xl">
-            <div className="flex flex-col gap-2 px-6 py-4">
-              <h1 className="text-xl font-semibold line-clamp-4">
-                {result.event_name}
-              </h1>
-              <div className="flex items-center gap-2">
-                <span className="text-blue-500">
-                  <SlCalender />
-                </span>
+          <div className="bg-gray-800 p-6 rounded-lg shadow-md">
+            <h1 className="text-2xl font-bold mb-4 text-blue-400 hover:underline">
+              {result.event_name}
+            </h1>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-2 text-lg">
+                <SlCalender className="text-blue-500" />
                 <span>{date}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-blue-500">
-                  <FaClock />
-                </span>
+              <div className="flex items-center gap-2 text-lg">
+                <FaClock className="text-blue-500" />
                 <span>{time}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-blue-500">
-                  <FaLocationDot />
-                </span>
+              <div className="flex items-center gap-2 text-lg">
+                <FaLocationDot className="text-blue-500" />
                 <span>{location}</span>
               </div>
             </div>
           </div>
         </div>
-        <div className="my-6">
-          <h1 className="font-semibold text-4xl">Comment Section</h1>
-          {dataReviews.result.length &&
-            dataReviews.result.map((item, idx) => {
-              return (
-                <div
-                  key={idx}
-                  className="flex flex-col my-2 bg-gray-800 p-4 rounded-md"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="relative w-[35px] h-[35px] rounded-full overflow-hidden">
-                      <Image
-                        src={item.user.avatar}
-                        alt={item.user.firstName}
-                        fill
-                        className="rounded-full"
-                      />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-semibold">
-                        {item.user.firstName} {item.user.lastName}
-                      </span>
-                      <span className="text-gray-400">
-                        {formatDate(item.createdAt)}
-                      </span>
-                    </div>
-                    <div className="flex">
-                      <StarDisplay rate={item.rating} />
-                    </div>
+
+        {/* Comment Section */}
+        <div className="my-10">
+          <h1 className="text-3xl font-bold text-blue-400 mb-6">Comments</h1>
+          {dataReviews.result.length ? (
+            dataReviews.result.map((item, idx) => (
+              <div
+                key={idx}
+                className="bg-gray-800 p-4 rounded-lg shadow-lg mb-4 hover:bg-gray-700 transition-all"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-blue-500">
+                    <Image
+                      src={item.user.avatar}
+                      alt={item.user.firstName}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
-                  <div
-                    dangerouslySetInnerHTML={{ __html: item.comment }}
-                    className="mt-2 indent-4 text-gray-300"
-                  />
+                  <div>
+                    <p className="text-lg font-semibold">
+                      {item.user.firstName} {item.user.lastName}
+                    </p>
+                    <p className="text-gray-400 text-sm">
+                      {formatDate(item.createdAt)}
+                    </p>
+                  </div>
+                  <div className="ml-auto">
+                    <StarDisplay rate={item.rating} />
+                  </div>
                 </div>
-              );
-            })}
+                <div
+                  dangerouslySetInnerHTML={{ __html: item.comment }}
+                  className="mt-3 text-gray-300 text-sm leading-relaxed"
+                />
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-400 text-lg">
+              No comments yet. Be the first to share your thoughts!
+            </p>
+          )}
         </div>
-        <div className="bg-gray-800 shadow-xl rounded-md  p-4">
-          <h1 className="font-semibold text-2xl mb-4 text-center">
-            Rate and drop your comment here
-          </h1>
+
+        {/* Review Form */}
+        <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-semibold text-center text-blue-400 mb-4">
+            Share Your Thoughts
+          </h2>
           <FormReview id={params.id} />
         </div>
       </div>
