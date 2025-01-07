@@ -1,11 +1,12 @@
-import OrganizerProfile from './OrganizerProfile'
-import { getOrganizerData } from '@/lib/organizer'
+import OrganizerProfile from "./OrganizerProfile";
+import { getOrganizerData } from "@/lib/organizer";
 
-export default async function OrganizerProfilePage() {
-  const organizer = await getOrganizerData()
+export default async function Page() {
+  const organizer = await getOrganizerData();
 
   if (!organizer) {
-    return <div>Organizer not found</div>
+    return <div>Organizer not found</div>;
   }
-  return <OrganizerProfile organizerId={organizer.id} {...organizer} />
+
+  return <OrganizerProfile organizer={organizer} />;
 }
