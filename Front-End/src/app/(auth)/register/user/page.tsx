@@ -43,10 +43,11 @@ const Register = () => {
 
   const handleSubmit = async (
     values: typeof initialValues,
-    { setSubmitting, resetForm }: FormikHelpers<typeof initialValues>,
+    { setSubmitting, resetForm }: FormikHelpers<typeof initialValues>
   ) => {
     const API_URL =
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/auth";
+      process.env.NEXT_PUBLIC_API_URL ||
+      "https://hypetix-back.vercel.app/api/auth";
 
     // Cek apakah API_URL sudah terdefinisi
     if (!API_URL) {
@@ -68,7 +69,7 @@ const Register = () => {
 
       const data = await response.json();
       setSuccess(
-        data.message || "Registration successful! You can now log in.",
+        data.message || "Registration successful! You can now log in."
       );
       resetForm();
 

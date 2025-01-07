@@ -27,14 +27,17 @@ const OrgLogin = () => {
   // Handle form submission
   const handleSubmit = async (
     values: typeof initialValues,
-    { setSubmitting }: FormikHelpers<typeof initialValues>,
+    { setSubmitting }: FormikHelpers<typeof initialValues>
   ) => {
     try {
-      const response = await fetch("http://localhost:8000/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
+      const response = await fetch(
+        "https://hypetix-back.vercel.app/api/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        }
+      );
 
       const responseText = await response.text();
       let data;
@@ -45,8 +48,8 @@ const OrgLogin = () => {
         throw new Error(
           `Server returned invalid response: ${responseText.substring(
             0,
-            100,
-          )}...`,
+            100
+          )}...`
         );
       }
 

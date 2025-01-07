@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { IEvent } from "@/types/event";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -37,7 +37,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
     try {
       setIsLoading(true);
       const res = await fetch(
-        `http://localhost:8000/api/events?search=${text}`
+        `https://hypetix-back.vercel.app/api/events?search=${text}`
       );
       const result = await res.json();
       setEvents(result.events || []);

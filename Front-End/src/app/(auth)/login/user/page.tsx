@@ -26,31 +26,34 @@ const Login = () => {
 
   const handleSubmit = async (
     values: typeof initialValues,
-    { setSubmitting }: FormikHelpers<typeof initialValues>,
+    { setSubmitting }: FormikHelpers<typeof initialValues>
   ) => {
-    console.log("Submit button clicked"); 
+    console.log("Submit button clicked");
     try {
-      const response = await fetch("http://localhost:8000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-  
-      console.log("Server response:", response); 
-  
+      const response = await fetch(
+        "https://hypetix-back.vercel.app/api/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        }
+      );
+
+      console.log("Server response:", response);
+
       const result = await response.json();
-      console.log("Parsed result:", result); 
-  
+      console.log("Parsed result:", result);
+
       if (!response.ok) {
         throw new Error(result.message || "An error occurred during login");
       }
-  
+
       localStorage.setItem("authToken", result.token);
       console.log("Token saved to localStorage:", result.token);
-  
+
       setLoginMessage("Login successful!");
       console.log("Logged in user:", result);
-  
+
       router.push("/events");
     } catch (error: Error | unknown) {
       const errorMessage =
@@ -59,10 +62,9 @@ const Login = () => {
       alert(errorMessage);
     } finally {
       setSubmitting(false);
-      console.log("Submitting state reset"); 
+      console.log("Submitting state reset");
     }
   };
-  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
