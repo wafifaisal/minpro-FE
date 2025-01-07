@@ -54,7 +54,7 @@ const Login = () => {
       setLoginMessage("Login successful!");
       console.log("Logged in user:", result);
 
-      router.push("/events");
+      router.push("/");
     } catch (error: Error | unknown) {
       const errorMessage =
         error instanceof Error ? error.message : "An unexpected error occurred";

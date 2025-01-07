@@ -44,7 +44,7 @@ export default function PayButton({
 
     try {
       const { data } = await axios.post("/order/midtrans-webhook", resBody);
-      router.push(`/events`);
+      router.push(`/`);
       toast.success(data.message);
     } catch (err: unknown) {
       const errorMessage =

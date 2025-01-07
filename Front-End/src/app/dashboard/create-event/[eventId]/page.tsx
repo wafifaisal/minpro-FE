@@ -54,7 +54,7 @@ export default async function TicketPage({
         <div className="mt-10 border-t border-gray-700 pt-4 text-center">
           <Link
             className="py-3 px-6 bg-lightBlue hover:bg-lightBlue/80 text-white font-semibold rounded-md transition-all"
-            href={"/events"}
+            href={"/dashboard"}
           >
             Back to Dashboard
           </Link>

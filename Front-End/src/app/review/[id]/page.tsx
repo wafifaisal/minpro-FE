@@ -25,10 +25,10 @@ export default async function ReviewPage({
 
   return (
     <main className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-200 min-h-screen">
-      <div className="sm:mx-8 md:mx-16 lg:mx-32 xl:mx-40 py-10">
+      <div className="sm:mx-8 md:mx-16 lg:mx-32 xl:mx-40 py-10 space-y-10">
         {/* Event Header */}
-        <div className="flex flex-col gap-6 rounded-lg shadow-lg overflow-hidden">
-          <div className="relative overflow-hidden aspect-[16/9] flex-1 group">
+        <div className="rounded-lg shadow-lg overflow-hidden bg-gray-800">
+          <div className="relative w-full h-60 sm:h-72 md:h-96 group">
             <Image
               src={result.event_thumbnail}
               alt={result.event_name}
@@ -36,7 +36,7 @@ export default async function ReviewPage({
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           </div>
-          <div className="bg-gray-800 p-6 rounded-lg shadow-md">
+          <div className="p-6">
             <h1 className="text-2xl font-bold mb-4 text-blue-400 hover:underline">
               {result.event_name}
             </h1>
@@ -58,7 +58,7 @@ export default async function ReviewPage({
         </div>
 
         {/* Comment Section */}
-        <div className="my-10">
+        <div>
           <h1 className="text-3xl font-bold text-blue-400 mb-6">Comments</h1>
           {dataReviews.result.length ? (
             dataReviews.result.map((item, idx) => (
@@ -67,7 +67,7 @@ export default async function ReviewPage({
                 className="bg-gray-800 p-4 rounded-lg shadow-lg mb-4 hover:bg-gray-700 transition-all"
               >
                 <div className="flex items-center gap-4">
-                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-blue-500">
+                  <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-blue-500">
                     <Image
                       src={item.user.avatar}
                       alt={item.user.firstName}

@@ -74,7 +74,7 @@ const Navbar: React.FC<NavbarProps> = ({
         <div className={`px-10 flex items-center justify-center py-2`}>
           {isEventPage && backgroundImage && isScrolled && (
             <div className="relative flex items-center">
-              <Link href={"/events"}>
+              <Link href={"/"}>
                 <Image
                   src={backgroundImage}
                   alt="Navbar Background"
@@ -86,9 +86,9 @@ const Navbar: React.FC<NavbarProps> = ({
             </div>
           )}
           {!isEventPage && (
-            <Link href={"/events"}>
+            <Link href={"/"}>
               <div className="relative flex items-center">
-                <Link href={"/events"}>
+                <Link href={"/"}>
                   <Image
                     src={
                       "https://res.cloudinary.com/dkyco4yqp/image/upload/v1735131879/HYPETIX-removebg-preview_qxyuj5.png"
