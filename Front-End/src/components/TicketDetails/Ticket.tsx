@@ -138,10 +138,20 @@ export default function TicketSection({
   const handleReedemCoupon = () => {
     setIsReedemedCoupon(true);
     setCoupon(false);
+    toast.success("Coupon redeemed successfully!", {
+      position: "bottom-right",
+      autoClose: 5000,
+      theme: "colored",
+    });
   };
 
   const handleReedemPoints = () => {
     setIsReedemedPoints(true);
+    toast.success("Points redeemed successfully!", {
+      position: "bottom-right",
+      autoClose: 5000,
+      theme: "colored",
+    });
   };
 
   return (
