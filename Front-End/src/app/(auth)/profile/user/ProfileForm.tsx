@@ -7,7 +7,8 @@ import Image from "next/image";
 export default function UserProfileForm() {
   const [firstName, setFirstName] = useState("John");
   const [lastName, setLastName] = useState("Doe");
-  const [avatar, 
+  const [
+    avatar,
     // setAvatar
   ] = useState("sample");
   const [password, setPassword] = useState("");
@@ -36,22 +37,6 @@ export default function UserProfileForm() {
           height={200}
           className="mx-auto rounded-full"
         />
-      </div>
-
-      <div>
-        {/* <label
-          htmlFor="avatar"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Avatar URL
-        </label> */}
-        {/* <input
-          type="text"
-          id="avatar"
-          value={avatar}
-          onChange={(e) => setAvatar(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-        /> */}
       </div>
 
       <div>

@@ -10,7 +10,11 @@ export default function OrganizerProfile({
 }: {
   organizer: IOrganizer;
 }) {
-  const [formData, setFormData] = useState(organizer);
+  const [formData, setFormData] = useState({
+    organizer,
+    avatar: "",
+    isVerify: organizer.isVerify,
+  });
   const [isEditing, setIsEditing] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +47,7 @@ export default function OrganizerProfile({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateOrganizer(formData);
+    await updateOrganizer(formData.organizer);
     setIsEditing(false);
   };
 
@@ -69,14 +73,15 @@ export default function OrganizerProfile({
                 Avatar
               </label>
               <div className="mt-1 flex flex-col items-center">
-                <Image
-                  src={
-                    formData.avatar ||
-                    "https://res.cloudinary.com/dkyco4yqp/image/upload/v1735131879/HYPETIX-removebg-preview_qxyuj5.png"
-                  }
-                  alt="Organizer Avatar"
-                  className="h-24 w-24 rounded-full object-cover"
-                />
+                {formData && formData.avatar ? (
+                  <Image src={formData.avatar} alt="Organizer Avatar" />
+                ) : (
+                  <Image
+                    src="https://res.cloudinary.com/dkyco4yqp/image/upload/v1735131879/HYPETIX-removebg-preview_qxyuj5.png"
+                    alt="Default Avatar"
+                    className="h-24 w-24 rounded-full object-cover"
+                  />
+                )}
 
                 {isEditing && (
                   <input
@@ -101,7 +106,7 @@ export default function OrganizerProfile({
                 type="text"
                 name="organizer_name"
                 id="organizer_name"
-                value={formData.organizer_name ?? ""}
+                value={formData.organizer.organizer_name ?? ""}
                 onChange={handleChange}
                 disabled={!isEditing}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
@@ -118,7 +123,7 @@ export default function OrganizerProfile({
                 type="email"
                 name="email"
                 id="email"
-                value={formData.email ?? ""}
+                value={formData.organizer.email ?? ""}
                 disabled
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm bg-gray-100"
               />
